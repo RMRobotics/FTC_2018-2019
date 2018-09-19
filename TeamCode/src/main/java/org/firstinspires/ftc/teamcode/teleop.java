@@ -54,7 +54,7 @@ public class teleop extends OpMode {
     }
 
     protected void setDrive(double p) {
-        setDrive(p);
+        setDrive(p, p, p, p);
     }
 
     @Override
