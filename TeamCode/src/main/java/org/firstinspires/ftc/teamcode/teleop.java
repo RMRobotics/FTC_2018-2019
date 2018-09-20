@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+//It's Rover Ruckus Time BOIS
+
 /**
  * Created by Angela on 9/18/2018.
  */
@@ -16,7 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class teleop extends OpMode {
 
     protected DcMotor FL, FR, BL, BR;
-    protected DcMotor lift, liftTurn;
+    protected DcMotor lift, turn;
     protected CRServo intake;
     protected Servo hook;
 
@@ -26,10 +28,8 @@ public class teleop extends OpMode {
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
-        hook = hardwareMap.servo.get("hook");
-        intake = hardwareMap.crservo.get("intake");
         lift = hardwareMap.dcMotor.get("lift");
-        liftTurn = hardwareMap.dcMotor.get("liftTurn");
+        turn = hardwareMap.dcMotor.get("turn");
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
         FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -40,6 +40,11 @@ public class teleop extends OpMode {
         FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        turn.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        hook = hardwareMap.servo.get("hook");
+        intake = hardwareMap.crservo.get("intake");
     }
 
     protected void addTelemetry() {
@@ -51,10 +56,6 @@ public class teleop extends OpMode {
         FR.setPower(p2);
         BL.setPower(p3);
         BR.setPower(p4);
-    }
-
-    protected void setDrive(double p) {
-        setDrive(p);
     }
 
     @Override
@@ -71,6 +72,26 @@ public class teleop extends OpMode {
         BL.setPower((forward - strafe + rotate) / max);
         BR.setPower((forward + strafe - rotate) / max);
 
-//It's Rover Ruckus Time BOIS
+        if (gamepad2.right_trigger!=0 || gamepad2.left_trigger==0)
+            intake.setPower(gamepad2.right_trigger);
+        else if (gamepad2.right_trigger ==0 || gamepad2.left_trigger !=0)
+            intake.setPower(gamepad2.left_trigger/-1);
+        else
+            intake.setPower(0);
+
+        if (gamepad1.right_bumper)
+            hook.setPosition(1);
+
+        if (gamepad1.left_bumper)
+            hook.setPosition(0);
+
+        lift.setPower(gamepad2.right_stick_y);
+
+        if (gamepad1.right_trigger!=0 || gamepad1.left_trigger==0)
+            turn.setPower(gamepad1.right_trigger);
+        else if (gamepad1.right_trigger ==0 || gamepad1.left_trigger !=0)
+            turn.setPower(gamepad1.left_trigger/-1);
+        else
+            turn.setPower(0);
     }
 }
