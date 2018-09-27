@@ -24,14 +24,20 @@ public class teleop extends OpMode {
 
     @Override
     public void init() {
+
+        //maps motors
         FL = hardwareMap.dcMotor.get("FL");
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
         lift = hardwareMap.dcMotor.get("lift");
         turn = hardwareMap.dcMotor.get("turn");
+
+        //sets left side of drivetrain to reverse
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //sets motors to run with encoders
         FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -43,6 +49,7 @@ public class teleop extends OpMode {
         turn.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        //maps servos
         hook = hardwareMap.servo.get("hook");
         intake = hardwareMap.crservo.get("intake");
     }
