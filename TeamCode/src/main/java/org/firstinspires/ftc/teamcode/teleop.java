@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 //It's Rover Ruckus Time BOIS
 
 /**
- * Created by Angela on 9/18/2018.
+ * Created by Rithik on 9/18/2018.
  */
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
