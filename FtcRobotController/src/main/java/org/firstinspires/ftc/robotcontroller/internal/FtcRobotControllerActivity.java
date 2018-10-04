@@ -101,6 +101,7 @@ import com.qualcomm.robotcore.wifi.NetworkType;
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.MotionDetection;
 import org.firstinspires.ftc.robotcore.internal.hardware.DragonboardLynxDragonboardIsPresentPin;
 import org.firstinspires.ftc.robotcore.internal.network.DeviceNameManager;
@@ -135,6 +136,7 @@ import ftc.vision.MineralProcessor;
 @SuppressWarnings("WeakerAccess")
 public class FtcRobotControllerActivity extends Activity
   {
+
       ////////////// START VISION PROCESSING CODE //////////////
 
       static final int FRAME_WIDTH_REQUEST = 176;
@@ -468,6 +470,8 @@ public class FtcRobotControllerActivity extends Activity
   protected void onStart() {
     super.onStart();
     RobotLog.vv(TAG, "onStart()");
+
+    RobotLog.vv(TAG, "checkpoint 1");
 
     // If we're start()ing after a stop(), then shut the old robot down so
     // we can refresh it with new state (e.g., with new hw configurations)
