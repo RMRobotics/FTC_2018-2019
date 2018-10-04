@@ -42,6 +42,10 @@ public class MineralProcessor implements ImageProcessor<MineralColor> {
         List<Scalar> hsvMin = new ArrayList<>();
         List<Scalar> hsvMax = new ArrayList<>();
         //hsvMin.add(new Scalar( H, S, V ));
+        hsvMin.add(new Scalar(300/2, 0, 255)); //white min
+        hsvMax.add(new Scalar( 60/2, 20, 230)); //white  max
+        hsvMin.add(new Scalar(40/2, 50, 150)); //yellow min
+        hsvMax.add(new Scalar( 70/2, 255, 255)); //yellow  max
         hsvMin.add(new Scalar(300/2, 50, 150)); //red min
         hsvMax.add(new Scalar( 60/2, 255, 255)); //red max
         hsvMin.add(new Scalar( 60/2, 50, 150)); //green min

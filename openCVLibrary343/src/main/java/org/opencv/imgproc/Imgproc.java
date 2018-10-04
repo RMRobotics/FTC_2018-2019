@@ -2217,6 +2217,7 @@ public class Imgproc {
     }
 
     //javadoc: cvtColor(src, dst, code)
+    //cvtColor converts an image from one color space to another.
     public static void cvtColor(Mat src, Mat dst, int code)
     {
         
