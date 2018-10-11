@@ -18,9 +18,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class teleop extends OpMode {
 
     protected DcMotor FL, FR, BL, BR;
-    protected DcMotor lift, turn;
+   /* protected DcMotor lift, turn;
     protected CRServo intake;
-    protected Servo hook;
+    protected Servo hook;*/
 
     @Override
     public void init() {
@@ -30,9 +30,9 @@ public class teleop extends OpMode {
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
-        lift = hardwareMap.dcMotor.get("lift");
+        /*lift = hardwareMap.dcMotor.get("lift");
         turn = hardwareMap.dcMotor.get("turn");
-
+*/
         //sets left side of drivetrain to reverse
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -46,12 +46,12 @@ public class teleop extends OpMode {
         FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        turn.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+       /* turn.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //maps servos
         hook = hardwareMap.servo.get("hook");
-        intake = hardwareMap.crservo.get("intake");
+        intake = hardwareMap.crservo.get("intake");*/
     }
 
     protected void addTelemetry() {
@@ -79,7 +79,7 @@ public class teleop extends OpMode {
         BL.setPower((forward - strafe + rotate) / max);
         BR.setPower((forward + strafe - rotate) / max);
 
-        if (gamepad2.right_trigger!=0 || gamepad2.left_trigger==0)
+       /* if (gamepad2.right_trigger!=0 || gamepad2.left_trigger==0)
             intake.setPower(gamepad2.right_trigger);
         else if (gamepad2.right_trigger ==0 || gamepad2.left_trigger !=0)
             intake.setPower(gamepad2.left_trigger/-1);
@@ -99,6 +99,6 @@ public class teleop extends OpMode {
         else if (gamepad1.right_trigger ==0 || gamepad1.left_trigger !=0)
             turn.setPower(gamepad1.left_trigger/-1);
         else
-            turn.setPower(0);
+            turn.setPower(0);*/
     }
 }
