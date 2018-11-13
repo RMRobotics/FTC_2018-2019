@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
@@ -22,6 +23,8 @@ import org.opencv.imgproc.Imgproc;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static java.lang.Thread.sleep;
 
 public class OpenCVSux {
 
@@ -62,13 +65,14 @@ public class OpenCVSux {
     private void DisplayImage(Mat img) {
         // Scale down x2
         Core.flip(img, img, -1);
-        mImageMap = Bitmap.createBitmap(img.cols(), img.rows(), Bitmap.Config.ARGB_8888);
+
+        Bitmap mImageMap = Bitmap.createBitmap(img.cols(), img.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(img, mImageMap);
 
         ((FtcRobotControllerActivity) hardwareMap.appContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mImageView.setImageBitmap(mImageMap);
+                ImageView mImageView.setImageBitmap(mImageMap);
             }
         });
     }

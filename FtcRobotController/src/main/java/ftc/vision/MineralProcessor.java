@@ -23,13 +23,14 @@ public class MineralProcessor implements ImageProcessor<MineralColor> {
     public ImageProcessorResult<MineralColor> process(long startTime, Mat rgbaFrame, boolean saveImages) {
         
         //<The code we write will go here>
-
+        //saves camera screen as image
         if (saveImages) {
             ImageUtil.saveImage(TAG, rgbaFrame,
                     Imgproc.COLOR_RGBA2BGR, "0_camera", startTime);
         }
 
         //convert image to hsv
+        //matrix of pixels which each have 3 values: R,G, and B
         Mat hsv = new Mat();
         Imgproc.cvtColor(rgbaFrame, hsv, Imgproc.COLOR_RGB2HSV);
         // rgbaFrame is untouched
@@ -42,39 +43,44 @@ public class MineralProcessor implements ImageProcessor<MineralColor> {
         List<Scalar> hsvMin = new ArrayList<>();
         List<Scalar> hsvMax = new ArrayList<>();
         //hsvMin.add(new Scalar( H, S, V ));
-        hsvMin.add(new Scalar(300/2, 0, 255)); //white min
-        hsvMax.add(new Scalar( 60/2, 20, 230)); //white  max
-        hsvMin.add(new Scalar(40/2, 50, 150)); //yellow min
-        hsvMax.add(new Scalar( 70/2, 255, 255)); //yellow  max
-        hsvMin.add(new Scalar(300/2, 50, 150)); //red min
+        //lower_yellow = np.array([20,100,100]) from Python program
+        //upper_yellow = np.array([100,255,255]) from Python program
+
+        /*hsvMin.add(new Scalar(300/2, 0, 255)); //white min
+        hsvMax.add(new Scalar( 60/2, 20, 230)); //white  max*/
+        hsvMin.add(new Scalar(20, 100, 100)); //yellow min
+        hsvMax.add(new Scalar( 100, 255, 255)); //yellow  max
+      /*  hsvMin.add(new Scalar(300/2, 50, 150)); //red min
         hsvMax.add(new Scalar( 60/2, 255, 255)); //red max
         hsvMin.add(new Scalar( 60/2, 50, 150)); //green min
         hsvMax.add(new Scalar(180/2, 255, 255)); //green max
         hsvMin.add(new Scalar(180/2, 50, 150)); //blue min
-        hsvMax.add(new Scalar(300/2, 255, 255)); //blue max
+        hsvMax.add(new Scalar(300/2, 255, 255)); //blue max*/
 
         // make a list of channels that are blank (used for combining binary images)
         List<Mat> rgbaChannels = new ArrayList<>();
         double [] maxMass = { Double.MIN_VALUE, Double.MIN_VALUE };
         //maxmass for left and right
-        int[] maxMassIndex = { 3, 3}; // index of the max mass
+        int[] maxMassIndex = { 3, 3}; // index of the max mass, creates list with 3, 3 being the only 2 elements
         // We are about to loop over the filters and compute the "color mass" for each color on each side of the image.
         // These variables are used inside the loop:
         Mat maskedImage;
         Mat colSum = new Mat();
         double mass;
-        int[] data = new int[3]; //used to read the colSum
+        int[] data = new int[3]; //used to read the colSum, creates list of 3 ints w indices 0, 1, 2
 
         //loop through the rgb channels
         for(int i=0; i<3; i++) {
             //apply HSV thresholds
             maskedImage = new Mat();
+            //see if each of the hsv values are in the range of the different hsv min and max values
             ImageUtil.hsvInRange(hsv, hsvMin.get(i), hsvMax.get(i), maskedImage);
             //copy the binary image to a channel of rgbaChannels
             rgbaChannels.add(maskedImage.clone());
 
 
             //apply a column sum to the (unscaled) binary image
+            //reduce matrix to a vector
             Core.reduce(maskedImage, colSum, 0, Core.REDUCE_SUM, 4);
 
             //loop through left and right to calculate mass
@@ -139,7 +145,4 @@ public class MineralProcessor implements ImageProcessor<MineralColor> {
         );
 
     }
-
-
-
 }
