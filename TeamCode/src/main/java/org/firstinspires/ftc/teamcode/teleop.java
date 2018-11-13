@@ -18,9 +18,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class teleop extends OpMode {
 
     protected DcMotor FL, FR, BL, BR;
-   /* protected DcMotor lift, turn;
-    protected CRServo intake;
-    protected Servo hook;*/
+    //intake spins surgical tubing
+    //lift holds robot up before auto
+    protected DcMotor lift, intake, slideExtension, launch;
+    protected CRServo launchTube;
+    protected Servo rampRotate;
 
     @Override
     public void init() {
@@ -30,9 +32,15 @@ public class teleop extends OpMode {
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
-        /*lift = hardwareMap.dcMotor.get("lift");
-        turn = hardwareMap.dcMotor.get("turn");
-*/
+        lift = hardwareMap.dcMotor.get("lift");
+        intake = hardwareMap.dcMotor.get("intake");
+        slideExtension = hardwareMap.dcMotor.get("slideExtension");
+        launch = hardwareMap.dcMotor.get("launch");
+
+        //maps servos
+        launchTube = hardwareMap.crservo.get("launchTube");
+        rampRotate = hardwareMap.servo.get("rampRotate");
+
         //sets left side of drivetrain to reverse
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -46,12 +54,10 @@ public class teleop extends OpMode {
         FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-       /* turn.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //maps servos
-        hook = hardwareMap.servo.get("hook");
-        intake = hardwareMap.crservo.get("intake");*/
+        launch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideExtension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     protected void addTelemetry() {
