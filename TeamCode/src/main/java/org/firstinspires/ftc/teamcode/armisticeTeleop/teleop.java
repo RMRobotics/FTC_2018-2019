@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.armisticeTeleop;
 
 //It's Rover Ruckus Time BOIS
 
@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "teleop")
+@TeleOp(name = "armisticeTeleop")
 public class teleop extends OpMode {
 
     protected DcMotor FL, FR, BL, BR;
