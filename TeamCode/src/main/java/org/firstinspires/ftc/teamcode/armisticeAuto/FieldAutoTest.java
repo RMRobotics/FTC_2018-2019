@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.armisticeAuto;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static org.firstinspires.ftc.teamcode.armisticeAuto.Direction.CENTER;
 
@@ -22,11 +23,28 @@ public class FieldAutoTest extends armisticeAutoSuper{
         moveEncoders(10, 1);
         detector = new GoldAlignDetector();
         DogeCVYellowDetector(detector);
+        int count = 0;
+        int change = 0;
+        int direction = 1;
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        while (detector.isFound() == false && timer.seconds() < 5){
+            strafeEncoders(1,direction);
+            count++;
+            if (count > 5) {
+                strafeEncoders(5, -direction);
+                count = 0;
+                direction = -direction;
+                change++;
+            }
+        }
         if (detector.isFound() == true){
             position = CENTER;
         }
-        while (detector.isFound() == false){
+        else
+        {
 
+            //plan B
         }
             moveEncoders(5, 1); //knock off yellow mineral
             moveEncoders(5, -1);

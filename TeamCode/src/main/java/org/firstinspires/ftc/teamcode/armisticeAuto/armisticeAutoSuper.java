@@ -25,8 +25,6 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected IIMU imu;
     static double CPI = (1120.0 * 0.66666)/(4.0 * Math.PI);
 
-
-
     public void initialize (DcMotor.RunMode r) {
         FL = hardwareMap.dcMotor.get("FL");
         FR = hardwareMap.dcMotor.get("FR");
