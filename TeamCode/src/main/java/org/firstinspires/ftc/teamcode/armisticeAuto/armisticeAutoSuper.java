@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.IIMU;
 
 /**
- * Created by Neal on 11/20/2018.
+ * Created by Angelita on 11/20/2018.
  */
 
 public abstract class armisticeAutoSuper extends LinearOpMode {
