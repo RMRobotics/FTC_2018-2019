@@ -94,13 +94,13 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
     protected void strafeEncoders(double distanceInches, int dir){
         double angle = imu.getZAngle();
-        int currentPos = FL.getCurrentPosition(), pos;
+        int currentPos = BL.getCurrentPosition(), pos;
         int distanceTics = dir*(int)(distanceInches * CPI);
         double tickRatio;
 
-        FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FL.setTargetPosition(currentPos + distanceTics);
-        FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BL.setTargetPosition(currentPos + distanceTics);
+        BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (dir == 1) {
             BR.setPower(1);
@@ -116,7 +116,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             FR.setPower(1);
         }
 
-        while(FL.isBusy() /*&& BL.isBusy() && BR.isBusy() && FL.isBusy()*/){
+        while(BL.isBusy() /*&& BL.isBusy() && BR.isBusy() && FL.isBusy()*/){
             if (Math.abs(-imu.getZAngle() - angle) >= 15){
 //                pos = FL.getCurrentPosition();
                 imuTurn(-(imu.getZAngle() - angle),0.3);
@@ -147,14 +147,14 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected void moveEncoders(double distanceInches, int dir){
         //dir of 1 will set left drive train's target to be negative
         double speed = 0.25 * dir;
-        int currentPos = FR.getCurrentPosition();
+        int currentPos = BL.getCurrentPosition();
         //distanceTics is num of tics it needs to travel
         int distanceTics = (int)(distanceInches * CPI);
         double tickRatio;
 
-        FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FR.setTargetPosition(currentPos + distanceTics);
-        FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BL.setTargetPosition(currentPos + distanceTics);
+        BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         BR.setPower(speed);
         BL.setPower(speed);
@@ -164,8 +164,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         telemetry.addData("checkpoint1","");
         holdUp(0.5);
 
-        while(FR.isBusy() /*&& BL.isBusy() && BR.isBusy() && FL.isBusy()*/){
-            tickRatio = ((double)FR.getCurrentPosition() - (double)currentPos) / distanceTics;
+        while(BL.isBusy() /*&& BL.isBusy() && BR.isBusy() && FL.isBusy()*/){
+            tickRatio = ((double)BL.getCurrentPosition() - (double)currentPos) / distanceTics;
             speed = dir * ((-0.5) * (tickRatio) + 0.5);
             if (dir > 0){
                 if (speed < 0.15)
@@ -175,7 +175,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
                 if (speed > -0.15)
                     speed = -0.15;
             }
-            print(String.valueOf(FR.getCurrentPosition()),0);
+            print(String.valueOf(BL.getCurrentPosition()),0);
             BR.setPower(speed);
             BL.setPower(speed);
             FL.setPower(speed);

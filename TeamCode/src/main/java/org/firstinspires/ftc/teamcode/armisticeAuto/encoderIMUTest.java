@@ -14,7 +14,7 @@ public class encoderIMUTest extends armisticeAutoSuper{
 
         initialize(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
-        moveEncoders(12, 1);
+        moveEncoders(5, 1);
         strafeEncoders(4,1);
         imuTurn(90, 0.5);
     }

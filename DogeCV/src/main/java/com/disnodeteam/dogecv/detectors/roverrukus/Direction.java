@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.armisticeAuto;
+package com.disnodeteam.dogecv.detectors.roverrukus;
 
 /**
  * Created by Angela on 11/24/2018.

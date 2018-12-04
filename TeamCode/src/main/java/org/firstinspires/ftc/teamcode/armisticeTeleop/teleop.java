@@ -32,32 +32,32 @@ public class teleop extends OpMode {
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
-        lift = hardwareMap.dcMotor.get("lift");
-        intake = hardwareMap.dcMotor.get("intake");
-        slideExtension = hardwareMap.dcMotor.get("slideExtension");
-        launch = hardwareMap.dcMotor.get("launch");
-
-        //maps servos
-        launchTube = hardwareMap.crservo.get("launchTube");
-        rampRotate = hardwareMap.servo.get("rampRotate");
+        //lift = hardwareMap.dcMotor.get("lift");
+        //intake = hardwareMap.dcMotor.get("intake");
+//        slideExtension = hardwareMap.dcMotor.get("slideExtension");
+//        launch = hardwareMap.dcMotor.get("launch");
+//
+//        //maps servos
+//        launchTube = hardwareMap.crservo.get("launchTube");
+//        rampRotate = hardwareMap.servo.get("rampRotate");
 
         //sets left side of drivetrain to reverse
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //sets motors to run with encoders
-        FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        launch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideExtension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        launch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        slideExtension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     protected void addTelemetry() {

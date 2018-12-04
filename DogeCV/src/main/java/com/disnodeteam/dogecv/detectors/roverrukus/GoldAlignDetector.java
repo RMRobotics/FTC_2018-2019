@@ -35,7 +35,8 @@ public class GoldAlignDetector extends DogeCVDetector {
 
     // Results of the detector
     private boolean found    = false; // Is the gold mineral found
-    private boolean aligned  = false; // Is the gold mineral aligned
+//    private boolean aligned  = false;
+    private Direction aligned = Direction.UNKNOWN; // Is the gold mineral aligned
     private double  goldXPos = 0;     // X Position (in pixels) of the gold element
 
     // Detector settings
@@ -120,9 +121,12 @@ public class GoldAlignDetector extends DogeCVDetector {
 
             // Check if the mineral is aligned
             if(xPos < alignXMax && xPos > alignXMin){
-                aligned = true;
-            }else{
-                aligned = false;
+                aligned = Direction.CENTER;
+            }else if (xPos<alignXMin){
+                aligned = Direction.LEFT;
+            }else
+            {
+                aligned = Direction.RIGHT;
             }
 
             // Draw Current X
@@ -130,7 +134,7 @@ public class GoldAlignDetector extends DogeCVDetector {
             found = true;
         }else{
             found = false;
-            aligned = false;
+            aligned = Direction.UNKNOWN;
         }
         if(debugAlignment){
 
@@ -180,7 +184,7 @@ public class GoldAlignDetector extends DogeCVDetector {
      * Returns if the gold element is aligned
      * @return if the gold element is alined
      */
-    public boolean getAligned(){
+    public Direction getAligned(){
         return aligned;
     }
 

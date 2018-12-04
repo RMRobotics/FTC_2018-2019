@@ -67,7 +67,7 @@ public class DogeCVGoldAlignExample extends OpMode
         detector.ratioScorer.weight = 5; //
         detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
 
-        detector.enable(); // Start the detector!
+        detector.enable(); // Start the detector
     }
 
     /*
