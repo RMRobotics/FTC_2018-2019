@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.armisticeAuto;
 
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+import com.disnodeteam.dogecv.detectors.roverrukus.*;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.disnodeteam.dogecv.detectors.Direction;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import static org.firstinspires.ftc.teamcode.armisticeAuto.Direction.CENTER;
 
 /**
  * Created by Angela on 11/24/2018.
@@ -15,50 +14,65 @@ import static org.firstinspires.ftc.teamcode.armisticeAuto.Direction.CENTER;
 public class FieldAutoTest extends armisticeAutoSuper{
 
     private GoldAlignDetector detector;
-    Direction position;
+    com.disnodeteam.dogecv.detectors.Direction position = Direction.UNKNOWN;
 
     public void runOpMode(){
+
+        //initialization
         initialize(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
+
+        //Get off lander
+
+        //Move forward to see Qube
         moveEncoders(10, 1);
+
+        //See Qube
         detector = new GoldAlignDetector();
         DogeCVYellowDetector(detector);
+
+        //Vars
         int count = 0;
         int change = 0;
         int direction = 1;
+        double totalDistance = 0;
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
+
+
         while (detector.isFound() == false && timer.seconds() < 5){
-            strafeEncoders(1,direction);
+            strafeEncoders(3,direction);
             count++;
+
+            if (change%2 == 1) {
+                totalDistance--;
+            }
+            else {
+                totalDistance++;
+            }
+
             if (count > 5) {
-                strafeEncoders(5, -direction);
+                strafeEncoders(14.5, -direction);
                 count = 0;
+                totalDistance = 0;
                 direction = -direction;
                 change++;
             }
         }
         if (detector.isFound() == true){
-            position = CENTER;
+            position = detector.getAligned();
+            strafeEncoders(20, 1);
         }
         else
         {
-
-            //plan B
+            if (totalDistance < 0) {
+                totalDistance = -totalDistance + 20;
+            }
+            strafeEncoders(totalDistance, 1);
         }
-            moveEncoders(5, 1); //knock off yellow mineral
-            moveEncoders(5, -1);
-        switch (position) {
-            case CENTER:
-                strafeEncoders(10, 1);
-                break;
-            case LEFT:
-                strafeEncoders(5, 1);
-                break;
-            case RIGHT:
-                strafeEncoders(15, 1);
-                break;
-        }
+        moveEncoders(5, 1); //knock off yellow mineral
+        moveEncoders(5, -1);
+        imuTurn(45, 0.4);
         moveEncoders(20, 1);
         //drop off flag
         imuTurn(180, 0.4);

@@ -3,6 +3,7 @@ package com.disnodeteam.dogecv.detectors.roverrukus;
 import android.util.Log;
 
 import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.detectors.Direction;
 import com.disnodeteam.dogecv.detectors.DogeCVDetector;
 import com.disnodeteam.dogecv.filters.DogeCVColorFilter;
 import com.disnodeteam.dogecv.filters.LeviColorFilter;
@@ -35,7 +36,7 @@ public class GoldAlignDetector extends DogeCVDetector {
 
     // Results of the detector
     private boolean found    = false; // Is the gold mineral found
-    private boolean aligned  = false; // Is the gold mineral aligned
+    private Direction aligned  = Direction.UNKNOWN; // Is the gold mineral aligned
     private double  goldXPos = 0;     // X Position (in pixels) of the gold element
 
     // Detector settings
@@ -72,97 +73,98 @@ public class GoldAlignDetector extends DogeCVDetector {
 
 
         //Preprocess the working Mat (blur it then apply a yellow filter)
-        Imgproc.GaussianBlur(workingMat,workingMat,new Size(5,5),0);
-        yellowFilter.process(workingMat.clone(),maskYellow);
+        Imgproc.GaussianBlur(workingMat, workingMat, new Size(5, 5), 0);
+        yellowFilter.process(workingMat.clone(), maskYellow);
 
         //Find contours of the yellow mask and draw them to the display mat for viewing
 
         List<MatOfPoint> contoursYellow = new ArrayList<>();
         Imgproc.findContours(maskYellow, contoursYellow, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-        Imgproc.drawContours(displayMat,contoursYellow,-1,new Scalar(230,70,70),2);
+        Imgproc.drawContours(displayMat, contoursYellow, -1, new Scalar(230, 70, 70), 2);
 
         // Current result
         Rect bestRect = null;
         double bestDiffrence = Double.MAX_VALUE; // MAX_VALUE since less diffrence = better
 
         // Loop through the contours and score them, searching for the best result
-        for(MatOfPoint cont : contoursYellow){
+        for (MatOfPoint cont : contoursYellow) {
             double score = calculateScore(cont); // Get the diffrence score using the scoring API
 
             // Get bounding rect of contour
             Rect rect = Imgproc.boundingRect(cont);
-            Imgproc.rectangle(displayMat, rect.tl(), rect.br(), new Scalar(0,0,255),2); // Draw rect
+            Imgproc.rectangle(displayMat, rect.tl(), rect.br(), new Scalar(0, 0, 255), 2); // Draw rect
 
             // If the result is better then the previously tracked one, set this rect as the new best
-            if(score < bestDiffrence){
+            if (score < bestDiffrence) {
                 bestDiffrence = score;
                 bestRect = rect;
             }
         }
 
         // Vars to calculate the alignment logic.
-        double alignX    = (getAdjustedSize().width / 2) + alignPosOffset; // Center point in X Pixels
+        double alignX = (getAdjustedSize().width / 2) + alignPosOffset; // Center point in X Pixels
         double alignXMin = alignX - (alignSize / 2); // Min X Pos in pixels
-        double alignXMax = alignX +(alignSize / 2); // Max X pos in pixels
+        double alignXMax = alignX + (alignSize / 2); // Max X pos in pixels
         double xPos; // Current Gold X Pos
 
-        if(bestRect != null){
+        if (bestRect != null) {
             // Show chosen result
-            Imgproc.rectangle(displayMat, bestRect.tl(), bestRect.br(), new Scalar(255,0,0),4);
-            Imgproc.putText(displayMat, "Chosen", bestRect.tl(),0,1,new Scalar(255,255,255));
+            Imgproc.rectangle(displayMat, bestRect.tl(), bestRect.br(), new Scalar(255, 0, 0), 4);
+            Imgproc.putText(displayMat, "Chosen", bestRect.tl(), 0, 1, new Scalar(255, 255, 255));
 
             // Set align X pos
             xPos = bestRect.x + (bestRect.width / 2);
             goldXPos = xPos;
 
             // Draw center point
-            Imgproc.circle(displayMat, new Point( xPos, bestRect.y + (bestRect.height / 2)), 5, new Scalar(0,255,0),2);
+            Imgproc.circle(displayMat, new Point(xPos, bestRect.y + (bestRect.height / 2)), 5, new Scalar(0, 255, 0), 2);
 
             // Check if the mineral is aligned
-            if(xPos < alignXMax && xPos > alignXMin){
-                aligned = true;
-            }else{
-                aligned = false;
+            if (xPos < alignXMax && xPos > alignXMin) {
+                aligned = Direction.CENTER;
+            } else if (xPos < alignXMin) {
+                aligned = Direction.LEFT;
+            } else if (xPos > alignXMax) {
+                aligned = Direction.RIGHT;
+            } else {
+                found = false;
+                aligned = Direction.UNKNOWN;
             }
 
             // Draw Current X
-            Imgproc.putText(displayMat,"Current X: " + bestRect.x,new Point(10,getAdjustedSize().height - 10),0,0.5, new Scalar(255,255,255),1);
-            found = true;
-        }else{
-            found = false;
-            aligned = false;
-        }
-        if(debugAlignment){
+            Imgproc.putText(displayMat, "Current X: " + bestRect.x, new Point(10, getAdjustedSize().height - 10), 0, 0.5, new Scalar(255, 255, 255), 1);
+            if (debugAlignment) {
 
-            //Draw debug alignment info
-            if(isFound()){
-                Imgproc.line(displayMat,new Point(goldXPos, getAdjustedSize().height), new Point(goldXPos, getAdjustedSize().height - 30),new Scalar(255,255,0), 2);
+                //Draw debug alignment info
+                if (isFound()) {
+                    Imgproc.line(displayMat, new Point(goldXPos, getAdjustedSize().height), new Point(goldXPos, getAdjustedSize().height - 30), new Scalar(255, 255, 0), 2);
+                }
+
+                Imgproc.line(displayMat, new Point(alignXMin, getAdjustedSize().height), new Point(alignXMin, getAdjustedSize().height - 40), new Scalar(0, 255, 0), 2);
+                Imgproc.line(displayMat, new Point(alignXMax, getAdjustedSize().height), new Point(alignXMax, getAdjustedSize().height - 40), new Scalar(0, 255, 0), 2);
             }
 
-            Imgproc.line(displayMat,new Point(alignXMin, getAdjustedSize().height), new Point(alignXMin, getAdjustedSize().height - 40),new Scalar(0,255,0), 2);
-            Imgproc.line(displayMat,new Point(alignXMax, getAdjustedSize().height), new Point(alignXMax,getAdjustedSize().height - 40),new Scalar(0,255,0), 2);
+            //Print result
+            Imgproc.putText(displayMat, "Result: " + aligned, new Point(10, getAdjustedSize().height - 30), 0, 1, new Scalar(255, 255, 0), 1);
+
         }
-
-        //Print result
-        Imgproc.putText(displayMat,"Result: " + aligned,new Point(10,getAdjustedSize().height - 30),0,1, new Scalar(255,255,0),1);
-
-
-        return displayMat;
+            return displayMat;
 
     }
 
+
     @Override
     public void useDefaults() {
-        addScorer(ratioScorer);
+            addScorer(ratioScorer);
 
-        // Add diffrent scoreres depending on the selected mode
-        if(areaScoringMethod == DogeCV.AreaScoringMethod.MAX_AREA){
-            addScorer(maxAreaScorer);
-        }
+            // Add diffrent scoreres depending on the selected mode
+            if (areaScoringMethod == DogeCV.AreaScoringMethod.MAX_AREA) {
+                addScorer(maxAreaScorer);
+            }
 
-        if (areaScoringMethod == DogeCV.AreaScoringMethod.PERFECT_AREA){
-            addScorer(perfectAreaScorer);
-        }
+            if (areaScoringMethod == DogeCV.AreaScoringMethod.PERFECT_AREA) {
+                addScorer(perfectAreaScorer);
+            }
 
     }
 
@@ -180,7 +182,7 @@ public class GoldAlignDetector extends DogeCVDetector {
      * Returns if the gold element is aligned
      * @return if the gold element is alined
      */
-    public boolean getAligned(){
+    public Direction getAligned(){
         return aligned;
     }
 
