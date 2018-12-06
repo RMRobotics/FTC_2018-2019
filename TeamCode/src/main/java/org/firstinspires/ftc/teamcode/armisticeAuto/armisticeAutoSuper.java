@@ -92,7 +92,38 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         detector.enable(); // Start the detector!
     }
 
-    protected void strafeEncoders(double distanceInches, int dir){
+    //fine adjustment aligning to the gold unobtainium
+    protected void yellowAlign(GoldAlignDetector detector){
+
+        //set the tolerance to something smaller than 100
+        detector.setAlignSettings(0, 50);
+
+        //check if the robot is on the left or on the right
+        while(!(detector.getAligned().equals(Direction.CENTER))){
+
+            //strafe based on position of the robot in relation to yellow block
+            if(detector.getAligned().equals(Direction.LEFT)){
+                FL.setPower(-.2);
+                FR.setPower(.2);
+                BL.setPower(.2);
+                BR.setPower(-.2);
+            }
+            else{
+                FL.setPower(.2);
+                FR.setPower(-.2);
+                BL.setPower(-.2);
+                BR.setPower(.2);
+            }
+        }
+
+        //stop in front of block
+        FL.setPower(0);
+        FR.setPower(0);
+        BL.setPower(0);
+        BR.setPower(0);
+    }
+
+    protected void strafeEncoders(double distanceInches, int dir, double pwr){
         double angle = imu.getZAngle();
         int currentPos = BL.getCurrentPosition(), pos;
         int distanceTics = dir*(int)(distanceInches * CPI);
@@ -103,17 +134,17 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (dir == 1) {
-            BR.setPower(1);
-            BL.setPower(-1);
-            FL.setPower(1);
-            FR.setPower(-1);
+            BR.setPower(pwr);
+            BL.setPower(-pwr);
+            FL.setPower(pwr);
+            FR.setPower(-pwr);
         }
 
         if (dir == -1) {
-            BR.setPower(-1);
-            BL.setPower(1);
-            FL.setPower(-1);
-            FR.setPower(1);
+            BR.setPower(-pwr);
+            BL.setPower(pwr);
+            FL.setPower(-pwr);
+            FR.setPower(pwr);
         }
 
         while(BL.isBusy() /*&& BL.isBusy() && BR.isBusy() && FL.isBusy()*/){
