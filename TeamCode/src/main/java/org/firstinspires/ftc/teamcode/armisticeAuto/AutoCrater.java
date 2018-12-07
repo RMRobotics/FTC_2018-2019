@@ -1,22 +1,20 @@
 package org.firstinspires.ftc.teamcode.armisticeAuto;
 
 import com.disnodeteam.dogecv.detectors.roverrukus.*;
-
 import com.disnodeteam.dogecv.detectors.roverrukus.Direction;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * Created by Angela on 11/24/2018.
+ * Created by Neal on 12/6/2018.
  */
 
 @Autonomous(name = "FieldAutoTest")
-public class FieldAutoTest extends armisticeAutoSuper{
+public class AutoCrater extends armisticeAutoSuper{
 
     private GoldAlignDetector detector;
     private com.disnodeteam.dogecv.detectors.roverrukus.Direction position = Direction.UNKNOWN;
-
 
     public void runOpMode(){
 
@@ -43,7 +41,7 @@ public class FieldAutoTest extends armisticeAutoSuper{
 
 
         while (detector.isFound() == false && timer.seconds() < 5){
-            strafeEncoders(3,direction, .25);
+            strafeEncoders(3,direction);
             count++;
 
             if (change%2 == 1) {
@@ -54,7 +52,7 @@ public class FieldAutoTest extends armisticeAutoSuper{
             }
 
             if (count > 5) {
-                strafeEncoders(14.5, -direction, .25);
+                strafeEncoders(14.5, -direction);
                 count = 0;
                 totalDistance = 0;
                 direction = -direction;
@@ -63,14 +61,14 @@ public class FieldAutoTest extends armisticeAutoSuper{
         }
         if (detector.isFound() == true){
             position = detector.getAligned();
-            strafeEncoders(20, 1, .25);
+            strafeEncoders(20, 1);
         }
         else
         {
             if (totalDistance < 0) {
                 totalDistance = -totalDistance + 20;
             }
-            strafeEncoders(totalDistance, 1, .25);
+            strafeEncoders(totalDistance, 1);
         }
         moveEncoders(5, 1); //knock off yellow mineral
         moveEncoders(5, -1);
