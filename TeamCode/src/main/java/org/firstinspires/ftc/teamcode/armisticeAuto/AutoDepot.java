@@ -41,7 +41,7 @@ public class AutoDepot extends armisticeAutoSuper{
 
 
         while (detector.isFound() == false && timer.seconds() < 5){
-            strafeEncoders(3,direction);
+            strafeEncoders(3,direction, .25);
             count++;
 
             if (change%2 == 1) {
@@ -52,7 +52,7 @@ public class AutoDepot extends armisticeAutoSuper{
             }
 
             if (count > 5) {
-                strafeEncoders(14.5, -direction);
+                strafeEncoders(14.5, -direction, .25);
                 count = 0;
                 totalDistance = 0;
                 direction = -direction;
@@ -61,14 +61,14 @@ public class AutoDepot extends armisticeAutoSuper{
         }
         if (detector.isFound() == true){
             position = detector.getAligned();
-            strafeEncoders(20, 1);
+            strafeEncoders(20, 1, .25);
         }
         else
         {
             if (totalDistance < 0) {
                 totalDistance = -totalDistance + 20;
             }
-            strafeEncoders(totalDistance, 1);
+            strafeEncoders(totalDistance, 1, .25);
         }
         moveEncoders(5, 1); //knock off yellow mineral
         moveEncoders(5, -1);
