@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by Neal on 12/11/2018.
  */
 
-@Autonomous(name = "distanceTest")
+@Autonomous(name = "distanceTest", group = "autotest")
 public class distanceTest extends armisticeAutoSuper{
 
     private GoldAlignDetector detector;

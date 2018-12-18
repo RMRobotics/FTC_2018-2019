@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Neal on 12/6/2018.
  */
 
-@Autonomous(name = "FieldAutoTest")
+@Autonomous(name = "AutoDepot")
 public class AutoDepot extends armisticeAutoSuper{
 
     private GoldAlignDetector detector;
