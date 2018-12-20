@@ -6,6 +6,7 @@ import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.IIMU;
@@ -23,7 +24,9 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected ElapsedTime timer = new ElapsedTime();
     protected BNO055IMU rev;
     protected IIMU imu;
+    protected DistanceSensor sensorRange;
     static double CPI = (1120.0 * 0.66666)/(4.0 * Math.PI);
+
 
     public void initialize (DcMotor.RunMode r) {
         FL = hardwareMap.dcMotor.get("FL");
@@ -32,6 +35,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR = hardwareMap.dcMotor.get("BR");
         FL.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.REVERSE);
+        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
         setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(r);

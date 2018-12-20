@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 /**
  * Created by Neal on 12/6/2018.
  */
@@ -21,6 +23,10 @@ public class AutoCrater extends armisticeAutoSuper{
         //initialization
         initialize(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
+
+        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
+        telemetry.update();
 
         //Get off lander
 
