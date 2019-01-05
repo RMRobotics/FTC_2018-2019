@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous(name = "AutoDepot")
 public class AutoDepot extends armisticeAutoSuper{
-
+// NOTE: MECHANICS WILL ADD AN ARM TO DEPOSIT TEAM MARKER, NAVIGATING TO THE DEPOT WILL NOT BE NECESSARY
     private GoldAlignDetector detector;
     private com.disnodeteam.dogecv.detectors.roverrukus.Direction position = Direction.UNKNOWN;
 
@@ -29,7 +29,7 @@ public class AutoDepot extends armisticeAutoSuper{
 
         //Get off lander
 
-        //Move forward to see Qube
+        //Move forward to see Qube and deposit marker
         moveEncoders(10, 1);
 
         //See Qube
@@ -45,7 +45,8 @@ public class AutoDepot extends armisticeAutoSuper{
         timer.reset();
 
         if (detector.getAligned().equals(Direction.CENTER)){
-            moveEncoders(2, 1);
+            double distance = sensorRange.getDistance(DistanceUnit.INCH);
+            moveEncoders(distance, 1);
             //push mineral w/ arm
         }
         else if (detector.getAligned().equals(Direction.LEFT)){

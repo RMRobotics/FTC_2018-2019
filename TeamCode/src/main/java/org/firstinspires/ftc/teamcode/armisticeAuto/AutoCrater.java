@@ -46,7 +46,8 @@ public class AutoCrater extends armisticeAutoSuper{
         timer.reset();
 
         if (detector.getAligned().equals(Direction.CENTER)){
-            moveEncoders(2, 1);
+            double distance = sensorRange.getDistance(DistanceUnit.INCH);
+            moveEncoders(distance, 1);
             //push mineral w/ arm
         }
         else if (detector.getAligned().equals(Direction.LEFT)){
