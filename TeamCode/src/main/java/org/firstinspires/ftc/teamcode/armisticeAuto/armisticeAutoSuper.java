@@ -35,10 +35,14 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR = hardwareMap.dcMotor.get("BR");
         FL.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.REVERSE);
-        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
+//        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
         setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(r);
+        rev = hardwareMap.get(BNO055IMU.class, "imu");
+        imu = new RevIMU(rev);
+        imu.initialize();
+        imu.setOffset(0);
     }
 
     protected void setMode(DcMotor.RunMode r) {
@@ -181,7 +185,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
     protected void moveEncoders(double distanceInches, int dir){
         //dir of 1 will set left drive train's target to be negative
-        double speed = 0.25 * dir;
+        double speed = 0.3 * dir;
         int currentPos = BL.getCurrentPosition();
         //distanceTics is num of tics it needs to travel
         int distanceTics = (int)(distanceInches * CPI);

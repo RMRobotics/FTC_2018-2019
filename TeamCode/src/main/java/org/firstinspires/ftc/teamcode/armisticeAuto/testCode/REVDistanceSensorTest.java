@@ -1,16 +1,17 @@
-package org.firstinspires.ftc.teamcode.armisticeAuto;
+package org.firstinspires.ftc.teamcode.armisticeAuto.testCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.armisticeAuto.armisticeAutoSuper;
 
 /**
  * Created by Angela on 12/18/2018.
  */
-@Autonomous(name = "DistanceSensorTest", group = "autotest")
-public class REVDistanceSensorTest extends armisticeAutoSuper{
+@Autonomous(name = "DistanceSensor Test", group = "autotest")
+public class REVDistanceSensorTest extends armisticeAutoSuper {
 
     private DistanceSensor sensorRange;
 
