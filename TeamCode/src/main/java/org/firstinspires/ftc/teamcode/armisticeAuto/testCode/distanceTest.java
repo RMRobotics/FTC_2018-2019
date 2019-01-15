@@ -1,16 +1,19 @@
-package org.firstinspires.ftc.teamcode.armisticeAuto;
+package org.firstinspires.ftc.teamcode.armisticeAuto.testCode;
 
 import com.disnodeteam.dogecv.detectors.roverrukus.Direction;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.armisticeAuto.armisticeAutoSuper;
+
 /**
  * Created by Neal on 12/11/2018.
  */
 
-@Autonomous(name = "distanceTest")
-public class distanceTest extends armisticeAutoSuper{
-
+@Autonomous(name = "Distance Test", group = "autotest")
+public class distanceTest extends armisticeAutoSuper {
+//tests if it goes the same distance every time
     private GoldAlignDetector detector;
     private Direction position = Direction.UNKNOWN;
 

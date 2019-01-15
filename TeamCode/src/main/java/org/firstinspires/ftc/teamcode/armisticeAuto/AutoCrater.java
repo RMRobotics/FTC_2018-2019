@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 /**
  * Created by Neal on 12/6/2018.
  */
 
-@Autonomous(name = "FieldAutoTest")
+@Autonomous(name = "AutoCrater")
 public class AutoCrater extends armisticeAutoSuper{
 
     private GoldAlignDetector detector;
@@ -21,6 +23,10 @@ public class AutoCrater extends armisticeAutoSuper{
         //initialization
         initialize(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
+
+        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
+        telemetry.update();
 
         //Get off lander
 
@@ -40,7 +46,8 @@ public class AutoCrater extends armisticeAutoSuper{
         timer.reset();
 
         if (detector.getAligned().equals(Direction.CENTER)){
-            moveEncoders(2, 1);
+            double distance = sensorRange.getDistance(DistanceUnit.INCH);
+            moveEncoders(distance, 1);
             //push mineral w/ arm
         }
         else if (detector.getAligned().equals(Direction.LEFT)){

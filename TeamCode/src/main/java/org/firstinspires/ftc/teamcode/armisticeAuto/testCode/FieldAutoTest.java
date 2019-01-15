@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.armisticeAuto;
+package org.firstinspires.ftc.teamcode.armisticeAuto.testCode;
 
 import com.disnodeteam.dogecv.detectors.roverrukus.*;
 
@@ -7,12 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.armisticeAuto.armisticeAutoSuper;
+
 /**
  * Created by Angela on 11/24/2018.
  */
 
-@Autonomous(name = "FieldAutoTest")
-public class FieldAutoTest extends armisticeAutoSuper{
+@Autonomous(name = "FieldAuto Test", group = "autotest")
+public class FieldAutoTest extends armisticeAutoSuper {
 
     private GoldAlignDetector detector;
     private com.disnodeteam.dogecv.detectors.roverrukus.Direction position = Direction.UNKNOWN;

@@ -6,6 +6,7 @@ import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.IIMU;
@@ -23,7 +24,9 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected ElapsedTime timer = new ElapsedTime();
     protected BNO055IMU rev;
     protected IIMU imu;
+    protected DistanceSensor sensorRange;
     static double CPI = (1120.0 * 0.66666)/(4.0 * Math.PI);
+
 
     public void initialize (DcMotor.RunMode r) {
         FL = hardwareMap.dcMotor.get("FL");
@@ -32,9 +35,14 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR = hardwareMap.dcMotor.get("BR");
         FL.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.REVERSE);
+//        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
         setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(r);
+        rev = hardwareMap.get(BNO055IMU.class, "imu");
+        imu = new RevIMU(rev);
+        imu.initialize();
+        imu.setOffset(0);
     }
 
     protected void setMode(DcMotor.RunMode r) {
@@ -177,7 +185,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
     protected void moveEncoders(double distanceInches, int dir){
         //dir of 1 will set left drive train's target to be negative
-        double speed = 0.25 * dir;
+        double speed = 0.3 * dir;
         int currentPos = BL.getCurrentPosition();
         //distanceTics is num of tics it needs to travel
         int distanceTics = (int)(distanceInches * CPI);
