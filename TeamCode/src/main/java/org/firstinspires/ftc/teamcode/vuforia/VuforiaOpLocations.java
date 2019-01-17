@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.vuforia;
 
 /*
-Created on 1/3/19 by Neal Machado
-Test Vuforia class using FIXIT 3491 tutorial
+Created on 1/16/19 by Neal Machado
+Test Vuforia class with actual locations for each image
  */
 
+//Z DISPLACEMENT STILL NEEDS TO BE ACCOUNTED FOR
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -22,10 +23,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 
-@Autonomous(name = "VuforiaOp")
-public class VuforiaOp extends LinearOpMode {
+@Autonomous(name = "VuforiaOpLocations")
+public class VuforiaOpLocations extends LinearOpMode {
 
     float mmPerInch = 25.4f;
+    float robotSize = 18 * mmPerInch;
+    float mmFTCFieldWidth  = (12*12 - 2) * mmPerInch;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -35,8 +38,14 @@ public class VuforiaOp extends LinearOpMode {
         params.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES; //show the xyz axis on the target (can be a teapot, building, axis, or none)
 
         VuforiaLocalizer vuforia = ClassFactory.getInstance().createVuforia(params); //create the vuforia object with the above params
-
         VuforiaTrackables images = vuforia.loadTrackablesFromAsset("RoverRuckus"); //access the .xml file with all the images
+
+        //set location for the phone
+        OpenGLMatrix phoneOnRobot = OpenGLMatrix
+                .translation(0, robotSize / 2, 0)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 0, 0));
 
         //set names for images
         images.get(0).setName("BluePerimeter");
@@ -44,9 +53,40 @@ public class VuforiaOp extends LinearOpMode {
         images.get(2).setName("FrontPerimeter");
         images.get(3).setName("BackPerimeter");
 
+        //define matricices for the locations of the images
+        OpenGLMatrix blueImageOnField = OpenGLMatrix
+                .translation(-mmFTCFieldWidth / 2, 0, 0)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 0, 90));
+        images.get(0).setLocation(blueImageOnField);
+
+        OpenGLMatrix redImageOnField = OpenGLMatrix
+                .translation(mmFTCFieldWidth / 2, 0, 0)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 0, 270));
+        images.get(1).setLocation(redImageOnField);
+
+        OpenGLMatrix frontImageOnField = OpenGLMatrix
+                .translation(0, -mmFTCFieldWidth / 2, 0)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 180, 0));
+        images.get(2).setLocation(frontImageOnField);
+
+        OpenGLMatrix backImageOnField = OpenGLMatrix
+                .translation(0, mmFTCFieldWidth / 2, 0)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 0, 0));
+        images.get(3).setLocation(backImageOnField);
+
         waitForStart();
 
         images.activate();
+
+        OpenGLMatrix lastLocation; //stores last known location of robot
 
         while(opModeIsActive()){
             for(VuforiaTrackable i : images){
@@ -54,41 +94,26 @@ public class VuforiaOp extends LinearOpMode {
 
                 if(pose != null){ //if the image is found
 
-                    VectorF translation = pose.getTranslation(); //finds data about the image
+                    //finds data about the image
+                    VectorF translation = pose.getTranslation();
                     Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
-                    //find the xyz components of the offset relative to robot, rounds to 2 decimal places, and converts to inches
-                    double tX = translation.get(0) / mmPerInch;
-                    double tY = translation.get(1) / mmPerInch;
-                    double tZ = translation.get(2) / mmPerInch;
+                    OpenGLMatrix robotLocationOnField = ((VuforiaTrackableDefaultListener)(i).getListener()).getUpdatedRobotLocation();
+                    lastLocation = robotLocationOnField;
 
-                  //find the rotational components of the target relative to robot
-                    double rX = rot.firstAngle;
-                    double rY = rot.secondAngle;
-                    double rZ = rot.thirdAngle;
-
-                    telemetry.addData("\n(Translations) X: " + tX + ", Y: " + tY + ", Z: " + tZ, "");
-                    telemetry.addData("(Rotations) X: " + rX + ", Y: " + rY + ", Z: " + rZ, "");
-
-
-//                    telemetry.addData(i.getName() + "-Translation", translation.toString());
-
-//                    telemetry.addData("x/z", (tX/tZ));
-//                    double degreesToTurnblah = Math.toDegrees(Math.atan((double)(translation.get(0)/translation.get(2)))); //displays the angle (rounded to 2 decimal places) needed to turn to the image
-//
-//                    double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(0), translation.get(2))); //displays the angle (rounded to 2 decimal places) needed to turn to the image
-//                    telemetry.addData(i.getName() + "-Degrees", degreesToTurn);
+                    telemetry.addData(i.getName(), " is visisble");
+                    telemetry.addData("Pos: ", format(lastLocation));
                 }
             }
             telemetry.update();
         }
 
+    }
 
-
-
-
-
-
+    String format(OpenGLMatrix transformationMatrix) {
+        return transformationMatrix.formatAsTransform();
     }
 
 }
+
+
