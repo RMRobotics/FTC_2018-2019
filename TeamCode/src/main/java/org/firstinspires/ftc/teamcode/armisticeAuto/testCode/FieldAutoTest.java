@@ -23,13 +23,13 @@ public class FieldAutoTest extends armisticeAutoSuper {
     public void runOpMode(){
 
         //initialization
-        initialize(DcMotor.RunMode.RUN_USING_ENCODER);
+        initialize(true);
         waitForStart();
 
         //Get off lander
 
         //Move forward to see Qube
-        moveEncoders(10, 1);
+        moveEncoders(10.0);
 
         //See Qube
         detector = new GoldAlignDetector();
@@ -74,12 +74,12 @@ public class FieldAutoTest extends armisticeAutoSuper {
             }
             strafeEncoders(totalDistance, 1, .25);
         }
-        moveEncoders(5, 1); //knock off yellow mineral
-        moveEncoders(5, -1);
+        moveEncoders(5); //knock off yellow mineral
+        moveEncoders(-5);
         imuTurn(45, 0.4);
-        moveEncoders(20, 1);
+        moveEncoders(20);
         //drop off flag
         imuTurn(180, 0.4);
-        moveEncoders(30, 1);
+        moveEncoders(30);
     }
 }

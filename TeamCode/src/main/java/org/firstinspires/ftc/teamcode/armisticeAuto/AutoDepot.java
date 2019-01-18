@@ -21,7 +21,7 @@ public class AutoDepot extends armisticeAutoSuper{
     public void runOpMode(){
 
         //initialization
-        initialize(DcMotor.RunMode.RUN_USING_ENCODER);
+        initialize(true);
         waitForStart();
         telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
         telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
@@ -30,7 +30,7 @@ public class AutoDepot extends armisticeAutoSuper{
         //Get off lander
 
         //Move forward to see Qube and deposit marker
-        moveEncoders(10, 1);
+        moveEncoders(10);
 
         //See Qube
         detector = new GoldAlignDetector();
@@ -46,7 +46,7 @@ public class AutoDepot extends armisticeAutoSuper{
 
         if (detector.getAligned().equals(Direction.CENTER)){
             double distance = sensorRange.getDistance(DistanceUnit.INCH);
-            moveEncoders(distance, 1);
+            moveEncoders(distance);
             //push mineral w/ arm
         }
         else if (detector.getAligned().equals(Direction.LEFT)){
@@ -61,7 +61,7 @@ public class AutoDepot extends armisticeAutoSuper{
         }
         else
         {
-            moveEncoders(2, -1);
+            moveEncoders(2 * -1);
         }
 
 //        while (detector.isFound() == false && timer.seconds() < 5){
@@ -97,24 +97,24 @@ public class AutoDepot extends armisticeAutoSuper{
 
 
         //knock off yellow mineral
-        moveEncoders(5, 1);
+        moveEncoders(5* 1);
 
         //go back to initial pos and turn
-        moveEncoders(5, -1);
+        moveEncoders(5* -1);
         imuTurn(90, 0.4);
 
         //move to turn point and turn
-        moveEncoders(55, 1);
+        moveEncoders(55* 1);
         imuTurn(135,0.4);
 
         //move to home depot and drop flag
-        moveEncoders(60,1);
+        moveEncoders(60*1);
 
         //turn arouuuuuuund every now and then i get a little bit lonely
         imuTurn(180, 0.4);
 
         //travel from depot to crater
-        moveEncoders(69, 1);
+        moveEncoders(69* 1);
 
         //drop arm in crater
 

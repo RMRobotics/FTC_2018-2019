@@ -21,7 +21,7 @@ public class AutoCrater extends armisticeAutoSuper{
     public void runOpMode(){
 
         //initialization
-        initialize(DcMotor.RunMode.RUN_USING_ENCODER);
+        initialize(true);
         waitForStart();
 
         telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
@@ -33,9 +33,10 @@ public class AutoCrater extends armisticeAutoSuper{
         //See Qube
         detector = new GoldAlignDetector();
         DogeCVYellowDetector(detector);
-
+        telemetry.addData("Detector X Pos: ", detector.goldPosCenterDiff());
+        telemetry.update();
         //Move forward to see Qube
-        moveEncoders(10, 1);
+        moveEncoders(10.0);
 
         //Vars
         int count = 0;
@@ -46,9 +47,7 @@ public class AutoCrater extends armisticeAutoSuper{
         timer.reset();
 
         if (detector.getAligned().equals(Direction.CENTER)){
-            double distance = sensorRange.getDistance(DistanceUnit.INCH);
-            moveEncoders(distance, 1);
-            //push mineral w/ arm
+
         }
         else if (detector.getAligned().equals(Direction.LEFT)){
             while(detector.isFound()==false){
@@ -62,54 +61,24 @@ public class AutoCrater extends armisticeAutoSuper{
         }
         else
         {
-            moveEncoders(2, -1);
+            moveEncoders(-2);
         }
 
-        //Detect Qube
-//        while (detector.isFound() == false && timer.seconds() < 5){
-//            strafeEncoders(3,direction,.25);
-//            count++;
-//
-//            if (change%2 == 1) {
-//                totalDistance--;
-//            }
-//            else {
-//                totalDistance++;
-//            }
-//
-//            if (count > 5) {
-//                strafeEncoders(14.5, -direction,.25);
-//                count = 0;
-//                totalDistance = 0;
-//                direction = -direction;
-//                change++;
-//            }
-//        }
-//        if (detector.isFound() == true){
-//            position = detector.getAligned();
-//            strafeEncoders(20, 1);
-//        }
-//        else
-//        {
-//            if (totalDistance < 0) {
-//                totalDistance = -totalDistance + 20;
-//            }
-//            strafeEncoders(totalDistance, 1);
-//        }
+        double distance = sensorRange.getDistance(DistanceUnit.INCH);
 
         //knock off yellow mineral
-        moveEncoders(5, 1);
+        moveEncoders(distance);
 
         //go back to initial pos and turn
-        moveEncoders(5, -1);
+        moveEncoders(distance * -1);
         imuTurn(90, 0.4);
 
         //move to turn point and turn
-        moveEncoders(55, 1);
+        moveEncoders(55);
         imuTurn(45,0.4);
 
         //go to home depot
-        moveEncoders(32, 1);
+        moveEncoders(32);
 
         //drop off flag
 
@@ -117,7 +86,7 @@ public class AutoCrater extends armisticeAutoSuper{
         imuTurn(180, 0.4);
 
         //travel from depot to crater
-        moveEncoders(69, 1);
+        moveEncoders(69);
 
         //drop arm in crater
     }
