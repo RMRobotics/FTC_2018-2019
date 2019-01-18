@@ -147,7 +147,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR.setPower(0);
     }
 
-    protected void strafeEncoders(double distanceInches, int dir, double pwr){
+    protected void dumbstrafeEncoders(double distanceInches, int dir, double pwr){
         double angle = imu.getZAngle();
         int currentPos1 = FL.getCurrentPosition();
         int currentPos2 = FR.getCurrentPosition();
@@ -162,8 +162,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         FL.setTargetPosition(currentPos1 + distanceTics);
-        FR.setTargetPosition(currentPos2 + distanceTics);
-        BL.setTargetPosition(currentPos3 + distanceTics);
+        FR.setTargetPosition(currentPos2 - distanceTics);
+        BL.setTargetPosition(currentPos3 - distanceTics);
         BR.setTargetPosition(currentPos4 + distanceTics);
 
         if (dir == 1) {
@@ -181,14 +181,14 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         }
 
         while(FL.isBusy() /*&& BL.isBusy() && BR.isBusy() && FL.isBusy()*/){
-            telemetry.addData(String.valueOf(testCount),"");
+            telemetry.addData(String.valueOf(testCount)," " + String.valueOf(FL.getCurrentPosition()));
             telemetry.update();
             testCount++;
-            if (Math.abs(-imu.getZAngle() - angle) >= 15){
+            if (Math.abs(-imu.getXAngle() - angle) >= 15){
                 currentPos1 = FL.getCurrentPosition();
-                imuTurn(-(imu.getZAngle() - angle),0.3);
+                imuTurn(-(imu.getXAngle() - angle),0.3);
                 //wheelFL.setTargetPosition(wheelFL.getTargetPosition() + wheelFL.getCurrentPosition() - pos);
-                angle = imu.getZAngle();
+                angle = imu.getXAngle();
                 if (dir == 1) {
                     BR.setPower(pwr);
                     BL.setPower(-pwr);
@@ -207,7 +207,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR.setPower(0);
         FL.setPower(0);
         BL.setPower(0);
-        double angleFinal = -(imu.getZAngle() - angle);
+        double angleFinal = -(imu.getXAngle() - angle);
         imuTurn(angleFinal,0.3);
     }
 
@@ -248,9 +248,54 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
         telemetry.addData("dope","");
         telemetry.update();
-
     }
 
+    protected void strafeEncoders(double distanceInches, double pwr){
+
+        int currentPos1 = FL.getCurrentPosition();
+        int currentPos2 = FR.getCurrentPosition();
+        int currentPos3 = BL.getCurrentPosition();
+        int currentPos4 = BR.getCurrentPosition();
+        //distanceTics is num of tics it needs to travel
+        int distanceTics = (int)(distanceInches * CPI);
+
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        FL.setTargetPosition(currentPos1 + distanceTics);
+        FR.setTargetPosition(currentPos2 + distanceTics);
+        BL.setTargetPosition(currentPos3 + distanceTics);
+        BR.setTargetPosition(currentPos4 + distanceTics);
+
+        if (distanceInches>0) {
+            BR.setPower(pwr);
+            BL.setPower(-pwr);
+            FL.setPower(pwr);
+            FR.setPower(-pwr);
+        }
+        else {
+            BR.setPower(-pwr);
+            BL.setPower(pwr);
+            FL.setPower(-pwr);
+            FR.setPower(pwr);
+        }
+
+        int count = 0;
+
+        while (FL.isBusy()){
+            count++;
+            telemetry.addData(String.valueOf(count),"");
+            telemetry.update();
+        }
+
+        setDrive(0);
+
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        telemetry.addData("dope","");
+        telemetry.update();
+    }
 
     protected void dankEncoders(double distanceInches, int dir){
         //dir of 1 will set left drive train's target to be negative
@@ -259,10 +304,6 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         //distanceTics is num of tics it needs to travel
         int distanceTics = (int)(distanceInches * CPI);
         double tickRatio;
-
-
-
-
 
         FR.setTargetPosition(currentPos + distanceTics);
         FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
