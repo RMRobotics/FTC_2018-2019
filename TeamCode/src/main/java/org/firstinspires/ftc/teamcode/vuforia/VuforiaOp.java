@@ -83,12 +83,5 @@ public class VuforiaOp extends LinearOpMode {
             telemetry.update();
         }
 
-
-
-
-
-
-
     }
-
 }
