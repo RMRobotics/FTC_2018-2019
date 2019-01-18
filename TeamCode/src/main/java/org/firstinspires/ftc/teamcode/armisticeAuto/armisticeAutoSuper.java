@@ -149,17 +149,22 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
     protected void strafeEncoders(double distanceInches, int dir, double pwr){
         double angle = imu.getZAngle();
-        int currentPos = FL.getCurrentPosition(), pos;
+        int currentPos1 = FL.getCurrentPosition();
+        int currentPos2 = FR.getCurrentPosition();
+        int currentPos3 = BL.getCurrentPosition();
+        int currentPos4 = BR.getCurrentPosition();
         int distanceTics = dir*(int)(distanceInches * CPI);
         double tickRatio;
         int testCount = 0;
 
-        FL.setTargetPosition(currentPos + distanceTics);
-        FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        FL.setTargetPosition(currentPos1 + distanceTics);
+        FR.setTargetPosition(currentPos2 + distanceTics);
+        BL.setTargetPosition(currentPos3 + distanceTics);
+        BR.setTargetPosition(currentPos4 + distanceTics);
 
         if (dir == 1) {
             BR.setPower(pwr);
@@ -180,7 +185,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             telemetry.update();
             testCount++;
             if (Math.abs(-imu.getZAngle() - angle) >= 15){
-                pos = FL.getCurrentPosition();
+                currentPos1 = FL.getCurrentPosition();
                 imuTurn(-(imu.getZAngle() - angle),0.3);
                 //wheelFL.setTargetPosition(wheelFL.getTargetPosition() + wheelFL.getCurrentPosition() - pos);
                 angle = imu.getZAngle();
