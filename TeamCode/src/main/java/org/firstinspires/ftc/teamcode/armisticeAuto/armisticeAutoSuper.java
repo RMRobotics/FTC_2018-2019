@@ -24,6 +24,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected DcMotor FR;
     protected DcMotor BL;
     protected DcMotor BR;
+    protected DcMotor lift;
+    protected DcMotor arm;
     protected CRServo intake;
     protected ElapsedTime timer = new ElapsedTime();
     protected BNO055IMU rev;
@@ -40,6 +42,10 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
         intake = hardwareMap.crservo.get("intake");
+
+        lift = hardwareMap.dcMotor.get("lift");
+        arm = hardwareMap.dcMotor.get("arm");
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         intake.setPower(0);
 
@@ -85,6 +91,14 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         FR.setPower(p);
         BL.setPower(p);
         BR.setPower(p);
+    }
+
+    protected void setStrafe(double pwr)
+    {
+        BR.setPower(pwr);
+        BL.setPower(-pwr);
+        FL.setPower(pwr);
+        FR.setPower(-pwr);
     }
 
     protected void print(String message, double time)
@@ -387,14 +401,14 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
         while (flag)
         {
-            if (Math.abs(imu.getZAngle()-degree)<err) {
+            if (Math.abs(imu.getXAngle()-degree)<err) {
                 flag = false;
                 FL.setPower(0);
                 BL.setPower(0);
                 FR.setPower(0);
                 BR.setPower(0);
             }
-            else if (dir_cw && imu.getZAngle()>degree)
+            else if (dir_cw && imu.getXAngle()>degree)
             {
                 FL.setPower(-1*pwr);
                 BL.setPower(-1*pwr);
@@ -403,7 +417,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
                 count+=1;
                 dir_cw = !dir_cw;
             }
-            else if (!dir_cw && imu.getZAngle()<degree)
+            else if (!dir_cw && imu.getXAngle()<degree)
             {
                 FL.setPower(pwr);
                 BL.setPower(pwr);
