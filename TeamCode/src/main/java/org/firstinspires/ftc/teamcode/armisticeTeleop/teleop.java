@@ -18,9 +18,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class teleop extends OpMode {
 
     protected DcMotor FL, FR, BL, BR;
+    protected CRServo intake;
     //intake spins surgical tubing
     //lift holds robot up before auto
-    protected DcMotor lift, intake, slideExtension, launch;
+    protected DcMotor lift, slideExtension, launch;
     protected CRServo launchTube;
     protected Servo rampRotate;
 
@@ -32,6 +33,9 @@ public class teleop extends OpMode {
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
+        intake = hardwareMap.crservo.get("intake");
+
+        intake.setPower(0);
         //lift = hardwareMap.dcMotor.get("lift");
         //intake = hardwareMap.dcMotor.get("intake");
 //        slideExtension = hardwareMap.dcMotor.get("slideExtension");
@@ -84,6 +88,14 @@ public class teleop extends OpMode {
         FR.setPower((forward - strafe - rotate) / max);
         BL.setPower((forward - strafe + rotate) / max);
         BR.setPower((forward + strafe - rotate) / max);
+
+        if (gamepad1.right_trigger!=0 && gamepad1.left_trigger==0)
+            intake.setPower(gamepad1.right_trigger);
+        else if (gamepad1.right_trigger==0 && gamepad1.left_trigger!=0)
+            intake.setPower(-gamepad1.left_trigger);
+        else
+            intake.setPower(0);
+
 
        /* if (gamepad2.right_trigger!=0 || gamepad2.left_trigger==0)
             intake.setPower(gamepad2.right_trigger);
