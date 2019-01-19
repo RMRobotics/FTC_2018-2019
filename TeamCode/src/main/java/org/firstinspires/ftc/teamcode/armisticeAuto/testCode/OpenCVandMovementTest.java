@@ -42,11 +42,11 @@ public class OpenCVandMovementTest extends armisticeAutoSuper {
             //push mineral w/ arm
         } else if (detector.getAligned().equals(Direction.LEFT)) {
             while (detector.isFound() == false) {
-                strafeEncoders(2, -1, .25);
+                strafeEncoders(2, 0.4);
             }
         } else if (detector.getAligned().equals(Direction.RIGHT)) {
             while (detector.isFound() == false) {
-                strafeEncoders(2, 1, .25);
+                strafeEncoders(2, 0.4);
             }
         } else {
             moveEncoders(2* -1);

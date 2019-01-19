@@ -45,7 +45,7 @@ public class FieldAutoTest extends armisticeAutoSuper {
 
 
         while (detector.isFound() == false && timer.seconds() < 5){
-            strafeEncoders(3,direction, .25);
+            strafeEncoders(3, 0.4);
             count++;
 
             if (change%2 == 1) {
@@ -56,7 +56,7 @@ public class FieldAutoTest extends armisticeAutoSuper {
             }
 
             if (count > 5) {
-                strafeEncoders(14.5, -direction, .25);
+                strafeEncoders(14.5,0.4);
                 count = 0;
                 totalDistance = 0;
                 direction = -direction;
@@ -65,14 +65,14 @@ public class FieldAutoTest extends armisticeAutoSuper {
         }
         if (detector.isFound() == true){
             position = detector.getAligned();
-            strafeEncoders(20, 1, .25);
+            strafeEncoders(20, 0.4);
         }
         else
         {
             if (totalDistance < 0) {
                 totalDistance = -totalDistance + 20;
             }
-            strafeEncoders(totalDistance, 1, .25);
+            strafeEncoders(totalDistance, 0.4);
         }
         moveEncoders(5); //knock off yellow mineral
         moveEncoders(-5);
