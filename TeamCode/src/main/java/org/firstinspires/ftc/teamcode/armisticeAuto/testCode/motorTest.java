@@ -19,7 +19,16 @@ public class motorTest extends armisticeAutoSuper {
 
         while (opModeIsActive())
         {
-            arm.setPower(gamepad1.right_stick_y);
+            if (gamepad2.a) {
+                timer.reset();
+                while (timer.seconds() < 2) {
+                    arm.setPower(0.4);
+                }
+                arm.setPower(0);
+            }
+
+
+
 
             if (gamepad1.a) {
                 imuTurn(90, 0.5);

@@ -45,7 +45,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
         lift = hardwareMap.dcMotor.get("lift");
         arm = hardwareMap.dcMotor.get("arm");
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intake.setPower(0);
 
@@ -284,8 +284,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         FL.setTargetPosition(currentPos1 + distanceTics);
-        FR.setTargetPosition(currentPos2 + distanceTics);
-        BL.setTargetPosition(currentPos3 + distanceTics);
+        FR.setTargetPosition(currentPos2 - distanceTics);
+        BL.setTargetPosition(currentPos3 - distanceTics);
         BR.setTargetPosition(currentPos4 + distanceTics);
 
         if (distanceInches>0) {
