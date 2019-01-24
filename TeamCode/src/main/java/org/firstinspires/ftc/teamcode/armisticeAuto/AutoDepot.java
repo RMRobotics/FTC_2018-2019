@@ -22,7 +22,7 @@ public class AutoDepot extends armisticeAutoSuper{
 
         //initialization
         initialize(true);
-        waitForStart();
+//        waitForStart();
 //        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
 //        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
 //        telemetry.update();

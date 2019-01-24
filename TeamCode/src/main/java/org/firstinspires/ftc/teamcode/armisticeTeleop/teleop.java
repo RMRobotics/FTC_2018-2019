@@ -69,13 +69,14 @@ public class teleop extends OpMode {
     }
 
     protected void armSlam(int sec) {
-        timer.reset();
-        double x = gamepad2.right_stick_y;
-        while (timer.seconds()<=sec || gamepad2.right_stick_y > 0){
-            if ((int)timer.seconds()==timer.seconds())
-                x/= 3;
-            arm.setPower(x);
-        }
+
+//        timer.reset();
+//        double x = gamepad2.right_stick_y;
+//        while (timer.seconds()<=sec || gamepad2.right_stick_y > 0){
+//            if ((int)timer.seconds()==timer.seconds())
+//                x/= 5;
+//            arm.setPower(x);
+//        }
     }
 
     /*
@@ -123,8 +124,8 @@ public class teleop extends OpMode {
         //Controls the arm
         arm.setPower(gamepad2.left_stick_y/1.5);
 
-        if (gamepad2.right_stick_y!=0)
-            armSlam(3);
+//        if (gamepad2.a)
+//            armSlam(3);
 
         //Controls the intake servo
         if (gamepad1.right_trigger!=0 && gamepad1.left_trigger==0)
