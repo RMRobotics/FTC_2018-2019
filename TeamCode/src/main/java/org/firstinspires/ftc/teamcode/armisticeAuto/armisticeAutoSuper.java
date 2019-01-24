@@ -256,7 +256,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
         int count = 0;
 
-        while (FL.isBusy()){
+        while (FL.isBusy() && !gamepad1.b){
             count++;
             telemetry.addData(String.valueOf(count),"");
             telemetry.update();
@@ -266,7 +266,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        telemetry.addData("dope","");
+        telemetry.addData("dope",String.valueOf(count));
         telemetry.update();
     }
 
@@ -284,8 +284,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         FL.setTargetPosition(currentPos1 + distanceTics);
-        FR.setTargetPosition(currentPos2 + distanceTics);
-        BL.setTargetPosition(currentPos3 + distanceTics);
+        FR.setTargetPosition(currentPos2 - distanceTics);
+        BL.setTargetPosition(currentPos3 - distanceTics);
         BR.setTargetPosition(currentPos4 + distanceTics);
 
         if (distanceInches>0) {
@@ -303,7 +303,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
         int count = 0;
 
-        while (FL.isBusy()){
+        while (FL.isBusy() && !gamepad1.b){
             count++;
             telemetry.addData(String.valueOf(count),"");
             telemetry.update();
@@ -313,7 +313,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        telemetry.addData("dope","");
+        telemetry.addData("dope",count);
         telemetry.update();
     }
 
@@ -399,16 +399,20 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             BR.setPower(speed);
         }
 
-        while (flag)
+        while (flag && !gamepad1.b)
         {
-            if (Math.abs(imu.getXAngle()-degree)<err) {
+            telemetry.addData("imu X",imu.getXAngle());
+            telemetry.addData("imu Y",imu.getYAngle());
+            telemetry.addData("imu Z",imu.getZAngle());
+            telemetry.update();
+            if (Math.abs(imu.getYAngle()-degree)<err) {
                 flag = false;
                 FL.setPower(0);
                 BL.setPower(0);
                 FR.setPower(0);
                 BR.setPower(0);
             }
-            else if (dir_cw && imu.getXAngle()>degree)
+            else if (dir_cw && imu.getYAngle()>degree)
             {
                 FL.setPower(-1*pwr);
                 BL.setPower(-1*pwr);
@@ -417,7 +421,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
                 count+=1;
                 dir_cw = !dir_cw;
             }
-            else if (!dir_cw && imu.getXAngle()<degree)
+            else if (!dir_cw && imu.getYAngle()<degree)
             {
                 FL.setPower(pwr);
                 BL.setPower(pwr);

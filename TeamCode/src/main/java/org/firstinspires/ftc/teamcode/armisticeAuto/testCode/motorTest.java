@@ -19,14 +19,44 @@ public class motorTest extends armisticeAutoSuper {
 
         while (opModeIsActive())
         {
+            telemetry.addData("dpad-left", "imuTurn 90 degrees");
+            telemetry.addData("dpad-right", "strafeEncoders 6 in");
+            telemetry.addData("dpad-up", "switch to driving");
+            telemetry.addData("dpad-down", "straight at 0.4");
+            telemetry.addData("right trigger", "intake crservo");
+            telemetry.addData("right joystick y", "arm power");
+            telemetry.addData("X", "moveEncoders 5 in");
+            telemetry.addData("B", "Cancel");
+            telemetry.update();
+
             arm.setPower(gamepad1.right_stick_y);
 
-            if (gamepad1.a) {
-                imuTurn(90, 0.5);
+            if (gamepad1.dpad_left) {
+                imuTurn(90, 0.4);
             }
-            else if (gamepad1.b)
+            else if (gamepad1.dpad_up)
+            {
+                while (!gamepad1.b) {
+                    double forward, strafe, rotate;
+                    forward = -gamepad1.left_stick_y;
+                    strafe = gamepad1.left_stick_x;
+                    rotate = gamepad1.right_stick_x;
+
+                    FL.setPower(forward + strafe + rotate);
+                    FR.setPower(forward - strafe - rotate);
+                    BL.setPower(forward - strafe + rotate);
+                    BR.setPower(forward + strafe - rotate);
+                }
+            }
+            else if (gamepad1.dpad_right)
             {
                 strafeEncoders(6,0.5);
+            }
+            else if (gamepad1.dpad_down)
+            {
+                while (!gamepad1.b)
+                    setDrive(0.4);
+                setDrive(0);
             }
             else if (gamepad1.right_trigger!=0)
             {
@@ -48,6 +78,7 @@ public class motorTest extends armisticeAutoSuper {
                     lift.setPower(-gamepad1.left_trigger);
             }
 
+            intake.setPower(0);
             lift.setPower(0);
         }
 
