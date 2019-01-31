@@ -204,11 +204,11 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             telemetry.addData(String.valueOf(testCount)," " + String.valueOf(FL.getCurrentPosition()));
             telemetry.update();
             testCount++;
-            if (Math.abs(-imu.getXAngle() - angle) >= 15){
+            if (Math.abs(-imu.getZAngle() - angle) >= 15){
                 currentPos1 = FL.getCurrentPosition();
-                imuTurn(-(imu.getXAngle() - angle),0.3);
+                imuTurn(-(imu.getZAngle() - angle),0.3);
                 //wheelFL.setTargetPosition(wheelFL.getTargetPosition() + wheelFL.getCurrentPosition() - pos);
-                angle = imu.getXAngle();
+                angle = imu.getZAngle();
                 if (dir == 1) {
                     BR.setPower(pwr);
                     BL.setPower(-pwr);

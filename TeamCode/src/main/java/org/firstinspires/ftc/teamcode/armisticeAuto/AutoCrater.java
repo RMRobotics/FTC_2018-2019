@@ -50,17 +50,20 @@ public class AutoCrater extends armisticeAutoSuper{
 
         //align with mineral
         if (detector.getAligned().equals(Direction.LEFT)){
-            setStrafe(0.4);
+//            dumbstrafeEncoders(12, -1, 0.4);
             while(detector.isFound()==false){
+                setStrafe(0.4);
             }
             setDrive(0);
         }
         else if (detector.getAligned().equals(Direction.RIGHT)){
-            setStrafe(-0.4);
+            dumbstrafeEncoders(12, 1, 0.4);
             while(detector.isFound()==false){
             }
             setDrive(0);
         }
+
+        moveEncoders(12);
 
 
 
@@ -85,7 +88,7 @@ public class AutoCrater extends armisticeAutoSuper{
 //        double distance = sensorRange.getDistance(DistanceUnit.INCH);
 
                                                             //knock off yellow mineral
-        moveEncoders(5);
+       /* moveEncoders(5);
 
                                                             //go back to initial pos and turn
         moveEncoders(5 * -1);
@@ -107,7 +110,7 @@ public class AutoCrater extends armisticeAutoSuper{
         imuTurn(180, 0.4);
 
         //travel from depot to crater
-        moveEncoders(69);
+        moveEncoders(69);*/
 
         //drop arm in crater
     }

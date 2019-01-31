@@ -17,9 +17,9 @@ public class EncoderTest extends armisticeAutoSuper {
         initialize(true);
 
 
-       strafeEncoders(6, 0.4);
+       dumbstrafeEncoders(36, 1, 0.6);
 
-        holdUp(5);
+        holdUp(2);
 
         setDrive(0);
 
