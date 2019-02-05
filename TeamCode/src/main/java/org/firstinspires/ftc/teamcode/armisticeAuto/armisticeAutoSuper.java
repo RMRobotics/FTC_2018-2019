@@ -200,11 +200,11 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             FR.setPower(pwr);
         }
 
-        while(FL.isBusy() /*&& BL.isBusy() && BR.isBusy() && FL.isBusy()*/){
+        while(FL.isBusy() /*&& BL.isBusy() && BR.isBusy() && FL.isBusy()*/ && !gamepad1.b){
             telemetry.addData(String.valueOf(testCount)," " + String.valueOf(FL.getCurrentPosition()));
             telemetry.update();
             testCount++;
-            if (Math.abs(-imu.getZAngle() - angle) >= 15){
+            if (Math.abs(imu.getZAngle() - angle) >= 10){
                 currentPos1 = FL.getCurrentPosition();
                 imuTurn(-(imu.getZAngle() - angle),0.3);
                 //wheelFL.setTargetPosition(wheelFL.getTargetPosition() + wheelFL.getCurrentPosition() - pos);
@@ -231,6 +231,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         imuTurn(angleFinal,0.3);
     }
 
+
     protected void moveEncoders(double distanceInches){
 
         int currentPos1 = FL.getCurrentPosition();
@@ -250,9 +251,9 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR.setTargetPosition(currentPos4 + distanceTics);
 
         if (distanceInches>0)
-            setDrive(0.8);
+            setDrive(0.5);
         else
-            setDrive(-0.8);
+            setDrive(-0.5);
 
         int count = 0;
 
@@ -471,7 +472,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected void imuTurn(double degree, double speed) {
         imu.initialize();
         imu.setOffset(0);
-        double err = 1.2, pwr = 0.4;
+        double err = 0.7, pwr = 0.5;
 
         int count = 2;
         boolean flag = true;
@@ -510,8 +511,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             else if (dir_cw && imu.getZAngle()>degree)
             {
                 pwr = speed/count;
-                if (pwr < 0.2)
-                    pwr = 0.2;
+                if (pwr < 0.15)
+                    pwr = 0.15;
                 FL.setPower(-1*pwr);
                 BL.setPower(-1*pwr);
                 FR.setPower(pwr);
@@ -522,8 +523,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             else if (!dir_cw && imu.getZAngle()<degree)
             {
                 pwr = speed/count;
-                if (pwr < 0.2)
-                    pwr = 0.2;
+                if (pwr < 0.15)
+                    pwr = 0.15;
                 FL.setPower(pwr);
                 BL.setPower(pwr);
                 FR.setPower(-1*pwr);
@@ -532,6 +533,9 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
                 dir_cw = !dir_cw;
             }
         }
+
+        print(String.valueOf(imu.getZAngle()),3);
+
         FL.setPower(0);
         BL.setPower(0);
         FR.setPower(0);

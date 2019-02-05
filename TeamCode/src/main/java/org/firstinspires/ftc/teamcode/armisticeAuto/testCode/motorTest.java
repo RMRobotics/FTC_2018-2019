@@ -15,9 +15,10 @@ public class motorTest extends armisticeAutoSuper {
 
         initialize(true);
         boolean toggle = true;
+        boolean flag = false;
         waitForStart();
 
-        while (opModeIsActive())
+        while (opModeIsActive() && !flag)
         {
             telemetry.addData("dpad-left", "imuTurn 90 degrees");
             telemetry.addData("dpad-right", "strafeEncoders 6 in");
@@ -27,6 +28,7 @@ public class motorTest extends armisticeAutoSuper {
             telemetry.addData("right joystick y", "arm power");
             telemetry.addData("X", "moveEncoders 5 in");
             telemetry.addData("B", "Cancel");
+            telemetry.addData("both bumpers","end OpMode");
             telemetry.update();
 
             arm.setPower(gamepad1.right_stick_y);
@@ -36,16 +38,30 @@ public class motorTest extends armisticeAutoSuper {
             }
             else if (gamepad1.dpad_up)
             {
+                double max = 1;
                 while (!gamepad1.b) {
                     double forward, strafe, rotate;
                     forward = -gamepad1.left_stick_y;
                     strafe = gamepad1.left_stick_x;
                     rotate = gamepad1.right_stick_x;
 
-                    FL.setPower(forward + strafe + rotate);
-                    FR.setPower(forward - strafe - rotate);
-                    BL.setPower(forward - strafe + rotate);
-                    BR.setPower(forward + strafe - rotate);
+                    if (gamepad1.a)
+                    {
+                        if (max==1) {
+                            max = 2;
+                            telemetry.addData("half speed","");
+                        }
+                        else {
+                            max = 1;
+                            telemetry.addData("normal","");
+                        }
+                        telemetry.update();
+                    }
+
+                    FL.setPower((forward + strafe + rotate) / max);
+                    FR.setPower((forward - strafe - rotate) / max);
+                    BL.setPower((forward - strafe + rotate) / max);
+                    BR.setPower((forward + strafe - rotate) / max);
                 }
             }
             else if (gamepad1.dpad_right)
@@ -76,6 +92,10 @@ public class motorTest extends armisticeAutoSuper {
                     lift.setPower(gamepad1.left_trigger);
                 else
                     lift.setPower(-gamepad1.left_trigger);
+            }
+            else if (gamepad1.right_bumper && gamepad1.left_bumper)
+            {
+                flag = true;
             }
 
             intake.setPower(0);

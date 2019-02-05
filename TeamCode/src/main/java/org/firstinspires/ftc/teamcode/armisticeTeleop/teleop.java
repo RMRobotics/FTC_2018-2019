@@ -101,10 +101,15 @@ public class teleop extends OpMode {
         //toggles to slowmode
         if (gamepad1.a)
         {
-            if (max==1)
-                max= 0.5;
-            else
+            if (max==1) {
+                max = 2;
+                telemetry.addData("half speed","");
+            }
+            else {
                 max = 1;
+                telemetry.addData("normal","");
+            }
+            telemetry.update();
         }
 
         //vroom vroom driving

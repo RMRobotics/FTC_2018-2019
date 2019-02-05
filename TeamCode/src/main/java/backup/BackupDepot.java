@@ -1,13 +1,11 @@
-package super_basic;
-
+package backup;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.armisticeAuto.armisticeAutoSuper;
 
-
-@Autonomous (name = "basicDepot", group = "basic")
-public class BasicDepot extends armisticeAutoSuper {
+@Autonomous (name = "backupDepot", group = "backup")
+public class BackupDepot extends armisticeAutoSuper {
 
     public void runOpMode()
     {
@@ -22,4 +20,5 @@ public class BasicDepot extends armisticeAutoSuper {
 
         print("done",5);
     }
+
 }
