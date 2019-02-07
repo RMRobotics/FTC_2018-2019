@@ -19,11 +19,11 @@ public class OpenCVandMovementTest extends armisticeAutoSuper {
 
     public void runOpMode() {
 
-        initialize(DcMotor.RunMode.RUN_USING_ENCODER);
+        initialize(true);
         waitForStart();
 
         //Move forward to see Qube
-        moveEncoders(10, 1);
+        moveEncoders(10* 1);
 
         //See Qube
         detector = new GoldAlignDetector();
@@ -38,18 +38,18 @@ public class OpenCVandMovementTest extends armisticeAutoSuper {
         timer.reset();
 
         if (detector.getAligned().equals(Direction.CENTER)) {
-            moveEncoders(2, 1);
+            moveEncoders(2* 1);
             //push mineral w/ arm
         } else if (detector.getAligned().equals(Direction.LEFT)) {
             while (detector.isFound() == false) {
-                strafeEncoders(2, -1, .25);
+                strafeEncoders(2, 0.4);
             }
         } else if (detector.getAligned().equals(Direction.RIGHT)) {
             while (detector.isFound() == false) {
-                strafeEncoders(2, 1, .25);
+                strafeEncoders(2, 0.4);
             }
         } else {
-            moveEncoders(2, -1);
+            moveEncoders(2* -1);
         }
     }
 }

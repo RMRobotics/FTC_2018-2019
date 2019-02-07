@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Created by Neal on 12/6/2018.
  */
 
-@Autonomous(name = "AutoCrater")
+@Autonomous(name = "AutoCrater", group = "auto")
 public class AutoCrater extends armisticeAutoSuper{
 
     private GoldAlignDetector detector;
@@ -20,22 +20,25 @@ public class AutoCrater extends armisticeAutoSuper{
 
     public void runOpMode(){
 
-        //initialization
-        initialize(DcMotor.RunMode.RUN_USING_ENCODER);
+                                                            //initialization
+        initialize(true);
         waitForStart();
 
-        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
-        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
-        telemetry.update();
+//        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+//        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
+//        telemetry.update();
 
-        //Get off lander
+                                                            //Get off lander
+        //lmao we dont have this yet
 
-        //See Qube
+                                                            //See Qube
         detector = new GoldAlignDetector();
         DogeCVYellowDetector(detector);
+        telemetry.addData("Detector X Pos: ", detector.goldPosCenterDiff());
+        telemetry.update();
 
         //Move forward to see Qube
-        moveEncoders(10, 1);
+//        moveEncoders(10.0);
 
         //Vars
         int count = 0;
@@ -45,79 +48,69 @@ public class AutoCrater extends armisticeAutoSuper{
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
 
-        if (detector.getAligned().equals(Direction.CENTER)){
-            double distance = sensorRange.getDistance(DistanceUnit.INCH);
-            moveEncoders(distance, 1);
-            //push mineral w/ arm
-        }
-        else if (detector.getAligned().equals(Direction.LEFT)){
+        //align with mineral
+        if (detector.getAligned().equals(Direction.LEFT)){
+//            dumbstrafeEncoders(12, -1, 0.4);
             while(detector.isFound()==false){
-                strafeEncoders(2, -1, .25);
+                setStrafe(0.4);
             }
+            setDrive(0);
         }
         else if (detector.getAligned().equals(Direction.RIGHT)){
+            dumbstrafeEncoders(12, 1, 0.4);
             while(detector.isFound()==false){
-                strafeEncoders(2, 1, .25);
             }
-        }
-        else
-        {
-            moveEncoders(2, -1);
+            setDrive(0);
         }
 
-        //Detect Qube
-//        while (detector.isFound() == false && timer.seconds() < 5){
-//            strafeEncoders(3,direction,.25);
-//            count++;
+        moveEncoders(12);
+
+
+
+//        if (detector.getAligned().equals(Direction.CENTER)){
 //
-//            if (change%2 == 1) {
-//                totalDistance--;
-//            }
-//            else {
-//                totalDistance++;
-//            }
-//
-//            if (count > 5) {
-//                strafeEncoders(14.5, -direction,.25);
-//                count = 0;
-//                totalDistance = 0;
-//                direction = -direction;
-//                change++;
+//        }
+//        else if (detector.getAligned().equals(Direction.LEFT)){
+//            while(detector.isFound()==false){
+//                strafeEncoders(2, 0.4);
 //            }
 //        }
-//        if (detector.isFound() == true){
-//            position = detector.getAligned();
-//            strafeEncoders(20, 1);
+//        else if (detector.getAligned().equals(Direction.RIGHT)){
+//            while(detector.isFound()==false){
+//                strafeEncoders(2, 0.4);
+//            }
 //        }
 //        else
 //        {
-//            if (totalDistance < 0) {
-//                totalDistance = -totalDistance + 20;
-//            }
-//            strafeEncoders(totalDistance, 1);
+//            moveEncoders(-2);
 //        }
 
-        //knock off yellow mineral
-        moveEncoders(5, 1);
+//        double distance = sensorRange.getDistance(DistanceUnit.INCH);
 
-        //go back to initial pos and turn
-        moveEncoders(5, -1);
+                                                            //knock off yellow mineral
+       /* moveEncoders(5);
+
+                                                            //go back to initial pos and turn
+        moveEncoders(5 * -1);
         imuTurn(90, 0.4);
 
-        //move to turn point and turn
-        moveEncoders(55, 1);
+                                                            //move to turn point and turn
+        moveEncoders(55);
         imuTurn(45,0.4);
 
-        //go to home depot
-        moveEncoders(32, 1);
+                                                            //go to home depot
+        moveEncoders(32);
 
-        //drop off flag
+                                                            //drop off flag
+        arm.setPower(0.3);
+        holdUp(2);
+        arm.setPower(0);
 
         //turn arouuuuuuund every now and then i get a little bit lonely
         imuTurn(180, 0.4);
 
         //travel from depot to crater
-        moveEncoders(69, 1);
+        moveEncoders(69);*/
 
         //drop arm in crater
     }

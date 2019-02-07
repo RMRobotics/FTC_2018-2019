@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Created by Neal on 12/6/2018.
  */
 
-@Autonomous(name = "AutoDepot")
+@Autonomous(name = "AutoDepot", group = "auto")
 public class AutoDepot extends armisticeAutoSuper{
 // NOTE: MECHANICS WILL ADD AN ARM TO DEPOSIT TEAM MARKER, NAVIGATING TO THE DEPOT WILL NOT BE NECESSARY
     private GoldAlignDetector detector;
@@ -21,22 +21,30 @@ public class AutoDepot extends armisticeAutoSuper{
     public void runOpMode(){
 
         //initialization
-        initialize(DcMotor.RunMode.RUN_USING_ENCODER);
-        waitForStart();
-        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
-        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
-        telemetry.update();
+        initialize(true);
+//        waitForStart();
+//        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+//        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
+//        telemetry.update();
 
-        //Get off lander
+                                                            //Get off lander
+//        lift.setPower(0.3);
+//        holdUp(3);
+//        lift.setPower(0);
 
-        //Move forward to see Qube and deposit marker
-        moveEncoders(10, 1);
+                                                            //slide a bit to the left lower lift and slide back
+        strafeEncoders(1,0.5);
+        lift.setPower(-0.3);
+        holdUp(3);
+        lift.setPower(0);
+        strafeEncoders(1,-0.5);
 
-        //See Qube
+
+                                                            //See Qube
         detector = new GoldAlignDetector();
         DogeCVYellowDetector(detector);
 
-        //Vars
+                                                            //Vars
         int count = 0;
         int change = 0;
         int direction = 1;
@@ -44,25 +52,30 @@ public class AutoDepot extends armisticeAutoSuper{
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
 
-        if (detector.getAligned().equals(Direction.CENTER)){
-            double distance = sensorRange.getDistance(DistanceUnit.INCH);
-            moveEncoders(distance, 1);
-            //push mineral w/ arm
-        }
-        else if (detector.getAligned().equals(Direction.LEFT)){
+//        if (detector.getAligned().equals(Direction.CENTER)){
+//            double distance = sensorRange.getDistance(DistanceUnit.INCH);
+//            moveEncoders(distance);
+//            //push mineral w/ arm
+//        }
+//        else
+        if (detector.getAligned().equals(Direction.LEFT)){
+            setStrafe(0.4);
             while(detector.isFound()==false){
-                strafeEncoders(2, -1, .25);
             }
+            setDrive(0);
         }
         else if (detector.getAligned().equals(Direction.RIGHT)){
+            setStrafe(-0.4);
             while(detector.isFound()==false){
-                strafeEncoders(2, 1, .25);
             }
+            setDrive(0);
         }
-        else
-        {
-            moveEncoders(2, -1);
-        }
+//        else
+//        {
+//            moveEncoders(2 * -1);
+//        }
+
+
 
 //        while (detector.isFound() == false && timer.seconds() < 5){
 //            strafeEncoders(3,direction, .25);
@@ -96,27 +109,29 @@ public class AutoDepot extends armisticeAutoSuper{
 //        }
 
 
-        //knock off yellow mineral
-        moveEncoders(5, 1);
+                                                            //knock off yellow mineral
+        moveEncoders(5* 1);
 
-        //go back to initial pos and turn
-        moveEncoders(5, -1);
+                                                            //go back to initial pos and turn
+        moveEncoders(5* -1);
         imuTurn(90, 0.4);
 
-        //move to turn point and turn
-        moveEncoders(55, 1);
+                                                            //move to turn point and turn
+        moveEncoders(55* 1);
         imuTurn(135,0.4);
 
-        //move to home depot and drop flag
-        moveEncoders(60,1);
+                                                            //move to home depot and drop flag
+        moveEncoders(60*1);
 
-        //turn arouuuuuuund every now and then i get a little bit lonely
+                                                            //turn arouuuuuuund every now and then i get a little bit lonely
         imuTurn(180, 0.4);
 
-        //travel from depot to crater
-        moveEncoders(69, 1);
+                                                            //travel from depot to crater
+        moveEncoders(69* 1);
 
-        //drop arm in crater
-
+                                                            //drop arm in crater
+//        arm.setPower(0.3);
+//        holdUp(2);
+//        arm.setPower(0);
     }
 }

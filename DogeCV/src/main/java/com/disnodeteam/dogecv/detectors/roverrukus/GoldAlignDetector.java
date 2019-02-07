@@ -107,6 +107,7 @@ public class GoldAlignDetector extends DogeCVDetector {
         double alignXMax = alignX +(alignSize / 2); // Max X pos in pixels
         double xPos; // Current Gold X Pos
 
+
         if(bestRect != null){
             // Show chosen result
             Imgproc.rectangle(displayMat, bestRect.tl(), bestRect.br(), new Scalar(255,0,0),4);
@@ -202,5 +203,11 @@ public class GoldAlignDetector extends DogeCVDetector {
      */
     public boolean isFound() {
         return found;
+    }
+
+    public double goldPosCenterDiff(){
+        double alignX    = (getAdjustedSize().width / 2) + alignPosOffset; // Center point in X Pixels
+        return getXPosition()-alignX;
+
     }
 }
