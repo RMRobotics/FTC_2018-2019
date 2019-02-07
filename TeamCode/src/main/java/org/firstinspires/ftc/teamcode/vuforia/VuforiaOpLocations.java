@@ -60,6 +60,7 @@ public class VuforiaOpLocations extends LinearOpMode {
                         AxesReference.EXTRINSIC, AxesOrder.XYZ,
                         AngleUnit.DEGREES, 90, 0, 90));
         images.get(0).setLocation(blueImageOnField);
+        ((VuforiaTrackableDefaultListener)(images.get(0)).getListener()).setPhoneInformation(phoneOnRobot, params.cameraDirection);
 
         OpenGLMatrix redImageOnField = OpenGLMatrix
                 .translation(mmFTCFieldWidth / 2, 0, 0)
@@ -67,6 +68,7 @@ public class VuforiaOpLocations extends LinearOpMode {
                         AxesReference.EXTRINSIC, AxesOrder.XYZ,
                         AngleUnit.DEGREES, 90, 0, 270));
         images.get(1).setLocation(redImageOnField);
+        ((VuforiaTrackableDefaultListener)(images.get(1)).getListener()).setPhoneInformation(phoneOnRobot, params.cameraDirection);
 
         OpenGLMatrix frontImageOnField = OpenGLMatrix
                 .translation(0, -mmFTCFieldWidth / 2, 0)
@@ -74,6 +76,7 @@ public class VuforiaOpLocations extends LinearOpMode {
                         AxesReference.EXTRINSIC, AxesOrder.XYZ,
                         AngleUnit.DEGREES, 90, 180, 0));
         images.get(2).setLocation(frontImageOnField);
+        ((VuforiaTrackableDefaultListener)(images.get(2)).getListener()).setPhoneInformation(phoneOnRobot, params.cameraDirection);
 
         OpenGLMatrix backImageOnField = OpenGLMatrix
                 .translation(0, mmFTCFieldWidth / 2, 0)
@@ -81,6 +84,7 @@ public class VuforiaOpLocations extends LinearOpMode {
                         AxesReference.EXTRINSIC, AxesOrder.XYZ,
                         AngleUnit.DEGREES, 90, 0, 0));
         images.get(3).setLocation(backImageOnField);
+        ((VuforiaTrackableDefaultListener)(images.get(3)).getListener()).setPhoneInformation(phoneOnRobot, params.cameraDirection);
 
         waitForStart();
 
@@ -89,6 +93,7 @@ public class VuforiaOpLocations extends LinearOpMode {
         OpenGLMatrix lastLocation; //stores last known location of robot
 
         while(opModeIsActive()){
+
             for(VuforiaTrackable i : images){
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)(i.getListener())).getPose();
 
@@ -101,9 +106,54 @@ public class VuforiaOpLocations extends LinearOpMode {
                     OpenGLMatrix robotLocationOnField = ((VuforiaTrackableDefaultListener)(i).getListener()).getUpdatedRobotLocation();
                     lastLocation = robotLocationOnField;
 
-                    telemetry.addData(i.getName(), " is visisble");
-                    telemetry.addData("Pos: ", format(lastLocation));
+                    if(lastLocation != null){
+                        telemetry.addData(i.getName(), " is visible");
+//                        telemetry.addData("Pos ", format(lastLocation));
+
+                        VectorF location = lastLocation.getTranslation();
+                        Orientation locationRot = Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+                        double tX = VuforiaUtil.round(location.get(0) / mmPerInch, 2);
+                        double tY = VuforiaUtil.round(location.get(1) / mmPerInch, 2);
+                        double tZ = VuforiaUtil.round(location.get(2) / mmPerInch, 2);
+
+                        double rX, rY, rZ;
+
+                        //find the rotational x and y components of the robot relative to the target, finds the z rotation of the robot relative to the field
+
+                        switch(i.getName()){
+                            case "BluePerimeter":
+                                rX = -1 * VuforiaUtil.round(rot.secondAngle, 2);
+                                rY = VuforiaUtil.round(rot.firstAngle, 2);
+                                rZ = VuforiaUtil.round(VuforiaUtil.to180(-1 * rot.secondAngle + 180), 2);
+                                break;
+                            case "RedPerimeter":
+                                rX = VuforiaUtil.round(rot.secondAngle, 2);
+                                rY = -1 * VuforiaUtil.round(rot.firstAngle, 2);
+                                rZ = VuforiaUtil.round(VuforiaUtil.to180(-1 * rot.secondAngle), 2);
+                                break;
+                            case "FrontPerimeter":
+                                rX = -1 * VuforiaUtil.round(rot.firstAngle, 2);
+                                rY = -1 * VuforiaUtil.round(rot.secondAngle, 2);
+                                rZ = VuforiaUtil.round(VuforiaUtil.to180(-1 * rot.secondAngle + 270), 2);
+                                break;
+                            case "BackPerimeter":
+                                rX = VuforiaUtil.round(rot.firstAngle, 2);
+                                rY = VuforiaUtil.round(rot.secondAngle, 2);
+                                rZ = VuforiaUtil.round(VuforiaUtil.to180(-1 * rot.secondAngle + 90), 2);
+                                break;
+                            default:
+                                rX = 0;
+                                rY = 0;
+                                rZ = 0;
+                        }
+
+                        telemetry.addData("\n(Translations) X: " + tX + ", Y: " + tY + ", Z: " + tZ, "");
+                        telemetry.addData("(Rotations) X: " + rX + ", Y: " + rY + ", Z: " + rZ, "");
+                    }
+
                 }
+
             }
             telemetry.update();
         }
@@ -115,5 +165,3 @@ public class VuforiaOpLocations extends LinearOpMode {
     }
 
 }
-
-
