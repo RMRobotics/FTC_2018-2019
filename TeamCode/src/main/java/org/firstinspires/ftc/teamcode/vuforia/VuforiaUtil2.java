@@ -177,13 +177,42 @@ public class VuforiaUtil2 {
         robotToImage.settX(round(translation.get(0) / MM_PER_INCH, 2));
         robotToImage.settY(round(translation.get(1) / MM_PER_INCH, 2));
         robotToImage.settZ(round(translation.get(2) / MM_PER_INCH, 2));
-        robotToImage.setrX(round(rot.firstAngle, 2));
-        robotToImage.setrY(round(rot.secondAngle, 2));
-        robotToImage.setrZ(round(rot.thirdAngle, 2));
+        robotToImage.setrX(to180(round(rot.firstAngle, 2)));
+        robotToImage.setrY(to180(round(rot.secondAngle, 2)));
+        robotToImage.setrZ(to180(round(rot.thirdAngle, 2)));
     }
 
     public void retrieveRobotToField(){
-
+        robotToField.settX(VuforiaUtil.round(location.get(0) / MM_PER_INCH, 2));
+        robotToField.settY(VuforiaUtil.round(location.get(1) / MM_PER_INCH, 2));
+        robotToField.settZ(VuforiaUtil.round(location.get(2) / MM_PER_INCH, 2));
+        switch(currentImage.getName()){
+            case "BluePerimeter":
+                robotToField.setrX(-1 * round(rot.secondAngle, 2));
+                robotToField.setrY(round(rot.firstAngle, 2));
+                robotToField.setrZ(round(to180(-1 * rot.secondAngle + 180), 2));
+                break;
+            case "RedPerimeter":
+                robotToField.setrX(round(rot.secondAngle, 2));
+                robotToField.setrY(-1 * round(rot.firstAngle, 2));
+                robotToField.setrZ(round(to180(-1 * rot.secondAngle), 2));
+                break;
+            case "FrontPerimeter":
+                robotToField.setrX(-1 * round(rot.firstAngle, 2));
+                robotToField.setrY(-1 * round(rot.secondAngle, 2));
+                robotToField.setrZ(round(to180(-1 * rot.secondAngle + 270), 2));
+                break;
+            case "BackPerimeter":
+                robotToField.setrX(round(rot.firstAngle, 2));
+                robotToField.setrY(round(rot.secondAngle, 2));
+                robotToField.setrZ(round(VuforiaUtil.to180(-1 * rot.secondAngle + 90), 2));
+                break;
+            default:
+                robotToField.setrX(0);
+                robotToField.setrY(0);
+                robotToField.setrZ(0);
+                break;
+        }
     }
 
 //    public void changeAngles(String imageName){
