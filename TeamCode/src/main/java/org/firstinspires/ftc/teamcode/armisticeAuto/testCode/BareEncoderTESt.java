@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.armisticeAuto.testCode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -27,6 +28,7 @@ public class BareEncoderTESt extends LinearOpMode{
 
         FL.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.REVERSE);
+        BR.setDirection(DcMotor.Direction.REVERSE);
 
         BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -106,6 +108,7 @@ public class BareEncoderTESt extends LinearOpMode{
         int currentPos2 = FR.getCurrentPosition();
         int currentPos3 = BL.getCurrentPosition();
         int currentPos4 = BR.getCurrentPosition();
+        int[] currentPoses = {currentPos1,currentPos2,currentPos3,currentPos4};
         //distanceTics is num of tics it needs to travel
         int distanceTics = (int)(distanceInches * CPI);
 
@@ -117,6 +120,18 @@ public class BareEncoderTESt extends LinearOpMode{
         FR.setTargetPosition(currentPos2 + distanceTics);
         BL.setTargetPosition(currentPos3 + distanceTics);
         BR.setTargetPosition(currentPos4 + distanceTics);
+
+        telemetry.addData(String.valueOf(distanceTics),"");
+        for (int i : currentPoses)
+        {
+            telemetry.addData(String.valueOf(i + distanceTics),"");
+        }
+        telemetry.update();
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        while (timer.seconds()<3){
+
+        }
 
         if (distanceInches>0)
             setDrive(0.5);
@@ -149,12 +164,51 @@ public class BareEncoderTESt extends LinearOpMode{
         initialize();
 
         initTime = timer.milliseconds();
-        /*while (timer.milliseconds() - initTime < 4000) {
-            setDrive(0.2);
+        while (timer.milliseconds() - initTime < 4000) {
+            setDrive(0.3);
+            telemetry.addData("FL Encoder", FL.getCurrentPosition());
+            telemetry.addData("BL Encoder", BL.getCurrentPosition());
+            telemetry.addData("FR Encoder", FR.getCurrentPosition());
+            telemetry.addData("BR Encoder", BR.getCurrentPosition());
+            telemetry.update();
         }
-        setDrive(0);*/
+        setDrive(0);
 
-        moveEncodersMod(48, 0.4);
+
+        /*FL.setPower(.5);
+        timer.reset();
+        while (timer.seconds()<5)
+        {
+
+        }
+        setDrive(0);
+
+        FR.setPower(.5);
+        timer.reset();
+        while (timer.seconds()<5)
+        {
+
+        }
+        setDrive(0);
+
+        BL.setPower(.5);
+        timer.reset();
+        while (timer.seconds()<5)
+        {
+
+        }
+        setDrive(0);
+
+        BR.setPower(.5);*/
+        timer.reset();
+        while (timer.seconds()<5)
+        {
+
+        }
+        setDrive(0);
+
+//        moveEncodersMod(48, 0.4);
+//        moveEncoders(48);
 
     }
 }
