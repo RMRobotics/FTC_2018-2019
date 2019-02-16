@@ -1,0 +1,43 @@
+package org.firstinspires.ftc.teamcode.vuforia;
+
+/*
+Created on 2/8/19 by Neal Machado
+Simple Position Class
+ */
+
+public class Position {
+
+    /**********INSTANCE VARIABLES**********/
+    private double tX, tY, tZ, rX, rY, rZ;
+
+    /**********CONSTRUCTORS**********/
+    public Position(){
+        this(0, 0, 0, 0, 0, 0);
+    }
+
+    public Position(double tX, double tY, double tZ, double rX, double rY, double rZ) {
+        this.tX = tX;
+        this.tY = tY;
+        this.tZ = tZ;
+        this.rX = rX;
+        this.rY = rY;
+        this.rZ = rZ;
+    }
+
+    /**********MUTATORS**********/
+    public void settX(double tX){ this.tX = tX; }
+    public void settY(double tY){ this.tY = tY; }
+    public void settZ(double tZ){ this.tZ = tZ; }
+    public void setrX(double rX){ this.rX = rX; }
+    public void setrY(double rY){ this.rY = rY; }
+    public void setrZ(double rZ){ this.rZ = rZ; }
+
+    /**********ACCESSORS**********/
+    public double gettX(){ return tX; }
+    public double gettY(){ return tY; }
+    public double gettZ(){ return tZ; }
+    public double getrX(){ return rX; }
+    public double getrY(){ return rY; }
+    public double getrZ(){ return rZ; }
+
+}

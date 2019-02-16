@@ -1,20 +1,18 @@
 package org.firstinspires.ftc.teamcode.vuforia;
 
 /*
-Created on 1/18/19 by Neal Machado
-Vuforia Util Class
+Created on 2/8/19 by Neal Machado
+Vuforia Util Class v2
  */
 
 /**********IMPORTS**********/
-import android.util.Log;
-import com.vuforia.Vuforia;
-import java.util.ArrayList;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -22,23 +20,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 
-import java.util.List;
-
-public class VuforiaUtil {
+public class VuforiaUtil2 {
 
     /**********INSTANCE VARIABLES**********/
     public static final float MM_PER_INCH = 25.4f;
-    private static final float robotSize = 18 * MM_PER_INCH;
-    private static final float MM_FTC_FIELD_WIDTH = (12*12 - 2) * MM_PER_INCH;
+    public static final float robotSize = 18 * MM_PER_INCH;
+    public static final float MM_FTC_FIELD_WIDTH = (12*12 - 2) * MM_PER_INCH;
 
     private VuforiaLocalizer.Parameters params;
     private VuforiaLocalizer vuforia;
     private VuforiaTrackables images;
-
-//    private VuforiaTrackable blueImage;
-//    private VuforiaTrackable redImage;
-//    private VuforiaTrackable frontImage;
-//    private VuforiaTrackable backImage;
 
     private OpenGLMatrix phoneOnRobot;
     private OpenGLMatrix blueImageOnField;
@@ -46,25 +37,34 @@ public class VuforiaUtil {
     private OpenGLMatrix frontImageOnField;
     private OpenGLMatrix backImageOnField;
 
+    private VuforiaTrackable currentImage;
+
+    private OpenGLMatrix pose;
+    private VectorF translation;
+    private Orientation rot;
+    private OpenGLMatrix robotLocationOnField;
     private OpenGLMatrix lastLocation;
 
-    private double tX, tY, tZ, rX, rY, rZ;
+    private VectorF location;
+    private Orientation locationRot;
 
-    OpenGLMatrix pose;
+
+    private Position robotToImage;
+    private Position robotToField;
 
     /**********CONSTRUCTORS**********/
     //default Vuforia parameters set to front camera, no visual feedback
-    public VuforiaUtil(){
+    public VuforiaUtil2(){
         this(false,  VuforiaLocalizer.CameraDirection.FRONT);
     }
 
     //constructor with defaulted visual feedback as the axes
-    public VuforiaUtil(boolean visualFeedback, VuforiaLocalizer.CameraDirection cameraDirection){
+    public VuforiaUtil2(boolean visualFeedback, VuforiaLocalizer.CameraDirection cameraDirection){
         this(visualFeedback, cameraDirection, VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES);
     }
 
     //constructor
-    public VuforiaUtil(boolean visualFeedback, VuforiaLocalizer.CameraDirection cameraDirection, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback){
+    public VuforiaUtil2(boolean visualFeedback, VuforiaLocalizer.CameraDirection cameraDirection, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback){
         if(visualFeedback){
             params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
             params.cameraMonitorFeedback = feedback;
@@ -122,143 +122,97 @@ public class VuforiaUtil {
         images.get(3).setLocation(backImageOnField);
         ((VuforiaTrackableDefaultListener)images.get(3).getListener()).setPhoneInformation(phoneOnRobot, params.cameraDirection);
 
-        tX = 0;
-        tY = 0;
-        tZ = 0;
-        rX = 0;
-        rY = 0;
-        rZ = 0;
+        pose = null;
+
+        robotLocationOnField = null;
+        lastLocation = null;
+
+        location = null;
+        locationRot = null;
+        translation = null;
+        rot = null;
+
+        robotToField = new Position();
+        robotToImage = new Position();
     }
 
     /**********METHODS**********/
-    public double[][] robotInformation(){
-
-        boolean imageFound = false;
-
-        double[][] returnArray = {
-                {-1, 0, 0},             //the first number indicates the image the robot is near, if -1 no image is in sight
-                {0, 0, 0},              //x, y, and z components of the vector (in inches) relative to the image being detected
-                {0, 0, 0},              //x, y, and z rotation relative to the image being detected
-                {0, 0, 0},              //x, y, and z coordinates (in inches) of the robot relative to the center of the field (using the FTC coordinate system)
-                {0, 0, 0}               //x, y, and z rotations relative to the center of the field
-        };
-
-        int counter = 0;
-
-
-        for(VuforiaTrackable i : images){
-            pose = ((VuforiaTrackableDefaultListener)(i.getListener())).getPose();
-
-//            returnArray[0][0] = 7;
-//            return returnArray;
-
-            if(pose != null && !imageFound){ //if the image is found
-
-//            if(pose != null){
-
-                imageFound = true;
-
-                //vector with information of the robot relative to the image detected
-                VectorF translation = pose.getTranslation(); //finds data about the image
-
-                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
-                returnArray[0][0] = counter; //indicates which image is detected
-                returnArray[1][0] = round(translation.get(0) / MM_PER_INCH, 2);
-                returnArray[1][1] = round(translation.get(1) / MM_PER_INCH, 2);
-                returnArray[1][2] = round(translation.get(2) / MM_PER_INCH, 2);
-                returnArray[2][0] = round(rot.firstAngle, 2);
-                returnArray[2][1] = round(rot.secondAngle, 2);
-                returnArray[2][2] = round(rot.thirdAngle, 2);
-
-                OpenGLMatrix robotLocationOnField = ((VuforiaTrackableDefaultListener)(i).getListener()).getUpdatedRobotLocation();
-                lastLocation = robotLocationOnField;
-
-//                Log.d("mfyyeet","uuyhyhi");
-
-//                if(lastLocation != null){
-//                    VectorF location = lastLocation.getTranslation();
-//                    Orientation locationRot = Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-//
-//                    returnArray[3][0] = round(location.get(0) / MM_PER_INCH, 2);
-//                    returnArray[3][1] = round(location.get(1) / MM_PER_INCH, 2);
-//                    returnArray[3][2] = round(location.get(2) / MM_PER_INCH, 2);
-//                    returnArray[4][0] = round(-1 * rot.firstAngle, 2);
-//                    returnArray[4][1] = round(-1 * rot.thirdAngle, 2);
-//                    returnArray[4][2] = round(-1 * rot.secondAngle, 2);
-//                }
-
-            }
-            counter++;
-        }
-
-        return returnArray;
+    public void start(){
 
     }
 
-
-    public static double[][] robotInformation(VuforiaTrackables images){
-
-        OpenGLMatrix lastLocation; //stores last known location of robot
-        //boolean imageFound = false;
-
-        double[][] returnArray = {
-                {-1, 0, 0},             //the first number indicates the image the robot is near, if -1 no image is in sight
-                {0, 0, 0},              //x, y, and z components of the vector (in inches) relative to the image being detected
-                {0, 0, 0},              //x, y, and z rotation relative to the image being detected
-                {0, 0, 0},              //x, y, and z coordinates (in inches) of the robot relative to the center of the field (using the FTC coordinate system)
-                {0, 0, 0}               //x, y, and z rotations relative to the center of the field
-        };
-
-        int counter = 0;
+    public void robotInformation(){
 
         for(VuforiaTrackable i : images){
-            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)(i.getListener())).getPose();
 
-//            returnArray[0][0] = 7;
-//            return returnArray;
-
-            //if(pose != null && !imageFound){ //if the image is found
+            currentImage = i;
+            pose = ((VuforiaTrackableDefaultListener)(i.getListener())).getPose();
 
             if(pose != null){
-
-                //imageFound = true;
-
-                //vector with information of the robot relative to the image detected
-                VectorF translation = pose.getTranslation(); //finds data about the image
-                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
-                returnArray[0][0] = counter; //indicates which image is detected
-                returnArray[1][0] = round(translation.get(0) / MM_PER_INCH, 2);
-                returnArray[1][1] = round(translation.get(1) / MM_PER_INCH, 2);
-                returnArray[1][2] = round(translation.get(2) / MM_PER_INCH, 2);
-                returnArray[2][0] = round(rot.firstAngle, 2);
-                returnArray[2][1] = round(rot.secondAngle, 2);
-                returnArray[2][2] = round(rot.thirdAngle, 2);
-
-                OpenGLMatrix robotLocationOnField = ((VuforiaTrackableDefaultListener)(i).getListener()).getUpdatedRobotLocation();
-                lastLocation = robotLocationOnField;
-
-//                Log.d("mfyyeet","uuyhyhi");
-
+                retrieveData();
+                retrieveRobotToImage();
                 if(lastLocation != null){
-                    VectorF location = lastLocation.getTranslation();
-                    Orientation locationRot = Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
-                    returnArray[3][0] = round(location.get(0) / MM_PER_INCH, 2);
-                    returnArray[3][1] = round(location.get(1) / MM_PER_INCH, 2);
-                    returnArray[3][2] = round(location.get(2) / MM_PER_INCH, 2);
-                    returnArray[4][0] = round(-1 * rot.firstAngle, 2);
-                    returnArray[4][1] = round(-1 * rot.thirdAngle, 2);
-                    returnArray[4][2] = round(-1 * rot.secondAngle, 2);
+                    location = lastLocation.getTranslation();
+                    locationRot = Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
                 }
-
             }
-            counter++;
+
         }
 
-        return returnArray;
+    }
 
+    public void stop(){
+
+    }
+
+    public void retrieveData(){
+        translation = pose.getTranslation();
+        rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+        robotLocationOnField = ((VuforiaTrackableDefaultListener)(currentImage).getListener()).getUpdatedRobotLocation();
+        lastLocation = robotLocationOnField;
+    }
+
+    public void retrieveRobotToImage(){
+        robotToImage.settX(round(translation.get(0) / MM_PER_INCH, 2));
+        robotToImage.settY(round(translation.get(1) / MM_PER_INCH, 2));
+        robotToImage.settZ(round(translation.get(2) / MM_PER_INCH, 2));
+        robotToImage.setrX(to180(round(rot.firstAngle, 2)));
+        robotToImage.setrY(to180(round(rot.secondAngle, 2)));
+        robotToImage.setrZ(to180(round(rot.thirdAngle, 2)));
+    }
+
+    public void retrieveRobotToField(){
+        robotToField.settX(VuforiaUtil.round(location.get(0) / MM_PER_INCH, 2));
+        robotToField.settY(VuforiaUtil.round(location.get(1) / MM_PER_INCH, 2));
+        robotToField.settZ(VuforiaUtil.round(location.get(2) / MM_PER_INCH, 2));
+        switch(currentImage.getName()){
+            case "BluePerimeter":
+                robotToField.setrX(-1 * round(rot.secondAngle, 2));
+                robotToField.setrY(round(rot.firstAngle, 2));
+                robotToField.setrZ(round(to180(-1 * rot.secondAngle + 180), 2));
+                break;
+            case "RedPerimeter":
+                robotToField.setrX(round(rot.secondAngle, 2));
+                robotToField.setrY(-1 * round(rot.firstAngle, 2));
+                robotToField.setrZ(round(to180(-1 * rot.secondAngle), 2));
+                break;
+            case "FrontPerimeter":
+                robotToField.setrX(-1 * round(rot.firstAngle, 2));
+                robotToField.setrY(-1 * round(rot.secondAngle, 2));
+                robotToField.setrZ(round(to180(-1 * rot.secondAngle + 270), 2));
+                break;
+            case "BackPerimeter":
+                robotToField.setrX(round(rot.firstAngle, 2));
+                robotToField.setrY(round(rot.secondAngle, 2));
+                robotToField.setrZ(round(VuforiaUtil.to180(-1 * rot.secondAngle + 90), 2));
+                break;
+            default:
+                robotToField.setrX(0);
+                robotToField.setrY(0);
+                robotToField.setrZ(0);
+                break;
+        }
     }
 
 //    public void changeAngles(String imageName){
@@ -307,7 +261,7 @@ public class VuforiaUtil {
             case 3:
                 return "BackPerimeter";
             case 7:
-                return "yuh";
+                return "TEST";
             default:
                 return "Invalid input";
 
