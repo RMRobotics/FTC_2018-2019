@@ -80,7 +80,7 @@ public class motorTest extends armisticeAutoSuper {
             }
             else if (gamepad1.x)
             {
-                moveEncoders(5);
+                moveEncoders(15);
             }
             else if (gamepad1.y)
             {
