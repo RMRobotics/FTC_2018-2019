@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.armisticeAuto.armisticeAutoSuper;
 /**
  * Created by Angela on 1/5/2019.
  */
-@Autonomous (name = "OpenCV w/ Movement", group = "autotest")
+//@Autonomous (name = "OpenCV w/ Movement", group = "autotest")
 public class OpenCVandMovementTest extends armisticeAutoSuper {
 
     private GoldAlignDetector detector;

@@ -52,13 +52,13 @@ public class AutoCrater extends armisticeAutoSuper{
         if (detector.getAligned().equals(Direction.LEFT)){
 //            dumbstrafeEncoders(12, -1, 0.4);
             while(detector.isFound()==false){
-                setStrafe(0.4);
+                setStrafe(0.3);
             }
             setDrive(0);
         }
         else if (detector.getAligned().equals(Direction.RIGHT)){
-            dumbstrafeEncoders(12, 1, 0.4);
             while(detector.isFound()==false){
+                setStrafe(-0.3);
             }
             setDrive(0);
         }
@@ -67,25 +67,7 @@ public class AutoCrater extends armisticeAutoSuper{
 
 
 
-//        if (detector.getAligned().equals(Direction.CENTER)){
-//
-//        }
-//        else if (detector.getAligned().equals(Direction.LEFT)){
-//            while(detector.isFound()==false){
-//                strafeEncoders(2, 0.4);
-//            }
-//        }
-//        else if (detector.getAligned().equals(Direction.RIGHT)){
-//            while(detector.isFound()==false){
-//                strafeEncoders(2, 0.4);
-//            }
-//        }
-//        else
-//        {
-//            moveEncoders(-2);
-//        }
-
-//        double distance = sensorRange.getDistance(DistanceUnit.INCH);
+        double distance = sensorRange.getDistance(DistanceUnit.INCH);
 
                                                             //knock off yellow mineral
        /* moveEncoders(5);

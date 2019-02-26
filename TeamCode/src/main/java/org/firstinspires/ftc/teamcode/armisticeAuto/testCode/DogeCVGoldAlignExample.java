@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-@Autonomous(name="DogeCV GoldAlign Example", group="DogeCV")
+//@Autonomous(name="DogeCV GoldAlign Example", group="DogeCV")
 
 public class DogeCVGoldAlignExample extends OpMode
 {

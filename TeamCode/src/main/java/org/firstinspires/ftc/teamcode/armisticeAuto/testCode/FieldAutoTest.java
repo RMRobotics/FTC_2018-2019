@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.armisticeAuto.armisticeAutoSuper;
  * Created by Angela on 11/24/2018.
  */
 
-@Autonomous(name = "FieldAuto Test", group = "autotest")
+//@Autonomous(name = "FieldAuto Test", group = "autotest")
 public class FieldAutoTest extends armisticeAutoSuper {
 
     private GoldAlignDetector detector;

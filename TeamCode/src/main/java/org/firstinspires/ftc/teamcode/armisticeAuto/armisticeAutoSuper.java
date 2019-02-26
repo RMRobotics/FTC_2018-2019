@@ -41,16 +41,16 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
-        intake = hardwareMap.crservo.get("intake");
+//        intake = hardwareMap.crservo.get("intake");
 
-        lift = hardwareMap.dcMotor.get("lift");
-        arm = hardwareMap.dcMotor.get("arm");
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        /*lift = hardwareMap.dcMotor.get("lift");
+        arm = hardwareMap.dcMotor.get("arm");*/
+//        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        intake.setPower(0);
+//        intake.setPower(0);
 
-        FL.setDirection(DcMotor.Direction.REVERSE);
-        BL.setDirection(DcMotor.Direction.REVERSE);
+        FR.setDirection(DcMotor.Direction.REVERSE);
+        BR.setDirection(DcMotor.Direction.REVERSE);
 //        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
 //        setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
         BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -68,6 +68,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         imu = new RevIMU(rev);
         imu.initialize();
         imu.setOffset(0);
+
 
         waitForStart();
     }
@@ -471,7 +472,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected void imuTurn(double degree, double speed) {
         imu.initialize();
         imu.setOffset(0);
-        double err = 0.7, pwr = 0.5;
+        double err = 1.2, pwr = 0.5;
+        speed = -speed;
 
         int count = 2;
         boolean flag = true;
@@ -512,10 +514,10 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
                 pwr = speed/count;
                 if (pwr < 0.15)
                     pwr = 0.15;
-                FL.setPower(-1*pwr);
-                BL.setPower(-1*pwr);
-                FR.setPower(pwr);
-                BR.setPower(pwr);
+                FL.setPower(pwr);
+                BL.setPower(pwr);
+                FR.setPower(-pwr);
+                BR.setPower(-pwr);
                 count+=1;
                 dir_cw = !dir_cw;
             }
@@ -524,10 +526,10 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
                 pwr = speed/count;
                 if (pwr < 0.15)
                     pwr = 0.15;
-                FL.setPower(pwr);
-                BL.setPower(pwr);
-                FR.setPower(-1*pwr);
-                BR.setPower(-1*pwr);
+                FL.setPower(-pwr);
+                BL.setPower(-pwr);
+                FR.setPower(pwr);
+                BR.setPower(pwr);
                 count+=1;
                 dir_cw = !dir_cw;
             }

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.armisticeAuto.armisticeAutoSuper;
 /**
  * Created by Angela on 12/18/2018.
  */
-@Autonomous(name = "DistanceSensor Test", group = "autotest")
+//@Autonomous(name = "DistanceSensor Test", group = "autotest")
 public class REVDistanceSensorTest extends armisticeAutoSuper {
 
     private DistanceSensor sensorRange;

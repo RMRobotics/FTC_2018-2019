@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.armisticeAuto.armisticeAutoSuper;
  * Created by Angela on 11/20/2018.
  */
 
-@Autonomous(name = "Encoder Test", group = "autotest")
+//@Autonomous(name = "Encoder Test", group = "autotest")
 public class EncoderTest extends LinearOpMode {
     protected DcMotor FL;
     protected DcMotor FR;

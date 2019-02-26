@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.armisticeAuto.armisticeAutoSuper;
  * Created by Neal on 12/11/2018.
  */
 
-@Autonomous(name = "Distance Test", group = "autotest")
+//@Autonomous(name = "Distance Test", group = "autotest")
 public class distanceTest extends armisticeAutoSuper {
 //tests if it goes the same distance every time
     private GoldAlignDetector detector;
