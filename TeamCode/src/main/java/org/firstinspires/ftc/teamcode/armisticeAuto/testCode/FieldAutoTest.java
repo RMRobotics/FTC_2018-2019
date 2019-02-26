@@ -29,7 +29,7 @@ public class FieldAutoTest extends armisticeAutoSuper {
         //Get off lander
 
         //Move forward to see Qube
-        moveEncoders(10.0);
+        moveEncoders(10.0,0.4);
 
         //See Qube
         detector = new GoldAlignDetector();
@@ -74,12 +74,12 @@ public class FieldAutoTest extends armisticeAutoSuper {
             }
             strafeEncoders(totalDistance, 0.4);
         }
-        moveEncoders(5); //knock off yellow mineral
-        moveEncoders(-5);
+        moveEncoders(5,0.4); //knock off yellow mineral
+        moveEncoders(-5,0.4);
         imuTurn(45, 0.4);
-        moveEncoders(20);
+        moveEncoders(20,0.4);
         //drop off flag
         imuTurn(180, 0.4);
-        moveEncoders(30);
+        moveEncoders(30,0.4);
     }
 }

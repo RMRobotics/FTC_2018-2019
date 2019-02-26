@@ -71,7 +71,7 @@ public class motorTest extends armisticeAutoSuper {
                 intake.setPower(gamepad1.right_trigger);
             }*/
             else if (gamepad1.x) {
-                moveEncoders(15);
+                moveEncoders(15,0.4);
             } else if (gamepad1.y) {
                 toggle = !toggle;
             }

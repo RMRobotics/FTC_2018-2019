@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.armisticeAuto.armisticeAutoSuper;
+
 /**
  * Created by Angela on 1/17/2019.
  */
 @Autonomous(name = "bareEncoderTest", group = "autotest")
-public class BareEncoderTESt extends LinearOpMode{
+public class BareEncoderTESt extends LinearOpMode {
 
     protected DcMotor FL;
     protected DcMotor FR;
@@ -26,8 +28,8 @@ public class BareEncoderTESt extends LinearOpMode{
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
 
-        FR.setDirection(DcMotor.Direction.REVERSE);
-        BR.setDirection(DcMotor.Direction.REVERSE);
+        FL.setDirection(DcMotor.Direction.REVERSE);
+        BL.setDirection(DcMotor.Direction.REVERSE);
 
         setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -64,44 +66,6 @@ public class BareEncoderTESt extends LinearOpMode{
         BR.setZeroPowerBehavior(z);
     }
 
-    protected void moveEncodersMod(double distanceInches, double pwr){
-        int currentPos1 = FL.getCurrentPosition();
-        int currentPos2 = FR.getCurrentPosition();
-        int currentPos3 = BL.getCurrentPosition();
-        int currentPos4 = BR.getCurrentPosition();
-        //distanceTics is num of tics it needs to travel
-        int distanceTics = (int)(distanceInches * CPI);
-
-        int targetDistance = FL.getCurrentPosition() + distanceTics;
-
-        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        setMode(DcMotor.RunMode.RUN_USING_ENCODER);/*
-//        setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        /*FL.setTargetPosition(currentPos1 + distanceTics);
-        FR.setTargetPosition(currentPos2 + distanceTics);
-        BL.setTargetPosition(currentPos3 + distanceTics);
-        BR.setTargetPosition(currentPos4 + distanceTics);*/
-        int count = 0;
-
-        while ((targetDistance - FL.getCurrentPosition()) > 5 && !gamepad1.b){
-
-            setDrive(pwr);
-
-            telemetry.addData("FL encoder: " , FL.getCurrentPosition());
-            telemetry.addData("BL encoder: " , BL.getCurrentPosition());
-            telemetry.addData("FR encoder: " , FR.getCurrentPosition());
-            telemetry.addData("BR encoder: " , BR.getCurrentPosition());
-            telemetry.update();
-        }
-
-        setDrive(0);
-
-//        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        telemetry.addData("dope",String.valueOf(count));
-        telemetry.update();
-    }
 
     protected void setEnc(int p) {
         FL.setTargetPosition(FL.getCurrentPosition() + p);
@@ -117,72 +81,7 @@ public class BareEncoderTESt extends LinearOpMode{
         BR.setTargetPosition(BR.getCurrentPosition() + p4);
     }
 
-    protected void moveEncodersBasic(double distanceInches, double power){
-        // Reset encoders
-        FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // Prepare to drive to target position
-        FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // Set target position and speed
-        FL.setTargetPosition(3440);
-        FR.setTargetPosition(3440);
-//        BL.setTargetPosition(1440);
-//       BR.setTargetPosition(1440);
-        FL.setPower(power);
-        FR.setPower(power);
-        BL.setPower(power);
-        BR.setPower(power);
-        telemetry.addData("checkpoint 2","");
-        telemetry.update();
-
-        boolean flag = true;
-
-        timer.reset();
-//        double BRtime=-1,BLtime=-1,FRtime=-1,FLtime=-1;
-
-        // Loop while we approach the target.  Display position as we go
-        while(FR.isBusy() && FL.isBusy()) {
-
-           /* telemetry.addData("FL stop time:",FLtime);
-            telemetry.addData("FR stop time:",FRtime);
-            telemetry.addData("BL stop time:",BLtime);
-            telemetry.addData("BR stop time:",BRtime);
-            telemetry.addData("time:",timer.milliseconds());*/
-
-            telemetry.addData("FL Encoder", FL.getCurrentPosition());
-            telemetry.addData("BL Encoder", BL.getCurrentPosition());
-            telemetry.addData("FR Encoder"  , FR.getCurrentPosition());
-            telemetry.addData("BR Encoder", BR.getCurrentPosition());
-            telemetry.update();
-        }
-
-        // We are done, turn motors off and switch back to normal driving mode.
-
-        FL.setPower(0);
-        FR.setPower(0);
-        BL.setPower(0);
-        BR.setPower(0);
-
-//        FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        timer.reset();
-        while (timer.seconds()<3)
-        {
-
-        }
-
-    }
-
-    protected void moveEncoders(double distanceInches){
+    protected void moveEncodersREAL(double distanceInches, double power){
 
         int currentPos1 = FL.getCurrentPosition();
         int currentPos2 = FR.getCurrentPosition();
@@ -191,112 +90,100 @@ public class BareEncoderTESt extends LinearOpMode{
         //distanceTics is num of tics it needs to travel
         int distanceTics = (int)(distanceInches * CPI);
 
+        // Reset encoders
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Prepare to drive to target position
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        // Set target position and speed
         FL.setTargetPosition(currentPos1 + distanceTics);
         FR.setTargetPosition(currentPos2 + distanceTics);
         BL.setTargetPosition(currentPos3 + distanceTics);
-//        BL.setTargetPosition(0);
-
         BR.setTargetPosition(currentPos4 + distanceTics);
 
-        if (distanceInches>0)
-            setDrive(0.4);
-        else
-            setDrive(-0.4);
+        FL.setPower(power);
+        FR.setPower(power);
+        BL.setPower(power);
+        BR.setPower(power);
 
-        int count = 0;
-
-        while (FL.isBusy() || FR.isBusy() || BL.isBusy() || BR.isBusy()){
-                count++;
-                telemetry.addData("FL Encoder", FL.getCurrentPosition());
-                telemetry.addData("BL Encoder", BL.getCurrentPosition());
-                telemetry.addData("FR Encoder", FR.getCurrentPosition());
-                telemetry.addData("BR Encoder", BR.getCurrentPosition());
-                telemetry.update();
-            }
-
-        setDrive(0);
-
-//        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        telemetry.addData("dope","");
-        telemetry.update();
-
-    }
-
-    protected void driveEncoder(int val, double power) {
-        double mag = Math.abs(power);
-//        val = val*scale;
-        double dir = Math.signum(val - FL.getCurrentPosition());
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                setEnc(val);
-        int shift = 0;
-        // TODO: check to see if acceleration code functions properly
-        while (Math.abs(FL.getCurrentPosition() - val) > 5 && opModeIsActive()) {
+        // Loop while we approach the target.  Display position as we go
+        while(FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
             telemetry.addData("FL Encoder", FL.getCurrentPosition());
             telemetry.addData("BL Encoder", BL.getCurrentPosition());
             telemetry.addData("FR Encoder", FR.getCurrentPosition());
             telemetry.addData("BR Encoder", BR.getCurrentPosition());
             telemetry.update();
-
-            if (shift * 0.02 < mag) {
-                setDrive(dir * shift * 0.05);
-                shift++;
-                sleep(200);
-            } else {
-                setDrive(dir * mag);
-            }
         }
+
+        // We are done, turn motors off and switch back to normal driving mode.
+        FL.setPower(0);
+        FR.setPower(0);
+        BL.setPower(0);
+        BR.setPower(0);
     }
 
-        protected void moveEncodersGerm(double distanceInches, int dir){
+    protected void strafeEncoders(double distanceInches, double pwr){
 
-            double speed = 0.5 * dir;
-            int currentPos = FL.getCurrentPosition();
-            int distanceTics = (int)(distanceInches * CPI);
-            double tickRatio;
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addData("Checkpoint 2", "");
+        telemetry.update();
+        holdUp(2);
+        int currentPos1 = FL.getCurrentPosition();
+        int currentPos2 = FR.getCurrentPosition();
+        int currentPos3 = BL.getCurrentPosition();
+        int currentPos4 = BR.getCurrentPosition();
+        //distanceTics is num of tics it needs to travel
+        int distanceTics = (int)(distanceInches * CPI);
 
-            FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            FL.setTargetPosition(currentPos + distanceTics);
-            FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        telemetry.addData("Checkpoint 3", "");
+        telemetry.update();
+        holdUp(2);
 
-            BR.setPower(speed);
-            BL.setPower(speed);
-            FL.setPower(speed);
-            FR.setPower(speed);
+        FL.setTargetPosition(currentPos1 + distanceTics);
+        FR.setTargetPosition(currentPos2 - distanceTics);
+        BL.setTargetPosition(currentPos3 - distanceTics);
+        BR.setTargetPosition(currentPos4 + distanceTics);
+        telemetry.addData("Checkpoint 4", "");
+        telemetry.update();
+        holdUp(2);
 
-
-            while(FL.isBusy() /*&& BL.isBusy() && BR.isBusy() && FL.isBusy()*/){
-                telemetry.addData("FL Encoder", FL.getCurrentPosition());
-                telemetry.addData("BL Encoder", BL.getCurrentPosition());
-                telemetry.addData("FR Encoder", FR.getCurrentPosition());
-                telemetry.addData("BR Encoder", BR.getCurrentPosition());
-                telemetry.update();
-
-                tickRatio = ((double)FL.getCurrentPosition() - (double)currentPos) / distanceTics;
-                speed = dir * ((-0.5) * (tickRatio) + 0.5);
-                if (dir > 0){
-                    if (speed < 0.15)
-                        speed = 0.15;
-                }
-                if (dir < 0){
-                    if (speed > -0.15)
-                        speed = -0.15;
-                }
-                BR.setPower(speed);
-                BL.setPower(speed);
-                FL.setPower(speed);
-                FR.setPower(speed);
-            }
-            FR.setPower(0);
-            BR.setPower(0);
-            FL.setPower(0);
-            BL.setPower(0);
-
+        if (distanceInches>0) {
+            BR.setPower(pwr);
+            BL.setPower(-pwr);
+            FL.setPower(pwr);
+            FR.setPower(-pwr);
         }
+        else {
+            BR.setPower(-pwr);
+            BL.setPower(pwr);
+            FL.setPower(-pwr);
+            FR.setPower(pwr);
+        }
+        telemetry.addData("Checkpoint 5", "");
+        telemetry.update();
+        holdUp(2);
+        int count = 0;
+
+        while(FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
+            count++;
+            telemetry.addData("FL Encoder", FL.getCurrentPosition());
+            telemetry.addData("BL Encoder", BL.getCurrentPosition());
+            telemetry.addData("FR Encoder", FR.getCurrentPosition());
+            telemetry.addData("BR Encoder", BR.getCurrentPosition());
+            telemetry.addData("count:",count);
+            telemetry.update();
+        }
+        setDrive(0);
+    }
+
+    protected void holdUp(double num)
+    {
+        timer.reset();
+        while (timer.seconds()<num)
+        {}
+    }
 
 
     @Override
@@ -360,7 +247,11 @@ public class BareEncoderTESt extends LinearOpMode{
 //       moveEncodersMod(48, 0.4);
 //       moveEncoders(36);
 //       driveEncoder(48,0.5);
-       moveEncodersBasic(60, 0.6);
+       moveEncodersREAL(48, 0.4);
+       telemetry.addData("Checkpoint 1", "");
+       telemetry.update();
+       strafeEncoders(48,0.4);
+       // 24 goes 11, 48 goes 22
 //         moveEncodersGerm(36,1);
 
     }

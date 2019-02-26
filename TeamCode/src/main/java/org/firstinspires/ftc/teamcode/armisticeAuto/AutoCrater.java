@@ -29,7 +29,6 @@ public class AutoCrater extends armisticeAutoSuper{
 //        telemetry.update();
 
                                                             //Get off lander
-        //lmao we dont have this yet
 
                                                             //See Qube
         detector = new GoldAlignDetector();
@@ -38,7 +37,7 @@ public class AutoCrater extends armisticeAutoSuper{
         telemetry.update();
 
         //Move forward to see Qube
-//        moveEncoders(10.0);
+        moveEncoders(20, 0.4);
 
         //Vars
         int count = 0;
@@ -63,11 +62,7 @@ public class AutoCrater extends armisticeAutoSuper{
             setDrive(0);
         }
 
-        moveEncoders(12);
-
-
-
-        double distance = sensorRange.getDistance(DistanceUnit.INCH);
+        moveEncoders(-24,0.4);
 
                                                             //knock off yellow mineral
        /* moveEncoders(5);

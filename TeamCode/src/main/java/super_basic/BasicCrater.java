@@ -12,7 +12,7 @@ public class BasicCrater extends armisticeAutoSuper {
     {
         initialize(false);
 
-        moveEncoders(10);
+        moveEncoders(10,0.4);
 
         arm.setPower(0.3);
         holdUp(2);
