@@ -33,6 +33,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected DistanceSensor sensorRange;
     protected Orientation angles;
     protected Acceleration gravity;
+    protected GoldAlignDetector detector = null;
     static double CPI = (1120.0 * 0.66666)/(4.0 * Math.PI);
 
 
@@ -52,8 +53,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 //        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
 //        setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        FR.setDirection(DcMotor.Direction.REVERSE);
-        BR.setDirection(DcMotor.Direction.REVERSE);
+        FL.setDirection(DcMotor.Direction.REVERSE);
+        BL.setDirection(DcMotor.Direction.REVERSE);
 
         setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -64,6 +65,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         imu.initialize();
         imu.setOffset(0);
 
+        telemetry.addData("Status:", "IMU Initialized");
+        telemetry.update();
 
         waitForStart();
     }
@@ -230,7 +233,6 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected void strafeEncoders(double distanceInches, double pwr){
 
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         int currentPos1 = FL.getCurrentPosition();
         int currentPos2 = FR.getCurrentPosition();
         int currentPos3 = BL.getCurrentPosition();
@@ -248,17 +250,15 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         if (distanceInches>0) {
             BR.setPower(pwr);
             BL.setPower(-pwr);
-            FL.setPower(pwr);
-            FR.setPower(-pwr);
+            FL.setPower(-pwr);
+            FR.setPower(pwr);
         }
         else {
             BR.setPower(-pwr);
             BL.setPower(pwr);
-            FL.setPower(-pwr);
-            FR.setPower(pwr);
+            FL.setPower(pwr);
+            FR.setPower(-pwr);
         }
-
-        int count = 0;
 
         while(FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
             telemetry.addData("FL Encoder", FL.getCurrentPosition());
@@ -271,8 +271,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     }
 
     protected void moveEncoders(double distanceInches, double power){
-
-        // Reset encoders
+// Reset encoders
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int currentPos1 = FL.getCurrentPosition();

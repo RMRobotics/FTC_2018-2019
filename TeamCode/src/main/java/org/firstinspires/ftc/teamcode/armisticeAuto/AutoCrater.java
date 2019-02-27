@@ -20,17 +20,13 @@ public class AutoCrater extends armisticeAutoSuper{
 
     public void runOpMode(){
 
-                                                            //initialization
+        //initialization
         initialize(true);
         waitForStart();
 
-//        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
-//        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
-//        telemetry.update();
+        //Get off lander
+        // See Qube
 
-                                                            //Get off lander
-
-                                                            //See Qube
         detector = new GoldAlignDetector();
         DogeCVYellowDetector(detector);
         telemetry.addData("Detector X Pos: ", detector.goldPosCenterDiff());
