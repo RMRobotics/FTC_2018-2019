@@ -96,8 +96,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     {
         BR.setPower(pwr);
         BL.setPower(-pwr);
-        FL.setPower(pwr);
-        FR.setPower(-pwr);
+        FL.setPower(-pwr);
+        FR.setPower(pwr);
     }
 
     protected void print(String message, double time)
@@ -166,70 +166,6 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR.setPower(0);
     }
 
-    protected void dumbstrafeEncoders(double distanceInches, int dir, double pwr){
-        double angle = imu.getZAngle();
-        int currentPos1 = FL.getCurrentPosition();
-        int currentPos2 = FR.getCurrentPosition();
-        int currentPos3 = BL.getCurrentPosition();
-        int currentPos4 = BR.getCurrentPosition();
-        int distanceTics = dir*(int)(distanceInches * CPI);
-        double tickRatio;
-        int testCount = 0;
-
-        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        FL.setTargetPosition(currentPos1 + distanceTics);
-        FR.setTargetPosition(currentPos2 - distanceTics);
-        BL.setTargetPosition(currentPos3 - distanceTics);
-        BR.setTargetPosition(currentPos4 + distanceTics);
-
-        if (dir == 1) {
-            BR.setPower(pwr);
-            BL.setPower(-pwr);
-            FL.setPower(pwr);
-            FR.setPower(-pwr);
-        }
-
-        if (dir == -1) {
-            BR.setPower(-pwr);
-            BL.setPower(pwr);
-            FL.setPower(-pwr);
-            FR.setPower(pwr);
-        }
-
-        while(FL.isBusy() /*&& BL.isBusy() && BR.isBusy() && FL.isBusy()*/ && !gamepad1.b){
-            telemetry.addData(String.valueOf(testCount)," " + String.valueOf(FL.getCurrentPosition()));
-            telemetry.update();
-            testCount++;
-            if (Math.abs(-imu.getZAngle() - angle) >= 10){
-                currentPos1 = FL.getCurrentPosition();
-                imuTurn(-(imu.getZAngle() - angle),0.3);
-                //wheelFL.setTargetPosition(wheelFL.getTargetPosition() + wheelFL.getCurrentPosition() - pos);
-                angle = imu.getZAngle();
-                if (dir == 1) {
-                    BR.setPower(pwr);
-                    BL.setPower(-pwr);
-                    FL.setPower(pwr);
-                    FR.setPower(-pwr);
-                }
-                if (dir == -1) {
-                    BR.setPower(-pwr);
-                    BL.setPower(pwr);
-                    FL.setPower(-pwr);
-                    FR.setPower(pwr);
-                }
-            }
-        }
-        FR.setPower(0);
-        BR.setPower(0);
-        FL.setPower(0);
-        BL.setPower(0);
-        double angleFinal = -(imu.getXAngle() - angle);
-        imuTurn(angleFinal,0.3);
-    }
-
     protected void strafeEncoders(double distanceInches, double pwr){
 
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -270,6 +206,30 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         setDrive(0);
     }
 
+    protected void strafeEncoders(int pos1, int pos2, int pos3, int pos4, double pwr){
+
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        FL.setTargetPosition(pos1);
+        FR.setTargetPosition(pos2);
+        BL.setTargetPosition(pos3);
+        BR.setTargetPosition(pos4);
+
+        BR.setPower(pwr);
+        BL.setPower(-pwr);
+        FL.setPower(-pwr);
+        FR.setPower(pwr);
+
+        while(FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
+            telemetry.addData("FL Encoder", FL.getCurrentPosition());
+            telemetry.addData("BL Encoder", BL.getCurrentPosition());
+            telemetry.addData("FR Encoder", FR.getCurrentPosition());
+            telemetry.addData("BR Encoder", BR.getCurrentPosition());
+            telemetry.update();
+        }
+        setDrive(0);
+    }
+
     protected void moveEncoders(double distanceInches, double power){
 // Reset encoders
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -278,6 +238,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         int currentPos2 = FR.getCurrentPosition();
         int currentPos3 = BL.getCurrentPosition();
         int currentPos4 = BR.getCurrentPosition();
+        distanceInches = distanceInches * (24/11);
         //distanceTics is num of tics it needs to travel
         int distanceTics = (int)(distanceInches * CPI);
 

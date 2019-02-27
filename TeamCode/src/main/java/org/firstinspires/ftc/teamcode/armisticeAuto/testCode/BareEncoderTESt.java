@@ -125,9 +125,7 @@ public class BareEncoderTESt extends LinearOpMode {
     protected void strafeEncoders(double distanceInches, double pwr){
 
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        telemetry.addData("Checkpoint 2", "");
-        telemetry.update();
-        holdUp(2);
+
         int currentPos1 = FL.getCurrentPosition();
         int currentPos2 = FR.getCurrentPosition();
         int currentPos3 = BL.getCurrentPosition();
@@ -136,17 +134,11 @@ public class BareEncoderTESt extends LinearOpMode {
         int distanceTics = (int)(distanceInches * CPI);
 
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        telemetry.addData("Checkpoint 3", "");
-        telemetry.update();
-        holdUp(2);
 
         FL.setTargetPosition(currentPos1 + distanceTics);
         FR.setTargetPosition(currentPos2 - distanceTics);
         BL.setTargetPosition(currentPos3 - distanceTics);
         BR.setTargetPosition(currentPos4 + distanceTics);
-        telemetry.addData("Checkpoint 4", "");
-        telemetry.update();
-        holdUp(2);
 
         if (distanceInches>0) {
             BR.setPower(pwr);
@@ -160,9 +152,6 @@ public class BareEncoderTESt extends LinearOpMode {
             FL.setPower(pwr);
             FR.setPower(-pwr);
         }
-        telemetry.addData("Checkpoint 5", "");
-        telemetry.update();
-        holdUp(2);
         int count = 0;
 
         while(FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
@@ -175,6 +164,7 @@ public class BareEncoderTESt extends LinearOpMode {
             telemetry.update();
         }
         setDrive(0);
+        holdUp(5);
     }
 
     protected void holdUp(double num)
@@ -246,7 +236,7 @@ public class BareEncoderTESt extends LinearOpMode {
 //       moveEncodersMod(48, 0.4);
 //       moveEncoders(36);
 //       driveEncoder(48,0.5);
-      moveEncodersREAL(-48, 0.4);
+//      moveEncodersREAL(-48, 0.4);
        telemetry.addData("Checkpoint 1", "");
        telemetry.update();
        strafeEncoders(-48,0.4);

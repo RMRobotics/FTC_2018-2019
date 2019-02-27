@@ -35,11 +35,10 @@ public class teleop extends OpMode {
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
-       /* lift = hardwareMap.dcMotor.get("lift");
-        arm = hardwareMap.dcMotor.get("arm");
+       // lift = hardwareMap.dcMotor.get("lift");
 
         //maps and inits intake servo
-        intake = hardwareMap.crservo.get("intake");
+        /*intake = hardwareMap.crservo.get("intake");
         intake.setPower(0);*/
 
         //sets left side of drivetrain to reverse
@@ -53,9 +52,8 @@ public class teleop extends OpMode {
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         //sets other motors to brake
-        /*lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-*/
+        //lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         //lmao
         max = 1;
     }
@@ -116,12 +114,6 @@ public class teleop extends OpMode {
         BL.setPower((forward - strafe + rotate) / max);
         BR.setPower((forward + strafe - rotate) / max);
 
-        if (gamepad1.dpad_up){
-            setDrive(0.4,0.4,0.4,0.4);
-        }
-        else if (gamepad1.dpad_down){
-            setDrive(0,0,0,0);
-        }
         //Controls the lift to latch onto the lander
         /*if (gamepad2.right_trigger!=0 && gamepad2.left_trigger==0)
             lift.setPower(gamepad2.right_trigger);
@@ -129,12 +121,6 @@ public class teleop extends OpMode {
             lift.setPower(-gamepad2.left_trigger);
         else
             lift.setPower(0);
-
-        //Controls the arm
-        arm.setPower(gamepad2.left_stick_y/1.5);
-*/
-//        if (gamepad2.a)
-//            armSlam(3);
 
         //Controls the intake servo
       /*  if (gamepad1.right_trigger!=0 && gamepad1.left_trigger==0)

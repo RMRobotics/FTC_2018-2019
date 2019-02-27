@@ -45,33 +45,41 @@ public class OpenCVandMovementTest extends armisticeAutoSuper {
 
         detector.enable(); // Start the detector!
 
+        int dir;
         boolean flag = true;
 
-        while (flag) {
-            //Vars
-            int count = 0;
-            int change = 0;
-            int direction = 1;
-            double totalDistance = 0;
-            ElapsedTime timer = new ElapsedTime();
-            timer.reset();
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        int currentPos1 = FL.getCurrentPosition();
+        int currentPos2 = FR.getCurrentPosition();
+        int currentPos3 = BL.getCurrentPosition();
+        int currentPos4 = BR.getCurrentPosition();
 
-            if (detector.getAligned().equals(Direction.CENTER)) {
-                moveEncoders(10 * 1, 0.4);
-                flag = false;
-                //push mineral w/ arm
-            } else if (detector.getAligned().equals(Direction.LEFT)) {
-                while (detector.isFound() == false) {
-                    setStrafe(-0.3);
+        if (detector.getAligned().equals(Direction.CENTER))
+            dir = 0;
+
+        while (!detector.getAligned().equals(Direction.CENTER)) {
+            if (detector.getAligned().equals(Direction.LEFT)) {
+                setStrafe(-0.3);
+                dir = 1;
                 }
-            } else if (detector.getAligned().equals(Direction.RIGHT)) {
-                while (detector.isFound() == false) {
-                    setStrafe(0.3);
+            else if (detector.getAligned().equals(Direction.RIGHT)) {
+                setStrafe(0.3);
+                dir = -1;
                 }
-            } else {
+            else {
                 telemetry.addData("UNKNOWN","");
                 telemetry.update();
             }
         }
+        setDrive(0);
+        /*moveEncoders(20, 0.4);
+
+        if (FL.getCurrentPosition()<currentPos1)
+            strafeEncoders(currentPos1, currentPos2, currentPos3, currentPos4, -0.4);
+        else
+            strafeEncoders(currentPos1, currentPos2, currentPos3, currentPos4, 0.4);
+        imuTurn(
+*/
     }
 }
