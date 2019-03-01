@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+<Tracking>
+<ModelTarget name="Cube"/>
+
+</Tracking>
+
+<Assembly name="Cubes_assembly" assemblyId="57895af49f9349aaa51de3c191be2d33">
+<Part name="Cube" translation="0 0 0" rotation="AD: 0 0 1 0"/>
+<EntryPoint name="viewpoint_0000" translation="-0.00626441 -0.00487184 0.126699" rotation="AD: 0.9993303191205438 0.1059840151449816 -0.38340073439899425 208.808">
+
+</EntryPoint>
+
+</Assembly>
+
+</QCARConfig>

@@ -24,6 +24,15 @@ public class Position {
         this.rZ = rZ;
     }
 
+    public Position(Position position){
+        tX = position.gettX();
+        tY = position.gettY();
+        tZ = position.gettZ();
+        rX = position.getrX();
+        rY = position.getrY();
+        rZ = position.getrY();
+    }
+
     /**********MUTATORS**********/
     public void settX(double tX){ this.tX = tX; }
     public void settY(double tY){ this.tY = tY; }

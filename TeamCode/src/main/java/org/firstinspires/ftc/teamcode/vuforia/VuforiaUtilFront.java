@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.vuforia;
 
 /*
-Created on 2/8/19 by Neal Machado
-Vuforia Util Class v2 (refractored to VuforiaUtil on 2/16/19)
+Created on 2/25/19 by Neal Machado
  */
 
 /**********IMPORTS**********/
@@ -19,9 +18,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
+
 import java.util.ArrayList;
 
-public class VuforiaUtil {
+public class VuforiaUtilFront {
 
     /**********INSTANCE VARIABLES**********/
     public static final float MM_PER_INCH = 25.4f;
@@ -61,17 +61,17 @@ public class VuforiaUtil {
 
     /**********CONSTRUCTORS**********/
     //default Vuforia parameters set to front camera, no visual feedback
-    public VuforiaUtil(){
+    public VuforiaUtilFront(){
         this(false,  VuforiaLocalizer.CameraDirection.FRONT);
     }
 
     //constructor with defaulted visual feedback as the axes
-    public VuforiaUtil(boolean visualFeedback, VuforiaLocalizer.CameraDirection cameraDirection){
+    public VuforiaUtilFront(boolean visualFeedback, VuforiaLocalizer.CameraDirection cameraDirection){
         this(visualFeedback, cameraDirection, VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES, 90, 0, 0);
     }
 
     //constructor
-    public VuforiaUtil(boolean visualFeedback, VuforiaLocalizer.CameraDirection cameraDirection, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, float degreesX, float degreesY, float degreesZ){
+    public VuforiaUtilFront(boolean visualFeedback, VuforiaLocalizer.CameraDirection cameraDirection, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, float degreesX, float degreesY, float degreesZ){
         this.degreesX = degreesX;
         this.degreesY = degreesY;
         this.degreesZ = degreesZ;
@@ -252,56 +252,51 @@ public class VuforiaUtil {
     }
 
     private void retrieveRobotToImage(){
-            if(degreesY == 0){
-                robotToImage.settX(round(translation.get(0) / MM_PER_INCH, 2));
-                robotToImage.settY(round(translation.get(1) / MM_PER_INCH, 2));
-                robotToImage.settZ(-1 * round(translation.get(2) / MM_PER_INCH, 2));
-                robotToImage.setrX(to180(round(rot.firstAngle, 2)));
-                robotToImage.setrY(to180(round(rot.secondAngle, 2)));
-                robotToImage.setrZ(to180(round(rot.thirdAngle, 2)));
-            }
-            else if(degreesY == -90){
-                    robotToImage.settX(-1 * round(translation.get(1) / MM_PER_INCH, 2));
-                    robotToImage.settY(round(translation.get(0) / MM_PER_INCH, 2));
-                    robotToImage.settZ(-1 * round(translation.get(2) / MM_PER_INCH, 2));
-                    robotToImage.setrX(-1 * to180(round(rot.firstAngle, 2)));
-                    robotToImage.setrY(-1 * to180(round(rot.secondAngle, 2)));
-                    robotToImage.setrZ(round(to180(rot.thirdAngle - 90), 2));
-            }
-//            else if(cameraDirection == VuforiaLocalizer.CameraDirection.BACK){
-//                robotToImage.settX(round(translation.get(0) / MM_PER_INCH, 2));
-//                robotToImage.settY(round(translation.get(1) / MM_PER_INCH, 2));
-//                robotToImage.settZ(-1 * round(translation.get(2) / MM_PER_INCH, 2));
-//                robotToImage.setrX(to180(round(rot.firstAngle, 2)));
-//                robotToImage.setrY(to180(round(rot.secondAngle, 2)));
-//                robotToImage.setrZ(to180(round(rot.thirdAngle, 2)));
-//            }
+        robotToImage.settX(-1 * round(translation.get(1) / MM_PER_INCH, 2));
+        robotToImage.settY(round(translation.get(2) / MM_PER_INCH, 2));
+        robotToImage.settZ(round(translation.get(2) / MM_PER_INCH, 2));
+        robotToImage.setrX(to180(round(rot.firstAngle, 2)));
+        robotToImage.setrY(to180(round(rot.secondAngle, 2)));
+        robotToImage.setrZ(to180(round(rot.thirdAngle, 2)));
     }
 
     private void retrieveRobotToField(){
-            robotToField.settX(VuforiaUtil.round(location.get(0) / MM_PER_INCH, 2));
-            robotToField.settY(VuforiaUtil.round(location.get(1) / MM_PER_INCH, 2));
-            robotToField.settZ(VuforiaUtil.round(location.get(2) / MM_PER_INCH, 2));
+            robotToField.settX(VuforiaUtilFront.round(location.get(0) / MM_PER_INCH, 2));
+            robotToField.settY(VuforiaUtilFront.round(location.get(1) / MM_PER_INCH, 2));
+            robotToField.settZ(VuforiaUtilFront.round(location.get(2) / MM_PER_INCH, 2));
             switch (currentImage.getName()) {
                 case "BluePerimeter":
                     robotToField.setrX(-1 * round(rot.secondAngle, 2));
                     robotToField.setrY(round(rot.firstAngle, 2));
-                    robotToField.setrZ(round(to180(-1 * rot.secondAngle + 180), 2));
+                    robotToField.setrZ(-1 * round(to180(rot.secondAngle), 2));
                     break;
                 case "RedPerimeter":
                     robotToField.setrX(round(rot.secondAngle, 2));
                     robotToField.setrY(-1 * round(rot.firstAngle, 2));
-                    robotToField.setrZ(round(to180(-1 * rot.secondAngle), 2));
+                    robotToField.setrZ(round(to180(-1 * rot.secondAngle - 180), 2));
+                    if(robotToField.getrZ() < -160){
+                        robotToField.setrZ(round(-1 * (robotToField.getrZ() + 180), 2));
+                    }
+                    else if(robotToField.getrZ() > 160){
+                        robotToField.setrZ(round(-1 * (robotToField.getrZ() - 180), 2));
+                    }
                     break;
                 case "FrontPerimeter":
+                    robotToField.settY(round(142 / 2 + robotToImage.gettZ(), 2));
                     robotToField.setrX(-1 * round(rot.firstAngle, 2));
                     robotToField.setrY(-1 * round(rot.secondAngle, 2));
-                    robotToField.setrZ(round(to180(-1 * rot.secondAngle + 270), 2));
+                    robotToField.setrZ(round(to180(90 - rot.secondAngle), 2));
+                    if(robotToField.getrZ() > 0){
+                        robotToField.setrZ(-1 * robotToField.getrZ());
+                    }
                     break;
                 case "BackPerimeter":
                     robotToField.setrX(round(rot.firstAngle, 2));
                     robotToField.setrY(round(rot.secondAngle, 2));
-                    robotToField.setrZ(round(VuforiaUtil.to180(-1 * rot.secondAngle + 90), 2));
+                    robotToField.setrZ(round(to180(90 + rot.secondAngle), 2));
+                    if(robotToField.getrZ() < 0){
+                        robotToField.setrZ(-1 * robotToField.getrZ());
+                    }
                     break;
                 default:
                     robotToField.setrX(0);
