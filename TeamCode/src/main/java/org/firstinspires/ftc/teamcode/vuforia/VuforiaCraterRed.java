@@ -64,6 +64,7 @@ public class VuforiaCraterRed extends armisticeAutoSuper {
 
         imuTurn(-(90-robotToField.getrZ()), 0.4); //turn towards the depot
         strafeEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettX(), 0.4); //move up against the wall
+
         moveEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettY() - 24, 0.4); //move to depot
         moveEncoders(-(FTC_FIELD_WIDTH - 48), 0.4);
 
