@@ -25,7 +25,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected DcMotor BL;
     protected DcMotor BR;
     protected DcMotor lift;
-    protected DcMotor arm;
+    protected DcMotor hook;
     protected CRServo intake;
     protected ElapsedTime timer = new ElapsedTime();
     protected BNO055IMU rev;
@@ -34,7 +34,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected Orientation angles;
     protected Acceleration gravity;
     protected GoldAlignDetector detector = null;
-    static double CPI = (1120.0 * 0.66666)/(4.0 * Math.PI);
+    public static double CPI = (1120.0 * 0.66666)/(4.0 * Math.PI);
 
 
     public void initialize (Boolean i) {
@@ -44,9 +44,12 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR = hardwareMap.dcMotor.get("BR");
 //        intake = hardwareMap.crservo.get("intake");
 
-        /*lift = hardwareMap.dcMotor.get("lift");
-        arm = hardwareMap.dcMotor.get("arm");*/
-//        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //lift = hardwareMap.dcMotor.get("lift");
+
+        /*hook = hardwareMap.dcMotor.get("hook");
+        hook.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hook.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hook.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
 
 //        intake.setPower(0);
 
@@ -94,8 +97,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
     protected void setStrafe(double pwr)
     {
-        BR.setPower(pwr);
-        BL.setPower(-pwr);
+        BR.setPower(-pwr);
+        BL.setPower(pwr);
         FL.setPower(-pwr);
         FR.setPower(pwr);
     }
@@ -112,6 +115,32 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         timer.reset();
         while (timer.seconds()<num)
         {}
+    }
+
+    public void extendHook() {
+        telemetry.addData("Encoder Val", hook.getCurrentPosition());
+        telemetry.update();
+
+        hook.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hook.setTargetPosition(-37500);
+        hook.setPower(0.4);
+        while (hook.isBusy()) {
+
+        }
+        hook.setPower(0);
+    }
+
+    public void retractHook() {
+        telemetry.addData("Encoder Val", hook.getCurrentPosition());
+        telemetry.update();
+
+        hook.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hook.setTargetPosition(0);
+        hook.setPower(-0.4);
+        while (hook.isBusy()) {
+
+        }
+        hook.setPower(0);
     }
 
     protected void DogeCVYellowDetector(GoldAlignDetector detector){
@@ -238,7 +267,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         int currentPos2 = FR.getCurrentPosition();
         int currentPos3 = BL.getCurrentPosition();
         int currentPos4 = BR.getCurrentPosition();
-        distanceInches = distanceInches * (24/11);
+//        distanceInches = distanceInches * (24/11);
         //distanceTics is num of tics it needs to travel
         int distanceTics = (int)(distanceInches * CPI);
 
@@ -250,6 +279,40 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         FR.setTargetPosition(currentPos2 + distanceTics);
         BL.setTargetPosition(currentPos3 + distanceTics);
         BR.setTargetPosition(currentPos4 + distanceTics);
+
+        FL.setPower(power);
+        FR.setPower(power);
+        BL.setPower(power);
+        BR.setPower(power);
+
+        // Loop while we approach the target.  Display position as we go
+        while(FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
+            telemetry.addData("FL Encoder", FL.getCurrentPosition());
+            telemetry.addData("BL Encoder", BL.getCurrentPosition());
+            telemetry.addData("FR Encoder", FR.getCurrentPosition());
+            telemetry.addData("BR Encoder", BR.getCurrentPosition());
+            telemetry.update();
+        }
+
+        // We are done, turn motors off and switch back to normal driving mode.
+        FL.setPower(0);
+        FR.setPower(0);
+        BL.setPower(0);
+        BR.setPower(0);
+    }
+
+    protected void moveEncoders(int encoderCount, double power){
+// Reset encoders
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Prepare to drive to target position
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Set target position and speed
+        FL.setTargetPosition(encoderCount);
+        FR.setTargetPosition(encoderCount);
+        BL.setTargetPosition(encoderCount);
+        BR.setTargetPosition(encoderCount);
 
         FL.setPower(power);
         FR.setPower(power);

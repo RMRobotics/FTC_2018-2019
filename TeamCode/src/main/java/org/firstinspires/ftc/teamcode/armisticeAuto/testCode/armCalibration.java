@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.armisticeAuto.testCode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Angela on 2/27/2019.
@@ -10,7 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Autonomous(name = "Arm Calibration")
 public class armCalibration extends LinearOpMode {
 
-    protected DcMotor arm;
+    protected DcMotor arm, intake;
+    protected ElapsedTime timer = new ElapsedTime();
 
     public void initialize() {
         arm = hardwareMap.dcMotor.get("arm");
@@ -19,7 +21,13 @@ public class armCalibration extends LinearOpMode {
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
+    }
 
+    protected void holdUp(double num)
+    {
+        timer.reset();
+        while (timer.seconds()<num)
+        {}
     }
 
     public void extendArm() {
@@ -29,7 +37,7 @@ public class armCalibration extends LinearOpMode {
 //        if (gamepad1.x) {
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(-37500);
-        arm.setPower(0.4);
+        arm.setPower(1);
         while (arm.isBusy()) {
 
         }
@@ -55,7 +63,7 @@ public class armCalibration extends LinearOpMode {
 
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(0);
-        arm.setPower(-0.4);
+        arm.setPower(-1);
         while (arm.isBusy()) {
 
         }
@@ -67,6 +75,9 @@ public class armCalibration extends LinearOpMode {
         initialize();
 
         extendArm();
+        holdUp(2);
+        retractArm();
+
 
     }
 }

@@ -174,6 +174,13 @@ public class BareEncoderTESt extends LinearOpMode {
         {}
     }
 
+    protected void setStrafe(double pwr)
+    {
+        BR.setPower(-pwr);
+        BL.setPower(pwr);
+        FL.setPower(-pwr);
+        FR.setPower(pwr);
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -191,58 +198,16 @@ public class BareEncoderTESt extends LinearOpMode {
         }
         setDrive(0);*/
 
-     /*setDrive(0.4);
-        timer.reset();
-        while (timer.seconds()<5)
-        {
-
-        }*/
-
-      /*  FL.setPower(.5);
-        timer.reset();
-        while (timer.seconds()<5)
-        {
-
+       while (timer.seconds() < 5){
+            setStrafe(0.4);
         }
-        setDrive(0);
-
-        FR.setPower(.5);
-        timer.reset();
-        while (timer.seconds()<5)
-        {
-
+        holdUp(2);
+        while (timer.seconds() < 12){
+            setStrafe(-0.4);
         }
-        setDrive(0);
 
-        BL.setPower(.5);
-        timer.reset();
-        while (timer.seconds()<5)
-        {
-
-        }
-        setDrive(0);
-
-        BR.setPower(.5);
-        timer.reset();
-        while (timer.seconds()<5);
-        {
-
-        }
-        setDrive(0);
-*/
-
-
-
-//       moveEncodersMod(48, 0.4);
-//       moveEncoders(36);
-//       driveEncoder(48,0.5);
-//      moveEncodersREAL(-48, 0.4);
-       telemetry.addData("Checkpoint 1", "");
-       telemetry.update();
-       strafeEncoders(-48,0.4);
-       // 24 goes 11, 48 goes 22 for straight
+        // 24 goes 11, 48 goes 22 for straight
         // 48 goes 18 for strafing
-//         moveEncodersGerm(36,1);
 
     }
 }

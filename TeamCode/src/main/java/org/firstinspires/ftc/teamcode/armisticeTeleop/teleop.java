@@ -17,9 +17,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name = "armisticeTeleop",group = "tele")
 public class teleop extends OpMode {
 
-    protected DcMotor FL, FR, BL, BR, //drivetrain
-            lift,           //used to hold up the robot on the lander
-            arm;            //used for intake
+    protected DcMotor FL, FR, BL, BR;
+    protected DcMotor hook;            //used for latching hook
+    protected DcMotor arm;            //used for intake
 
     protected CRServo intake;           //spins surgical tubing for intake
 
@@ -51,10 +51,11 @@ public class teleop extends OpMode {
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        //sets other motors to brake
-        //lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        /*hook = hardwareMap.dcMotor.get("hook");
+        hook.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hook.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hook.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
 
-        //lmao
         max = 1;
     }
 
@@ -109,18 +110,19 @@ public class teleop extends OpMode {
         }
 
         //vroom vroom driving
-        FL.setPower((forward + strafe + rotate) / max);
-        FR.setPower((forward - strafe - rotate) / max);
-        BL.setPower((forward - strafe + rotate) / max);
-        BR.setPower((forward + strafe - rotate) / max);
+        FL.setPower((forward + strafe + rotate) / -max);
+        FR.setPower((forward - strafe - rotate) / -max);
+        BL.setPower((forward - strafe + rotate) / -max);
+        BR.setPower((forward + strafe - rotate) / -max);
 
-        //Controls the lift to latch onto the lander
-        /*if (gamepad2.right_trigger!=0 && gamepad2.left_trigger==0)
-            lift.setPower(gamepad2.right_trigger);
-        else if (gamepad2.right_trigger==0 && gamepad2.left_trigger!=0)
-            lift.setPower(-gamepad2.left_trigger);
+        //controls the hook for latching
+        /*if (gamepad1.left_trigger>0){
+            hook.setPower(1);
+        }
+        else if (gamepad1.right_trigger>0)
+            hook.setPower(-1);
         else
-            lift.setPower(0);
+            hook.setPower(0);*/
 
         //Controls the intake servo
       /*  if (gamepad1.right_trigger!=0 && gamepad1.left_trigger==0)

@@ -23,12 +23,13 @@ public class OpenCVandMovementTest extends armisticeAutoSuper {
 
         initialize(true);
 
-        //Move forward to see Qube
-        moveEncoders(30,0.4);
+        //extendHook();
+
+
 
         //See Qube
         detector = new GoldAlignDetector(); // Create detector
-        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(), 1, false); // Initialize it with the app context and camera
         detector.useDefaults(); // Set detector to use default settings
 
         // Optional tuning
@@ -45,6 +46,17 @@ public class OpenCVandMovementTest extends armisticeAutoSuper {
 
         detector.enable(); // Start the detector!
 
+        Direction direction = detector.getAligned();
+        while (direction.equals(Direction.UNKNOWN)) {
+            telemetry.addData("direction: ", direction);
+            telemetry.update();
+        }
+
+        telemetry.addData("direction: ", direction);
+        telemetry.update();
+
+        holdUp(1);
+
         int dir;
         boolean flag = true;
 
@@ -55,26 +67,32 @@ public class OpenCVandMovementTest extends armisticeAutoSuper {
         int currentPos3 = BL.getCurrentPosition();
         int currentPos4 = BR.getCurrentPosition();
 
-        if (detector.getAligned().equals(Direction.CENTER))
+        //Move forward to see Qube
+        moveEncoders(30,0.4);
+
+        if (direction.equals(Direction.CENTER))
             dir = 0;
 
         while (!detector.getAligned().equals(Direction.CENTER)) {
-            if (detector.getAligned().equals(Direction.LEFT)) {
-                setStrafe(-0.3);
+            holdUp(5);
+            if (direction.equals(Direction.LEFT)) {
+                setStrafe(0.3);
                 dir = 1;
                 }
-            else if (detector.getAligned().equals(Direction.RIGHT)) {
-                setStrafe(0.3);
+            else if (direction.equals(Direction.RIGHT)) {
+                setStrafe(-0.3);
                 dir = -1;
                 }
             else {
                 telemetry.addData("UNKNOWN","");
                 telemetry.update();
+
+
             }
         }
         setDrive(0);
-        /*moveEncoders(20, 0.4);
-
+        moveEncoders(20, 0.4);
+/*
         if (FL.getCurrentPosition()<currentPos1)
             strafeEncoders(currentPos1, currentPos2, currentPos3, currentPos4, -0.4);
         else
