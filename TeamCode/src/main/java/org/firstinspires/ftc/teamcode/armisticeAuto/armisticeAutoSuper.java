@@ -25,7 +25,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected DcMotor BL;
     protected DcMotor BR;
     protected DcMotor lift;
-    protected DcMotor arm;
+    protected DcMotor hook;
     protected CRServo intake;
     protected ElapsedTime timer = new ElapsedTime();
     protected BNO055IMU rev;
@@ -44,9 +44,12 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR = hardwareMap.dcMotor.get("BR");
 //        intake = hardwareMap.crservo.get("intake");
 
-        /*lift = hardwareMap.dcMotor.get("lift");
-        arm = hardwareMap.dcMotor.get("arm");*/
-//        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //lift = hardwareMap.dcMotor.get("lift");
+
+        /*hook = hardwareMap.dcMotor.get("hook");
+        hook.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hook.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hook.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
 
 //        intake.setPower(0);
 
@@ -94,8 +97,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
     protected void setStrafe(double pwr)
     {
-        BR.setPower(pwr);
-        BL.setPower(-pwr);
+        BR.setPower(-pwr);
+        BL.setPower(pwr);
         FL.setPower(-pwr);
         FR.setPower(pwr);
     }
@@ -112,6 +115,32 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         timer.reset();
         while (timer.seconds()<num)
         {}
+    }
+
+    public void extendHook() {
+        telemetry.addData("Encoder Val", hook.getCurrentPosition());
+        telemetry.update();
+
+        hook.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hook.setTargetPosition(-37500);
+        hook.setPower(0.4);
+        while (hook.isBusy()) {
+
+        }
+        hook.setPower(0);
+    }
+
+    public void retractHook() {
+        telemetry.addData("Encoder Val", hook.getCurrentPosition());
+        telemetry.update();
+
+        hook.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hook.setTargetPosition(0);
+        hook.setPower(-0.4);
+        while (hook.isBusy()) {
+
+        }
+        hook.setPower(0);
     }
 
     protected void DogeCVYellowDetector(GoldAlignDetector detector){
@@ -238,7 +267,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         int currentPos2 = FR.getCurrentPosition();
         int currentPos3 = BL.getCurrentPosition();
         int currentPos4 = BR.getCurrentPosition();
-        distanceInches = distanceInches * (24/11);
+//        distanceInches = distanceInches * (24/11);
         //distanceTics is num of tics it needs to travel
         int distanceTics = (int)(distanceInches * CPI);
 
