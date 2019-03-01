@@ -301,6 +301,40 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR.setPower(0);
     }
 
+    protected void moveEncoders(int encoderCount, double power){
+// Reset encoders
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Prepare to drive to target position
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Set target position and speed
+        FL.setTargetPosition(encoderCount);
+        FR.setTargetPosition(encoderCount);
+        BL.setTargetPosition(encoderCount);
+        BR.setTargetPosition(encoderCount);
+
+        FL.setPower(power);
+        FR.setPower(power);
+        BL.setPower(power);
+        BR.setPower(power);
+
+        // Loop while we approach the target.  Display position as we go
+        while(FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
+            telemetry.addData("FL Encoder", FL.getCurrentPosition());
+            telemetry.addData("BL Encoder", BL.getCurrentPosition());
+            telemetry.addData("FR Encoder", FR.getCurrentPosition());
+            telemetry.addData("BR Encoder", BR.getCurrentPosition());
+            telemetry.update();
+        }
+
+        // We are done, turn motors off and switch back to normal driving mode.
+        FL.setPower(0);
+        FR.setPower(0);
+        BL.setPower(0);
+        BR.setPower(0);
+    }
+
     protected void imuInfo(){
         telemetry.addData("Angle: ", imu.getZAngle());
         telemetry.update();
