@@ -33,6 +33,7 @@ public class VuforiaDepot extends armisticeAutoSuper {
         waitForStart();
 
         //Vars
+        int initialInches = 50;         //ANGELA, FOR YOU TO CHANGE
         boolean useVuforia = true;
         int initialEncoder = FL.getCurrentPosition();
         int count = 0;
@@ -47,7 +48,7 @@ public class VuforiaDepot extends armisticeAutoSuper {
         if(Vuforia.getRobotToFieldtX() == 0){
             setDrive(.4);
         }
-        while(Vuforia.getRobotToFieldtX() == 0 && (initialEncoder + (50 * CPI)) <  FL.getCurrentPosition()){
+        while(Vuforia.getRobotToFieldtX() == 0 && (initialEncoder + (initialInches * CPI)) <  FL.getCurrentPosition()){
             Vuforia.robotInformation();
         }
 
@@ -112,7 +113,7 @@ public class VuforiaDepot extends armisticeAutoSuper {
         else{
             telemetry.addData("Vuforia not used", "");
             telemetry.update();
-
+            //ANGELA, FOR YOU TO CHANGE VALUES USING ADVANCED DEAD RECKONING
         }
 
     }
