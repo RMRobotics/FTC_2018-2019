@@ -275,10 +275,9 @@ public class VuforiaUtilFront {
                     locationRot = Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
                     retrieveRobotToField();
                 }
+                break;
             }
-            else{
-                used = false;
-            }
+
         }
 
     }
