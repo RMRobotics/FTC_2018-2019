@@ -46,14 +46,14 @@ public class VuforiaCrater extends armisticeAutoSuper {
 
         Vuforia.robotInformation();
         if(! Vuforia.getUsed()){
-            telemetry.addData("sees pose", 0);
+            telemetry.addData("doesnt pose", 0);
             telemetry.update();
-            holdUp(2);
-            setDrive(.4);
+            //holdUp(2);
+            setDrive(0.4);
 
         }
         else{
-            telemetry.addData("doesnt see pose", 0);
+            telemetry.addData("see pose", 0);
             telemetry.update();
             holdUp(2);
         }

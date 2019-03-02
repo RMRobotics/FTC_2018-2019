@@ -187,7 +187,7 @@ public class BareEncoderTESt extends LinearOpMode {
 
         initialize();
 
-       /* initTime = timer.milliseconds();
+        initTime = timer.milliseconds();
         while (timer.milliseconds() - initTime < 4000) {
             setDrive(0.3);
             telemetry.addData("FL Encoder", FL.getCurrentPosition());
@@ -196,7 +196,7 @@ public class BareEncoderTESt extends LinearOpMode {
             telemetry.addData("BR Encoder", BR.getCurrentPosition());
             telemetry.update();
         }
-        setDrive(0);*/
+        setDrive(0);
 
       /* while (timer.seconds() < 5){
             setStrafe(0.4);
