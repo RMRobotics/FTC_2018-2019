@@ -29,7 +29,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected DcMotor BL;
     protected DcMotor BR;
     protected DcMotor lift;
-    protected DcMotor arm;
+    protected DcMotor hook;
     protected CRServo intake;
     protected Servo marker;
     protected ElapsedTime timer = new ElapsedTime();
@@ -182,70 +182,6 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR.setPower(0);
     }
 
-    protected void dumbstrafeEncoders(double distanceInches, int dir, double pwr){
-        double angle = imu.getZAngle();
-        int currentPos1 = FL.getCurrentPosition();
-        int currentPos2 = FR.getCurrentPosition();
-        int currentPos3 = BL.getCurrentPosition();
-        int currentPos4 = BR.getCurrentPosition();
-        int distanceTics = dir*(int)(distanceInches * CPI);
-        double tickRatio;
-        int testCount = 0;
-
-        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        FL.setTargetPosition(currentPos1 + distanceTics);
-        FR.setTargetPosition(currentPos2 - distanceTics);
-        BL.setTargetPosition(currentPos3 - distanceTics);
-        BR.setTargetPosition(currentPos4 + distanceTics);
-
-        if (dir == 1) {
-            BR.setPower(pwr);
-            BL.setPower(-pwr);
-            FL.setPower(pwr);
-            FR.setPower(-pwr);
-        }
-
-        if (dir == -1) {
-            BR.setPower(-pwr);
-            BL.setPower(pwr);
-            FL.setPower(-pwr);
-            FR.setPower(pwr);
-        }
-
-        while(FL.isBusy() /*&& BL.isBusy() && BR.isBusy() && FL.isBusy()*/ && !gamepad1.b){
-            telemetry.addData(String.valueOf(testCount)," " + String.valueOf(FL.getCurrentPosition()));
-            telemetry.update();
-            testCount++;
-            if (Math.abs(-imu.getZAngle() - angle) >= 10){
-                currentPos1 = FL.getCurrentPosition();
-                imuTurn(-(imu.getZAngle() - angle),0.3);
-                //wheelFL.setTargetPosition(wheelFL.getTargetPosition() + wheelFL.getCurrentPosition() - pos);
-                angle = imu.getZAngle();
-                if (dir == 1) {
-                    BR.setPower(pwr);
-                    BL.setPower(-pwr);
-                    FL.setPower(pwr);
-                    FR.setPower(-pwr);
-                }
-                if (dir == -1) {
-                    BR.setPower(-pwr);
-                    BL.setPower(pwr);
-                    FL.setPower(-pwr);
-                    FR.setPower(pwr);
-                }
-            }
-        }
-        FR.setPower(0);
-        BR.setPower(0);
-        FL.setPower(0);
-        BL.setPower(0);
-        double angleFinal = -(imu.getXAngle() - angle);
-        imuTurn(angleFinal,0.3);
-    }
-
     protected void moveEncoders(double distanceInches){
 
         int currentPos1 = FL.getCurrentPosition();
@@ -315,6 +251,18 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             FL.setPower(-pwr);
             FR.setPower(pwr);
         }
+        /* if (distanceInches>0) {
+            BR.setPower(pwr);
+            BL.setPower(-pwr);
+            FL.setPower(-pwr);
+            FR.setPower(pwr);
+        }
+        else {
+            BR.setPower(-pwr);
+            BL.setPower(pwr);
+            FL.setPower(pwr);
+            FR.setPower(-pwr);
+        }*/
 
         int count = 0;
 
@@ -331,64 +279,6 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         telemetry.addData("dope",count);
         telemetry.update();
     }
-
-    protected void dankEncoders(double distanceInches, int dir){
-        //dir of 1 will set left drive train's target to be negative
-        double speed = 0.5 * dir;
-        int currentPos = FR.getCurrentPosition();
-        //distanceTics is num of tics it needs to travel
-        int distanceTics = (int)(distanceInches * CPI);
-        double tickRatio;
-
-        FR.setTargetPosition(currentPos + distanceTics);
-        FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-//        BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        BR.setTargetPosition(currentPos + distanceTics);
-//        BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//        FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        FL.setTargetPosition(currentPos + distanceTics);
-//        FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//        BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        BL.setTargetPosition(currentPos + distanceTics);
-//        BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        BR.setPower(speed);
-        BL.setPower(speed);
-        FL.setPower(speed);
-        FR.setPower(speed);
-
-        print("checkpoint 1",0.5);
-
-        while(FR.isBusy()){ //  && BL.isBusy() && BR.isBusy() && FL.isBusy()){
-            tickRatio = ((double)FR.getCurrentPosition() - (double)currentPos) / distanceTics;
-//            speed = dir * ((-0.5) * (tickRatio) + 0.5);
-            if (dir > 0){
-                if (speed < 0.15)
-                    speed = 0.15;
-            }
-            else if (speed > -0.15){
-                    speed = -0.15;
-            }
-            print(String.valueOf(FR.getCurrentPosition())+" " +distanceTics,1);
-            BR.setPower(speed);
-            BL.setPower(speed);
-            FL.setPower(speed);
-            FR.setPower(speed);
-        }
-        FR.setPower(0);
-        BR.setPower(0);
-        FL.setPower(0);
-        BL.setPower(0);
-
-        print("checkpoint 2",0.5);
-    }
-
 
     protected void moveEncodersCount(int encoderCount, double power) {
 // Reset encoders

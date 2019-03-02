@@ -30,7 +30,6 @@ public class VuforiaCraterRed extends armisticeAutoSuper {
 
         //initialization
         initialize(true);
-        waitForStart();
 
         //Vars
         boolean useVuforia = true;

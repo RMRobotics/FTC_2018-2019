@@ -19,8 +19,6 @@ public class DanCVTest extends armisticeAutoSuper {
     @Override
     public void runOpMode() {
         initialize(true);
-        waitForStart();
-
 
         int  count = 0;
         while (count < 1000) {
