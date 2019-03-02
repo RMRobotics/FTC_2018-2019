@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  * Created by Angela on 3/1/2019.
  */
 @TeleOp(name = "Motor Calibration")
-public class motorCalibration extends OpMode {
+public class motorCalibration extends teleop {
 
     protected DcMotor FL, BL, FR, BR;
     protected int max;

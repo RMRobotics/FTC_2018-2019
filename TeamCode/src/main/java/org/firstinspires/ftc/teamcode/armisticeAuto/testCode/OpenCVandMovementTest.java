@@ -99,5 +99,13 @@ public class OpenCVandMovementTest extends armisticeAutoSuper {
             strafeEncoders(currentPos1, currentPos2, currentPos3, currentPos4, 0.4);
         imuTurn(
 */
+        //drop of marker
+        dropMarker();
+        holdUp(0.5);
+        raiseMarker();
+
+        moveEncodersCount(-8600, 0.4);
+
+
     }
 }

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -30,6 +31,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected DcMotor lift;
     protected DcMotor arm;
     protected CRServo intake;
+    protected Servo marker;
     protected ElapsedTime timer = new ElapsedTime();
     protected BNO055IMU rev;
     protected IIMU imu;
@@ -48,25 +50,25 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR = hardwareMap.dcMotor.get("BR");
 //        intake = hardwareMap.crservo.get("intake");
 
-        /*lift = hardwareMap.dcMotor.get("lift");
-        arm = hardwareMap.dcMotor.get("arm");*/
-//        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        marker = hardwareMap.servo.get("marker");
+
+        hook = hardwareMap.dcMotor.get("hook");
+        hook.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hook.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hook.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
 //        intake.setPower(0);
 
         FR.setDirection(DcMotor.Direction.REVERSE);
         BR.setDirection(DcMotor.Direction.REVERSE);
 //        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
+
 //        setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
         BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        FL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        FR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        BL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        BR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         rev = hardwareMap.get(BNO055IMU.class, "imu");
@@ -390,98 +392,62 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         print("checkpoint 2",0.5);
     }
 
-    protected void imuTurn1(double degree, double speed) {
-        imu.setOffset(0);
 
+    protected void moveEncodersCount(int encoderCount, double power) {
+// Reset encoders
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        telemetry.addData("FL Encoder", FL.getCurrentPosition());
+        telemetry.addData("BL Encoder", BL.getCurrentPosition());
+        telemetry.addData("FR Encoder", FR.getCurrentPosition());
+        telemetry.addData("BR Encoder", BR.getCurrentPosition());
+        telemetry.addData("power:", power);
+        telemetry.update();
         holdUp(2);
 
-        double err = 1.2, pwr = speed;
+        // Set target position and speed
+        FL.setTargetPosition(encoderCount);
+        FR.setTargetPosition(encoderCount);
+        BL.setTargetPosition(encoderCount);
+        BR.setTargetPosition(encoderCount);
 
-        int count = 2;
-        boolean flag = true;
-        boolean dir_cw;
+        FL.setPower(power);
+        FR.setPower(power);
+        BL.setPower(power);
+        BR.setPower(power);
 
-        if (degree > 0)
-            dir_cw = true;
-        else
-            dir_cw = false;
+        int lastFL = FL.getCurrentPosition(), lastFR = FR.getCurrentPosition(), lastBL = BL.getCurrentPosition(), lastBR = BR.getCurrentPosition();
 
-        while (flag)
-        {
-            telemetry.addData("imu X",imu.getXAngle());
-            telemetry.addData("imu Y",imu.getYAngle());
-            telemetry.addData("imu Z",imu.getZAngle());
+        // Loop while we approach the target.  Display position as we go
+        while (FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
+            telemetry.addData("FL dif:", FL.getCurrentPosition() - lastFL);
+            telemetry.addData("FR dif:", FR.getCurrentPosition() - lastFR);
+            telemetry.addData("BL dif:", BL.getCurrentPosition() - lastBL);
+            telemetry.addData("BR dif:", BR.getCurrentPosition() - lastBR);
+            telemetry.addData("FL Encoder", FL.getCurrentPosition());
+            telemetry.addData("BL Encoder", BL.getCurrentPosition());
+            telemetry.addData("FR Encoder", FR.getCurrentPosition());
+            telemetry.addData("BR Encoder", BR.getCurrentPosition());
+            telemetry.addData("power:", power);
             telemetry.update();
-
-            if (Math.abs(imu.getZAngle()-degree)<err) {
-                flag = false;
-                FL.setPower(0);
-                BL.setPower(0);
-                FR.setPower(0);
-                BR.setPower(0);
-            }
-            else if (dir_cw && Math.abs(imu.getZAngle()- degree) > err) {
-                if (imu.getZAngle()%10 == 0){
-                    count++;
-                }
-                pwr = speed/count;
-                if (pwr < 0.15)
-                    pwr = 0.15;
-                FL.setPower(-1*pwr);
-                BL.setPower(-1*pwr);
-                FR.setPower(pwr);
-                BR.setPower(pwr);
-            }
-            else if (!dir_cw && Math.abs(imu.getZAngle()- degree) > err) {
-                if (imu.getZAngle() % 10 == 0) {
-                    count++;
-                }
-                pwr = speed / count;
-                if (pwr < 0.15)
-                    pwr = 0.15;
-                FL.setPower(pwr);
-                BL.setPower(pwr);
-                FR.setPower(-1 * pwr);
-                BR.setPower(-1 * pwr);
-            }
-            else if (dir_cw && imu.getZAngle()>degree)
-            {
-                pwr = speed/count;
-                if (pwr < 0.15)
-                    pwr = 0.15;
-                FL.setPower(-1*pwr);
-                BL.setPower(-1*pwr);
-                FR.setPower(pwr);
-                BR.setPower(pwr);
-                count+=1;
-                dir_cw = !dir_cw;
-            }
-            else if (!dir_cw && imu.getZAngle()<degree)
-            {
-                pwr = speed/count;
-                if (pwr < 0.15)
-                    pwr = 0.15;
-                FL.setPower(pwr);
-                BL.setPower(pwr);
-                FR.setPower(-1*pwr);
-                BR.setPower(-1*pwr);
-                count+=1;
-                dir_cw = !dir_cw;
-            }
+            lastFL = FL.getCurrentPosition();
+            lastFR = FR.getCurrentPosition();
+            lastBL = BL.getCurrentPosition();
+            lastBR = BR.getCurrentPosition();
         }
-        FL.setPower(0);
-        BL.setPower(0);
-        FR.setPower(0);
-        BR.setPower(0);
-
-        imuInfo();
-        telemetry.update();
-        holdUp(5);
     }
 
     protected void imuInfo(){
         telemetry.addData("Angle: ", imu.getZAngle());
         telemetry.update();
+    }
+
+    protected void dropMarker(){
+        marker.setPosition(0.75);
+    }
+
+    protected void raiseMarker(){
+        marker.setPosition(0);
     }
 
     protected void imuTurn(double degree, double speed) {

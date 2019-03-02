@@ -4,7 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Angela on 2/27/2019.
@@ -13,12 +16,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class servoCalibration extends OpMode {
 
     protected DcMotor hook, intake;
+    protected Servo marker;
+    protected ElapsedTime timer = new ElapsedTime();
 
     public void init() {
         hook = hardwareMap.dcMotor.get("hook");
         hook.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hook.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hook.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        marker = hardwareMap.servo.get("marker");
 
         /*intake = hardwareMap.dcMotor.get("intake");
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -30,6 +37,7 @@ public class servoCalibration extends OpMode {
     public void loop(){
 
         telemetry.addData("Hook Encoder Val", hook.getCurrentPosition());
+        telemetry.addData("Marker Power", marker.getPosition());
         //telemetry.addData("Intake Encoder Val", intake.getCurrentPosition());
         telemetry.update();
 
@@ -42,6 +50,16 @@ public class servoCalibration extends OpMode {
             hook.setPower(0);
 
 
+
+        if (gamepad1.right_bumper){
+            marker.setPosition(0);
+//            holdUp(0.5);
+        }
+        else if (gamepad1.left_bumper){
+            marker.setPosition(0.75);
+//            holdUp(0.5);
+        }
+
         /*if (gamepad1.dpad_up){
             intake.setPower(0.5);
         }
@@ -49,5 +67,12 @@ public class servoCalibration extends OpMode {
             intake.setPower(-0.5);
         else
             intake.setPower(0);*/
+    }
+
+    protected void holdUp(double num)
+    {
+        timer.reset();
+        while (timer.seconds()<num)
+        {}
     }
 }
