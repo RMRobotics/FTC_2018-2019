@@ -38,8 +38,9 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected DistanceSensor sensorRange;
     protected Orientation angles;
     protected Acceleration gravity;
-    protected MineralDetector detector;
-    static double CPI = (1120.0 * 0.66666)/(4.0 * Math.PI);
+    //Also if something not accounted for
+    //protected MineralDetector detector;
+    public static double CPI = (1120.0 * 0.66666)/(4.0 * Math.PI);
 
 
     public void initialize (Boolean i) {
@@ -74,10 +75,12 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         imu = new RevIMU(rev);
         imu.initialize();
         imu.setOffset(0);
-        detector = new MineralDetector();
-        detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
-        detector.activate();
 
+
+        //This is just in case something has not to be accounted for
+//        detector = new MineralDetector();
+//        detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
+//        detector.activate();
         waitForStart();
     }
 
@@ -124,7 +127,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         {}
     }
 
-    protected void DanCVMineralDetector(Detector detector){
+    protected void DanCVMineralDetector(MineralDetector detector){
         detector = new MineralDetector();
         detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
         detector.activate();
@@ -182,7 +185,9 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR.setPower(0);
     }
 
-    protected void moveEncoders(double distanceInches){
+    protected void moveEncoders(double distanceInches, double power){
+// Reset encoders
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int currentPos1 = FL.getCurrentPosition();
         int currentPos2 = FR.getCurrentPosition();
@@ -191,34 +196,34 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         //distanceTics is num of tics it needs to travel
         int distanceTics = (int)(distanceInches * CPI);
 
-        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // Prepare to drive to target position
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        // Set target position and speed
         FL.setTargetPosition(currentPos1 + distanceTics);
         FR.setTargetPosition(currentPos2 + distanceTics);
         BL.setTargetPosition(currentPos3 + distanceTics);
         BR.setTargetPosition(currentPos4 + distanceTics);
 
-        if (distanceInches>0)
-            setDrive(0.5);
-        else
-            setDrive(-0.5);
+        FL.setPower(power);
+        FR.setPower(power);
+        BL.setPower(power);
+        BR.setPower(power);
 
-        int count = 0;
-
-        while (FL.isBusy() && !gamepad1.b){
-            count++;
-            telemetry.addData(String.valueOf(count),"");
+        // Loop while we approach the target.  Display position as we go
+        while(FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
+            telemetry.addData("FL Encoder", FL.getCurrentPosition());
+            telemetry.addData("BL Encoder", BL.getCurrentPosition());
+            telemetry.addData("FR Encoder", FR.getCurrentPosition());
+            telemetry.addData("BR Encoder", BR.getCurrentPosition());
             telemetry.update();
         }
 
-        setDrive(0);
-
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        telemetry.addData("dope",String.valueOf(count));
-        telemetry.update();
+        // We are done, turn motors off and switch back to normal driving mode.
+        FL.setPower(0);
+        FR.setPower(0);
+        BL.setPower(0);
+        BR.setPower(0);
     }
 
     protected void strafeEncoders(double distanceInches, double pwr){
