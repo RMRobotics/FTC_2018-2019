@@ -12,7 +12,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.DanCV.Detection.Detector;
+import org.firstinspires.ftc.teamcode.DanCV.UI.CVViewActivity;
 import org.firstinspires.ftc.teamcode.IIMU;
+import org.firstinspires.ftc.teamcode.DanCV.Detection.MineralDetector;
 
 /**
  * Created by Angelita on 11/20/2018.
@@ -33,6 +36,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected DistanceSensor sensorRange;
     protected Orientation angles;
     protected Acceleration gravity;
+    protected MineralDetector detector;
     static double CPI = (1120.0 * 0.66666)/(4.0 * Math.PI);
 
 
@@ -68,7 +72,9 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         imu = new RevIMU(rev);
         imu.initialize();
         imu.setOffset(0);
-
+        detector = new MineralDetector();
+        detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
+        detector.activate();
 
         waitForStart();
     }
@@ -116,10 +122,16 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         {}
     }
 
+    protected void DanCVMineralDetector(Detector detector){
+        detector = new MineralDetector();
+        detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
+        detector.activate();
+    }
+
     protected void DogeCVYellowDetector(GoldAlignDetector detector){
         // Set up detector
         detector = new GoldAlignDetector(); // Create detector
-        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(),1,false); // Initialize it with the app context and camera
         detector.useDefaults(); // Set detector to use default settings
 
         // Optional tuning
