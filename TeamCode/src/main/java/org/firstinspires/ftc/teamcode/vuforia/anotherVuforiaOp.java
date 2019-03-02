@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.R;
 
 import java.util.Arrays;
 
-@Autonomous(name = "anotherVuforiaOp")
+@Autonomous(name = "anotherVuforiaOp", group = "Vuforia")
 
 public class anotherVuforiaOp extends LinearOpMode{
 
@@ -86,14 +86,14 @@ public class anotherVuforiaOp extends LinearOpMode{
 
         images.activate();
 
-        while(opModeIsActive()){
-            double[][] info = VuforiaUtil.robotInformation(images);
-            telemetry.addData("Image ", VuforiaUtil.imageLocation((int)info[0][0]));
-            for(int i = 1; i < info.length; i++){
-                telemetry.addData("", Arrays.toString(info[i]));
-            }
-            telemetry.update();
-        }
+//        while(opModeIsActive()){
+//            double[][] info = VuforiaUtil.robotInformation(images);
+//            telemetry.addData("Image ", VuforiaUtil.imageLocation((int)info[0][0]));
+//            for(int i = 1; i < info.length; i++){
+//                telemetry.addData("", Arrays.toString(info[i]));
+//            }
+//            telemetry.update();
+//        }
     }
 
 

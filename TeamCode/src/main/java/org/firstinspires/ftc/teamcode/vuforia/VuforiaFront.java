@@ -1,17 +1,22 @@
 package org.firstinspires.ftc.teamcode.vuforia;
 
+/*
+Created by Neal on 2/25/19
+
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
-@Autonomous(name = "VuforiaUtilTest", group = "Vuforia")
+@Autonomous(name = "VuforiaFront", group = "Vuforia")
 
-public class VuforiaUtilTest extends LinearOpMode {
+public class VuforiaFront extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        VuforiaUtil test = new VuforiaUtil(true, VuforiaLocalizer.CameraDirection.FRONT, VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES, 90, 90, 90);
+        VuforiaUtilFront test = new VuforiaUtilFront(true, VuforiaLocalizer.CameraDirection.FRONT, VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES, 90, 90, 90);
 
         waitForStart();
 

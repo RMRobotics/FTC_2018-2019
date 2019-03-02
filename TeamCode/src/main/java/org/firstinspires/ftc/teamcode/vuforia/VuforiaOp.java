@@ -22,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 
-@Autonomous(name = "VuforiaOp")
+@Autonomous(name = "VuforiaOp", group = "Vuforia")
 public class VuforiaOp extends LinearOpMode {
 
     float mmPerInch = 25.4f;
@@ -81,7 +81,7 @@ public class VuforiaOp extends LinearOpMode {
 //                }
 //            }
 
-            double[][] wow = VuforiaUtil.robotInformation(images);
+//            double[][] wow = VuforiaUtil.robotInformation(images);
 
             telemetry.update();
         }

@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.armisticeAuto.armisticeAutoSuper;
  * Created by Angela on 11/24/2018.
  */
 
-//@Autonomous(name = "FieldAuto Test", group = "autotest")
+@Autonomous(name = "FieldAuto Test", group = "autotest")
 public class FieldAutoTest extends armisticeAutoSuper {
 
     private GoldAlignDetector detector;
@@ -29,57 +29,26 @@ public class FieldAutoTest extends armisticeAutoSuper {
         //Get off lander
 
         //Move forward to see Qube
-        moveEncoders(10.0);
+        moveEncoders(30,0.4);
+        holdUp(1);
 
         //See Qube
-        detector = new GoldAlignDetector();
-        DogeCVYellowDetector(detector);
+        strafeEncoders(-48,0.4);
+        holdUp(1);
 
-        //Vars
-        int count = 0;
-        int change = 0;
-        int direction = 1;
-        double totalDistance = 0;
-        ElapsedTime timer = new ElapsedTime();
-        timer.reset();
+        moveEncoders(-48,0.4);
+        holdUp(1);
 
+       /* strafeEncoders(48,0.4);
+        holdUp(1);
+        */
 
-        while (detector.isFound() == false && timer.seconds() < 5){
-            strafeEncoders(3, 0.4);
-            count++;
-
-            if (change%2 == 1) {
-                totalDistance--;
-            }
-            else {
-                totalDistance++;
-            }
-
-            if (count > 5) {
-                strafeEncoders(14.5,0.4);
-                count = 0;
-                totalDistance = 0;
-                direction = -direction;
-                change++;
-            }
-        }
-        if (detector.isFound() == true){
-            position = detector.getAligned();
-            strafeEncoders(20, 0.4);
-        }
-        else
-        {
-            if (totalDistance < 0) {
-                totalDistance = -totalDistance + 20;
-            }
-            strafeEncoders(totalDistance, 0.4);
-        }
-        moveEncoders(5); //knock off yellow mineral
-        moveEncoders(-5);
+        /*moveEncoders(5,0.4); //knock off yellow mineral
+        moveEncoders(-5,0.4);
         imuTurn(45, 0.4);
-        moveEncoders(20);
+        moveEncoders(20,0.4);
         //drop off flag
         imuTurn(180, 0.4);
-        moveEncoders(30);
+        moveEncoders(30,0.4);*/
     }
 }

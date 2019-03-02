@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 
-@Autonomous(name = "VuforiaRecognize")
+@Autonomous(name = "VuforiaRecognize", group = "Vuforia")
 public class VuforiaRecognize extends LinearOpMode {
 
     @Override

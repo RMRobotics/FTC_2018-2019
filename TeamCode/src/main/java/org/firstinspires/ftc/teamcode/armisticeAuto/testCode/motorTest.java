@@ -30,7 +30,7 @@ public class motorTest extends armisticeAutoSuper {
             telemetry.addData("both bumpers", "end OpMode");
             telemetry.update();
 
-            arm.setPower(gamepad1.right_stick_y);
+            hook.setPower(gamepad1.right_stick_y);
 
             /*if (gamepad1.dpad_left) {
                 imuTurn(90, 0.4);
@@ -71,7 +71,7 @@ public class motorTest extends armisticeAutoSuper {
                 intake.setPower(gamepad1.right_trigger);
             }*/
             else if (gamepad1.x) {
-                moveEncoders(15);
+                moveEncoders(15,0.4);
             } else if (gamepad1.y) {
                 toggle = !toggle;
             }

@@ -110,24 +110,24 @@ public class AutoDepot extends armisticeAutoSuper{
 
 
                                                             //knock off yellow mineral
-        moveEncoders(5* 1);
+        moveEncoders(5* 1,0.4);
 
                                                             //go back to initial pos and turn
-        moveEncoders(5* -1);
+        moveEncoders(5* -1,0.4);
         imuTurn(90, 0.4);
 
                                                             //move to turn point and turn
-        moveEncoders(55* 1);
+        moveEncoders(55* 1,0.4);
         imuTurn(135,0.4);
 
                                                             //move to home depot and drop flag
-        moveEncoders(60*1);
+        moveEncoders(60*1,0.4);
 
                                                             //turn arouuuuuuund every now and then i get a little bit lonely
         imuTurn(180, 0.4);
 
                                                             //travel from depot to crater
-        moveEncoders(69* 1);
+        moveEncoders(69* 1,0.4);
 
                                                             //drop arm in crater
 //        arm.setPower(0.3);

@@ -20,25 +20,20 @@ public class AutoCrater extends armisticeAutoSuper{
 
     public void runOpMode(){
 
-                                                            //initialization
+        //initialization
         initialize(true);
         waitForStart();
 
-//        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
-//        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
-//        telemetry.update();
+        //Get off lander
+        // See Qube
 
-                                                            //Get off lander
-        //lmao we dont have this yet
-
-                                                            //See Qube
         detector = new GoldAlignDetector();
         DogeCVYellowDetector(detector);
         telemetry.addData("Detector X Pos: ", detector.goldPosCenterDiff());
         telemetry.update();
 
         //Move forward to see Qube
-//        moveEncoders(10.0);
+        moveEncoders(20, 0.4);
 
         //Vars
         int count = 0;
@@ -63,11 +58,7 @@ public class AutoCrater extends armisticeAutoSuper{
             setDrive(0);
         }
 
-        moveEncoders(12);
-
-
-
-        double distance = sensorRange.getDistance(DistanceUnit.INCH);
+        moveEncoders(-24,0.4);
 
                                                             //knock off yellow mineral
        /* moveEncoders(5);
