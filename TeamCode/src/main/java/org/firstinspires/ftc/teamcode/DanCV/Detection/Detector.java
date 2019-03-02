@@ -39,7 +39,7 @@ public abstract class Detector implements CameraBridgeViewBase.CvCameraViewListe
     public abstract RelativeDistance getRelativeDistance();
     public abstract RelativePosition getRelativePos();
     public abstract boolean isVisible();
-    public abstract double getNoiseLevel();
+    //public abstract double getNoiseLevel();
     public abstract boolean isCentered();
     public abstract boolean isReady();
     public abstract boolean isInited();

@@ -38,6 +38,7 @@ public class MineralDetector extends Detector  {
     private boolean showProcessFrame;
     private boolean inited;
     private boolean isReady = false;
+    private double resizeVal;
 
     public MineralDetector(){
         this.lower = new Scalar(20,190,100);
@@ -50,38 +51,7 @@ public class MineralDetector extends Detector  {
         mCnt = new MatOfPoint();
         kernel = new Mat(5,5,CvType.CV_8UC1,new Scalar(255));
         mContours = new ArrayList<>();
-    }
-
-    public MineralDetector(int centerBounds){
-        this.lower = new Scalar(0,112,178);
-        this.upper = new Scalar(20,255,255);
-        this.centerBounds = centerBounds;
-        this.buffer = new Rect();
-        this.showProcessFrame = false;
-    }
-
-    public MineralDetector(Scalar lower, Scalar upper){
-        this.lower = lower;
-        this.upper = upper;
-        this.centerBounds = 100;
-        this.buffer = new Rect();
-        this.showProcessFrame = false;
-    }
-
-    public MineralDetector(Scalar lower, Scalar upper, int centerBounds){
-        this.lower = lower;
-        this.upper = upper;
-        this.centerBounds = centerBounds;
-        this.buffer = new Rect();
-        this.showProcessFrame = false;
-    }
-
-    private void defaultInit(){
-        this.lower = new Scalar(15,150,160);
-        this.upper = new Scalar(50,255,255);
-        this.centerBounds = 100;
-        this.buffer = new Rect();
-        this.showProcessFrame = false;
+        resizeVal = 1.0;
     }
 
     public void toggleShowProcessFrame() {
@@ -100,14 +70,32 @@ public class MineralDetector extends Detector  {
         this.showProcessFrame = showProcessFrame;
     }
 
+    public void setResizeVal(double resizeVal) {
+        this.resizeVal = resizeVal;
+    }
+
+
+    private void resizeFrame(Mat frame){
+        Size initialSize = frame.size();
+        if(resizeVal != 0.0){
+            Size resize = new Size(initialSize.width*resizeVal,initialSize.height*resizeVal);
+            Imgproc.resize(frame,frame,resize);
+        }
+    }
+
+    private void reverseResize(Mat frame){
+        Size initialSize = frame.size();
+        Imgproc.resize(frame,frame,new Size(initialSize.width/resizeVal,initialSize.height/resizeVal));
+    }
+
     @Override
     protected Mat processFrame(Mat frame) {
-
         frame.copyTo(mFrame);
         frame.copyTo(mOriginalFrame);
         frame.release();
+        resizeFrame(mFrame);
         preProcessFrame();
-
+        reverseResize(mFrame);
         Imgproc.findContours(mFrame,mContours,new Mat(),Imgproc.RETR_TREE,Imgproc.CHAIN_APPROX_SIMPLE);
         //Imgproc.drawContours(mFrame,mContours,1,new Scalar(0,255,0),1);
         if(!(mContours == null) && mContours.size() > 0){
@@ -227,7 +215,7 @@ public class MineralDetector extends Detector  {
         }
     }
 
-    public Rect trackContours(List<MatOfPoint> contours){
+    private Rect trackContours(List<MatOfPoint> contours){
         // of the contours, this is the one we care about
         MatOfPoint cnt = contours.get(0);
 
@@ -275,22 +263,23 @@ public class MineralDetector extends Detector  {
 
     @Override
     public RelativePosition getRelativePos() {
-        RelativePosition position;
+
+        if(!(isReady() && isInited())){
+            return RelativePosition.UNKNOWN;
+        }
         int frameWidth = mOriginalFrame.width();
         int centerX = buffer.x;
         if(centerX > (frameWidth/2)+centerBounds){
-            position = RelativePosition.RIGHT;
+            return RelativePosition.RIGHT;
         }else if(centerX < (frameWidth/2)-centerBounds){
-            position = RelativePosition.LEFT;
+            return RelativePosition.LEFT;
 
         }else if((centerX > (frameWidth/2)-centerBounds) && (centerX < (frameWidth/2)+centerBounds) ){
-            position = RelativePosition.CENTER;
+            return RelativePosition.CENTER;
         }else{
-            position = RelativePosition.UNKNOWN;
+            return RelativePosition.UNKNOWN;
         }
         //Log.d(TAG, "Relative Position: " + position.name());
-
-        return position;
     }
 
     private RelativePosition getRelPosition(Mat frame, Rect box) {
@@ -313,11 +302,7 @@ public class MineralDetector extends Detector  {
         return (!buffer.empty());
     }
 
-    @Override
-    public double getNoiseLevel() {
-        Log.d(TAG, "Contours: " + (mContours.size()-1));
-        return mContours.size()-1;
-    }
+
 
     @Override
     public boolean isCentered() {
