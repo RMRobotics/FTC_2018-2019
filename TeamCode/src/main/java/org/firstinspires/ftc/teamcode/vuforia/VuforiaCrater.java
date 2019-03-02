@@ -48,6 +48,10 @@ public class VuforiaCrater extends armisticeAutoSuper {
         if(Vuforia.getRobotToFieldtX() == 0){
             setDrive(.4);
         }
+        telemetry.addData("Checkpoint", 0);
+        telemetry.update();
+        holdUp(2);
+
         while(Vuforia.getRobotToFieldtX() == 0 && (initialEncoder + (initialInches * CPI)) <  FL.getCurrentPosition()){
             Vuforia.robotInformation();
         }
@@ -60,6 +64,9 @@ public class VuforiaCrater extends armisticeAutoSuper {
         if(Vuforia.getRobotToFieldtX() == 0){
             useVuforia = false;
         }
+        telemetry.addData("Use Vuforia", useVuforia);
+        telemetry.update();
+        holdUp(2);
 
         if(useVuforia){
             if(Vuforia.getRobotToImagetZ() > 12.5){

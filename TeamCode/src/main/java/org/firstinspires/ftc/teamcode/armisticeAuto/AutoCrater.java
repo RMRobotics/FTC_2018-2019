@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.DanCV.Enums.RelativePosition;
 public class AutoCrater extends armisticeAutoSuper{
 
     private GoldAlignDetector detector;
-    private com.disnodeteam.dogecv.detectors.roverrukus.Direction position = Direction.UNKNOWN;
 
     public void runOpMode(){
 

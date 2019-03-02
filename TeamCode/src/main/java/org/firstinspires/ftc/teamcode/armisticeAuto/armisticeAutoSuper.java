@@ -345,10 +345,12 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         telemetry.addData("Encoder Val", hook.getCurrentPosition());
         telemetry.update();
         hook.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hook.setTargetPosition(-37500);
-        hook.setPower(1);
+        hook.setTargetPosition(37000);
+        hook.setPower(0.7);
         while (hook.isBusy()) {
 
+            telemetry.addData("Encoder Val", hook.getCurrentPosition());
+            telemetry.update();
         }
         hook.setPower(0);
     }
@@ -359,7 +361,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
         hook.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         hook.setTargetPosition(0);
-        hook.setPower(-1);
+        hook.setPower(-0.4);
         while (hook.isBusy()) {
 
         }
