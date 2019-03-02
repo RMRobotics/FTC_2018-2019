@@ -21,11 +21,27 @@ public class teleop extends OpMode {
     protected DcMotor hook;            //used for latching hook
     protected DcMotor arm;            //used for intake
 
-    protected CRServo intake;           //spins surgical tubing for intake
+    protected CRServo intake;//spins surgical tubing for intake
+
+    protected Servo marker;
 
     protected double max;//max motor value
 
     protected ElapsedTime timer = new ElapsedTime();
+
+    protected void setMode(DcMotor.RunMode r) {
+        FL.setMode(r);
+        FR.setMode(r);
+        BL.setMode(r);
+        BR.setMode(r);
+    }
+
+    protected void setZeroMode(DcMotor.ZeroPowerBehavior z) {
+        FL.setZeroPowerBehavior(z);
+        FR.setZeroPowerBehavior(z);
+        BL.setZeroPowerBehavior(z);
+        BR.setZeroPowerBehavior(z);
+    }
 
     @Override
     public void init() {
@@ -51,10 +67,16 @@ public class teleop extends OpMode {
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        /*hook = hardwareMap.dcMotor.get("hook");
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+        hook = hardwareMap.dcMotor.get("hook");
         hook.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hook.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hook.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+        hook.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        marker = hardwareMap.servo.get("marker");
 
         max = 1;
     }
@@ -91,6 +113,14 @@ public class teleop extends OpMode {
     @Override
     public void loop() {
 
+        telemetry.addData("FL Encoder", FL.getCurrentPosition());
+        telemetry.addData("BL Encoder", BL.getCurrentPosition());
+        telemetry.addData("FR Encoder", FR.getCurrentPosition());
+        telemetry.addData("BR Encoder", BR.getCurrentPosition());
+        telemetry.addData("Power", FL.getPower());
+        telemetry.update();
+
+
         //Three parameters for the motor speed
         double forward, strafe, rotate;
         forward = -gamepad1.left_stick_y;
@@ -116,13 +146,24 @@ public class teleop extends OpMode {
         BR.setPower((forward + strafe - rotate) / -max);
 
         //controls the hook for latching
-        /*if (gamepad1.left_trigger>0){
+        if (gamepad1.left_trigger>0){
             hook.setPower(1);
         }
         else if (gamepad1.right_trigger>0)
             hook.setPower(-1);
         else
-            hook.setPower(0);*/
+            hook.setPower(0);
+
+
+        if (gamepad1.right_bumper){
+            marker.setPosition(marker.getPosition()+0.05);
+        }
+        else if (gamepad1.left_bumper){
+            marker.setPosition(marker.getPosition()-0.05);
+        }
+
+        telemetry.addData("position:",marker.getPosition());
+        telemetry.update();
 
         //Controls the intake servo
       /*  if (gamepad1.right_trigger!=0 && gamepad1.left_trigger==0)

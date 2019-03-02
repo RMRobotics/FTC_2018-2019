@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -27,6 +28,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected DcMotor lift;
     protected DcMotor hook;
     protected CRServo intake;
+    protected Servo marker;
     protected ElapsedTime timer = new ElapsedTime();
     protected BNO055IMU rev;
     protected IIMU imu;
@@ -44,17 +46,16 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR = hardwareMap.dcMotor.get("BR");
 //        intake = hardwareMap.crservo.get("intake");
 
-        //lift = hardwareMap.dcMotor.get("lift");
+        marker = hardwareMap.servo.get("marker");
 
-        /*hook = hardwareMap.dcMotor.get("hook");
+        hook = hardwareMap.dcMotor.get("hook");
         hook.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hook.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hook.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+        hook.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 //        intake.setPower(0);
 
 //        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
-//        setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
 
         FL.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.REVERSE);
@@ -301,12 +302,21 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BR.setPower(0);
     }
 
-    protected void moveEncoders(int encoderCount, double power){
+    protected void moveEncodersCount(int encoderCount, double power){
 // Reset encoders
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Prepare to drive to target position
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        telemetry.addData("FL Encoder", FL.getCurrentPosition());
+        telemetry.addData("BL Encoder", BL.getCurrentPosition());
+        telemetry.addData("FR Encoder", FR.getCurrentPosition());
+        telemetry.addData("BR Encoder", BR.getCurrentPosition());
+        telemetry.addData("power:",power);
+        telemetry.update();
+        holdUp(2);
 
         // Set target position and speed
         FL.setTargetPosition(encoderCount);
@@ -319,13 +329,24 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BL.setPower(power);
         BR.setPower(power);
 
+        int lastFL = FL.getCurrentPosition(),lastFR = FR.getCurrentPosition(),lastBL = BL.getCurrentPosition(),lastBR = BR.getCurrentPosition();
+
         // Loop while we approach the target.  Display position as we go
         while(FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
+            telemetry.addData("FL dif:",FL.getCurrentPosition()-lastFL);
+            telemetry.addData("FR dif:",FR.getCurrentPosition()-lastFR);
+            telemetry.addData("BL dif:",BL.getCurrentPosition()-lastBL);
+            telemetry.addData("BR dif:",BR.getCurrentPosition()-lastBR);
             telemetry.addData("FL Encoder", FL.getCurrentPosition());
             telemetry.addData("BL Encoder", BL.getCurrentPosition());
             telemetry.addData("FR Encoder", FR.getCurrentPosition());
             telemetry.addData("BR Encoder", BR.getCurrentPosition());
+            telemetry.addData("power:",power);
             telemetry.update();
+            lastFL = FL.getCurrentPosition();
+            lastFR = FR.getCurrentPosition();
+            lastBL = BL.getCurrentPosition();
+            lastBR = BR.getCurrentPosition();
         }
 
         // We are done, turn motors off and switch back to normal driving mode.
@@ -338,6 +359,14 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected void imuInfo(){
         telemetry.addData("Angle: ", imu.getZAngle());
         telemetry.update();
+    }
+
+    protected void dropMarker(){
+        marker.setPosition(0.75);
+    }
+
+    protected void raiseMarker(){
+        marker.setPosition(0);
     }
 
     protected void imuTurn(double degree, double speed) {

@@ -198,13 +198,14 @@ public class BareEncoderTESt extends LinearOpMode {
         }
         setDrive(0);*/
 
-       while (timer.seconds() < 5){
+      /* while (timer.seconds() < 5){
             setStrafe(0.4);
         }
         holdUp(2);
         while (timer.seconds() < 12){
             setStrafe(-0.4);
-        }
+        }*/
+
 
         // 24 goes 11, 48 goes 22 for straight
         // 48 goes 18 for strafing

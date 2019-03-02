@@ -29,14 +29,14 @@ public class FieldAutoTest extends armisticeAutoSuper {
         //Get off lander
 
         //Move forward to see Qube
-        moveEncoders(30,0.4);
+        moveEncoders(30.0,0.4);
         holdUp(1);
 
         //See Qube
         strafeEncoders(-48,0.4);
         holdUp(1);
 
-        moveEncoders(-48,0.4);
+        moveEncoders(-48.0,0.4);
         holdUp(1);
 
        /* strafeEncoders(48,0.4);
@@ -50,5 +50,12 @@ public class FieldAutoTest extends armisticeAutoSuper {
         //drop off flag
         imuTurn(180, 0.4);
         moveEncoders(30,0.4);*/
+
+        /*dropMarker();
+        holdUp(0.5);
+        raiseMarker();
+
+        moveEncodersCount(-8600, 0.4);
+*/
     }
 }
