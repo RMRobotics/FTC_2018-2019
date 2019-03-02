@@ -24,19 +24,19 @@ public class AutoCrater extends armisticeAutoSuper{
         //initialization
         initialize(true);
 
-        /*MineralDetector detector = new MineralDetector();
+        MineralDetector detector = new MineralDetector();
         detector = DanCVMineralDetector(detector);
         detector.setResizeVal(0.5);
 
         telemetry.addData("Is Ready", detector.isReady());
         telemetry.addData("Init Done", detector.isInited());
-        telemetry.update();*/
+        telemetry.update();
 
         waitForStart();
 
         //Get off lander
         extendHook();
-        /*strafeEncoders(-10, 0.4);
+        strafeEncoders(20, 0.4);
 
         while (opModeIsActive()) {
             //This method returns a value from the Relative Position enum - see Enum Package folder in DanCV for more info
@@ -53,6 +53,8 @@ public class AutoCrater extends armisticeAutoSuper{
             telemetry.update();
         }
         RelativePosition direction = detector.getRelativePos();
+        telemetry.addData("direction", detector.getRelativePos());
+        telemetry.update();
 
 /*
 
