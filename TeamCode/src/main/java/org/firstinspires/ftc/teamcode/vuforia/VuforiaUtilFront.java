@@ -36,6 +36,8 @@ public class VuforiaUtilFront {
     private float degreesY;
     private float degreesZ;
 
+    private boolean used;
+
     private OpenGLMatrix phoneOnRobot;
     private OpenGLMatrix blueImageOnField;
     private OpenGLMatrix redImageOnField;
@@ -74,6 +76,8 @@ public class VuforiaUtilFront {
 
     //constructor
     public VuforiaUtilFront(boolean visualFeedback, VuforiaLocalizer.CameraDirection cameraDirection, VuforiaLocalizer.Parameters.CameraMonitorFeedback feedback, float degreesX, float degreesY, float degreesZ){
+        used = false;
+
         this.degreesX = degreesX;
         this.degreesY = degreesY;
         this.degreesZ = degreesZ;
@@ -262,7 +266,7 @@ public class VuforiaUtilFront {
 
             if(pose != null){
                 currentImage = images.get(i);
-
+                used = true;
                 robotToImage.settX(5);
                 retrieveData();
                 retrieveRobotToImage();
@@ -271,6 +275,9 @@ public class VuforiaUtilFront {
                     locationRot = Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
                     retrieveRobotToField();
                 }
+            }
+            else{
+                used = false;
             }
         }
 
@@ -368,6 +375,7 @@ public class VuforiaUtilFront {
     public double getRobotToFieldrX(){ return robotToField.getrX(); }
     public double getRobotToFieldrY(){ return robotToField.getrY(); }
     public double getRobotToFieldrZ(){ return robotToField.getrZ(); }
+    public boolean getUsed(){ return used; }
 
 
     /**********STATIC UTILITY METHODS**********/
