@@ -144,10 +144,10 @@ public class teleop extends OpMode {
 
 
         if (gamepad1.right_bumper){
-            marker.setPosition(marker.getPosition()+0.05);
+            marker.setPosition(0);
         }
         else if (gamepad1.left_bumper){
-            marker.setPosition(marker.getPosition()-0.05);
+            marker.setPosition(0.75);
         }
 
         telemetry.addData("position:",marker.getPosition());
