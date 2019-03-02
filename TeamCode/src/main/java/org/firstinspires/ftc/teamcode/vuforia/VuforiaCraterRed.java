@@ -17,6 +17,8 @@ import org.firstinspires.ftc.teamcode.vuforia.VuforiaUtilFront;
  * Created by Neal on 2/27/2019.
  */
 
+@Autonomous(name = "VuforiaCraterRed", group = "Vuforia")
+
 public class VuforiaCraterRed extends armisticeAutoSuper {
 
     public static final double FTC_FIELD_WIDTH = 12*12 - 2;
@@ -32,7 +34,7 @@ public class VuforiaCraterRed extends armisticeAutoSuper {
 
         //Vars
         boolean useVuforia = true;
-        int initialEncoder = 0;
+        int initialEncoder = FL.getCurrentPosition();
         int count = 0;
         int change = 0;
         int direction = 1;
@@ -41,26 +43,81 @@ public class VuforiaCraterRed extends armisticeAutoSuper {
         timer.reset();
 
 
-        imuTurn(-90,0.4);
-
         Vuforia.robotInformation();
         if(Vuforia.getRobotToFieldtX() == 0){
             setDrive(.4);
         }
-        while(Vuforia.getRobotToFieldtX() == 0 && (initialEncoder + (12 * 2)) <  1){
+        while(Vuforia.getRobotToFieldtX() == 0 && (initialEncoder + (12 * CPI)) <  FL.getCurrentPosition()){
             Vuforia.robotInformation();
         }
-        setDrive(0);
 
-
-        if(Vuforia.getRobotToImagetZ() > 12.5){
-            setDrive(.2);
-        }
-        while(Vuforia.getRobotToImagetX() > 12.5 && Vuforia.getRobotToImagetY() > 12.5){
-        }
         setDrive(0);
-        Vuforia.stillRobotInformation();
-        robotToField = new Position(Vuforia.getRobotToField());
+        telemetry.addData("Checkpoint", 1);
+        telemetry.update();
+        holdUp(2);
+
+        if(Vuforia.getRobotToFieldtX() == 0){
+            useVuforia = false;
+        }
+
+        if(useVuforia){
+            if(Vuforia.getRobotToImagetZ() > 12.5){
+                setDrive(.2);
+            }
+            while(Vuforia.getRobotToImagetX() > 12.5 && Vuforia.getRobotToImagetZ() > 12.5){
+                Vuforia.robotInformation();
+                telemetry.addData("tX: " + Vuforia.getRobotToImagetX() + "tZ", Vuforia.getRobotToImagetZ());
+                telemetry.update();
+            }
+            setDrive(0);
+            Vuforia.stillRobotInformation();
+            robotToField = new Position(Vuforia.getRobotToField());
+
+            telemetry.addData("tX: " + robotToField.gettX() + "tY", robotToField.gettY());
+            telemetry.update();
+
+            holdUp(10);
+
+            telemetry.addData("Checkpoint", 2);
+            holdUp(2);
+
+            if(Vuforia.getCurrentImageName().equals("RedPerimeter")){
+                imuTurn(-(90-robotToField.getrZ()), 0.4); //turn towards the depot
+                telemetry.addData("Checkpoint", 3);
+                holdUp(2);
+                strafeEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettX(), 0.4); //move up against the wall
+                telemetry.addData("Checkpoint", 4);
+                holdUp(2);
+                strafeEncoders(-1, 0.4);
+                telemetry.addData("Checkpoint", 5);
+                holdUp(2);
+                moveEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettY() - 24, 0.4); //move to depot
+            }
+            else{
+                if(robotToField.gettZ() > 0){
+                    imuTurn(90 - (180 - robotToField.gettZ()), 0.4);
+                }
+                else{
+                    imuTurn(90 + (180 + robotToField.gettZ()), 0.4);
+                }
+                telemetry.addData("Checkpoint", 3);
+                holdUp(2);
+                strafeEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettX(), 0.4); //move up against the wall
+                telemetry.addData("Checkpoint", 4);
+                holdUp(2);
+                strafeEncoders(1, 0.4);
+                telemetry.addData("Checkpoint", 5);
+                holdUp(2);
+                moveEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettY() - 24, 0.4); //move to depot
+            }
+            telemetry.addData("Checkpoint", 6);
+            holdUp(2);
+            moveEncoders(-(FTC_FIELD_WIDTH - 48), 0.4);
+        }
+        else{
+            telemetry.addData("Vuforia not used", "");
+            telemetry.update();
+        }
 
         imuTurn(-(90-robotToField.getrZ()), 0.4); //turn towards the depot
         strafeEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettX(), 0.4); //move up against the wall
