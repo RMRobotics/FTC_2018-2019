@@ -36,7 +36,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected DistanceSensor sensorRange;
     protected Orientation angles;
     protected Acceleration gravity;
-    protected MineralDetector detector;
+    //Also if something not accounted for
+    //protected MineralDetector detector;
     static double CPI = (1120.0 * 0.66666)/(4.0 * Math.PI);
 
 
@@ -72,10 +73,12 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         imu = new RevIMU(rev);
         imu.initialize();
         imu.setOffset(0);
-        detector = new MineralDetector();
-        detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
-        detector.activate();
 
+
+        //This is just in case something has not to be accounted for
+//        detector = new MineralDetector();
+//        detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
+//        detector.activate();
         waitForStart();
     }
 
@@ -122,7 +125,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         {}
     }
 
-    protected void DanCVMineralDetector(Detector detector){
+    protected void DanCVMineralDetector(MineralDetector detector){
         detector = new MineralDetector();
         detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
         detector.activate();
