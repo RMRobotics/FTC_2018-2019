@@ -58,11 +58,9 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         hook.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-//        intake.setPower(0);
 
         FR.setDirection(DcMotor.Direction.REVERSE);
         BR.setDirection(DcMotor.Direction.REVERSE);
-//        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
 
 //        setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
         BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -81,7 +79,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 //        detector = new MineralDetector();
 //        detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
 //        detector.activate();
-        waitForStart();
+//        waitForStart();
     }
 
     protected void setMode(DcMotor.RunMode r) {
@@ -127,10 +125,11 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         {}
     }
 
-    protected void DanCVMineralDetector(MineralDetector detector){
+    protected MineralDetector DanCVMineralDetector(MineralDetector detector){
         detector = new MineralDetector();
-        detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
+        detector.init(hardwareMap.appContext, CVViewActivity.getInstance(),1);
         detector.activate();
+        return detector;
     }
 
     protected void DogeCVYellowDetector(GoldAlignDetector detector){
@@ -340,6 +339,31 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
     protected void raiseMarker(){
         marker.setPosition(0);
+    }
+
+    protected void extendHook() {
+        telemetry.addData("Encoder Val", hook.getCurrentPosition());
+        telemetry.update();
+        hook.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hook.setTargetPosition(-37500);
+        hook.setPower(1);
+        while (hook.isBusy()) {
+
+        }
+        hook.setPower(0);
+    }
+
+    public void retractHook(){
+        telemetry.addData("Encoder Val", hook.getCurrentPosition());
+        telemetry.update();
+
+        hook.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hook.setTargetPosition(0);
+        hook.setPower(-1);
+        while (hook.isBusy()) {
+
+        }
+        hook.setPower(0);
     }
 
     protected void imuTurn(double degree, double speed) {

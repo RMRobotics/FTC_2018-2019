@@ -182,6 +182,7 @@ public class MineralDetector extends Detector  {
     public void activate() {
         super.activate();
         isReady = true;
+
     }
 
     public boolean isInited() {
@@ -301,8 +302,6 @@ public class MineralDetector extends Detector  {
     public boolean isVisible() {
         return (!buffer.empty());
     }
-
-
 
     @Override
     public boolean isCentered() {

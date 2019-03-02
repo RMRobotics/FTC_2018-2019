@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.DanCV.Detection.MineralDetector;
+import org.firstinspires.ftc.teamcode.DanCV.Enums.RelativePosition;
 
 /**
  * Created by Neal on 12/6/2018.
@@ -22,69 +24,89 @@ public class AutoCrater extends armisticeAutoSuper{
 
         //initialization
         initialize(true);
+
+        /*MineralDetector detector = new MineralDetector();
+        detector = DanCVMineralDetector(detector);
+        detector.setResizeVal(0.5);
+
+        telemetry.addData("Is Ready", detector.isReady());
+        telemetry.addData("Init Done", detector.isInited());
+        telemetry.update();*/
+
         waitForStart();
 
         //Get off lander
-        // See Qube
+        extendHook();
+        /*strafeEncoders(-10, 0.4);
 
-        detector = new GoldAlignDetector();
-        DogeCVYellowDetector(detector);
-        telemetry.addData("Detector X Pos: ", detector.goldPosCenterDiff());
-        telemetry.update();
+        while (opModeIsActive()) {
+            //This method returns a value from the Relative Position enum - see Enum Package folder in DanCV for more info
+            //Can yield LEFT,RIGHT,CENTER, or UNKNOWN (not visible)
+            telemetry.addData("Detected Position", detector.getRelativePos().name());
+
+            //Yields whether object is centered or not
+            telemetry.addData("Centered? ", detector.isCentered());
+
+            //Whether its visible (may have problems, but should work)
+            telemetry.addData("Visible", detector.isVisible());
+
+            //Update Telemetry
+            telemetry.update();
+        }
+        RelativePosition direction = detector.getRelativePos();
+
+/*
 
         //Move forward to see Qube
-        moveEncoders(20, 0.4);
-
-        //Vars
-        int count = 0;
-        int change = 0;
-        int direction = 1;
-        double totalDistance = 0;
-        ElapsedTime timer = new ElapsedTime();
-        timer.reset();
+        moveEncoders(30, 0.4);
 
         //align with mineral
-        if (detector.getAligned().equals(Direction.LEFT)){
-//            dumbstrafeEncoders(12, -1, 0.4);
-            while(detector.isFound()==false){
+        int dir;
+        boolean flag = true;
+
+        if (direction.equals(Direction.CENTER))
+            dir = 0;
+
+        while (!detector.getRelativePos().equals(Direction.CENTER)) {
+            holdUp(5);
+            if (direction.equals(Direction.LEFT)) {
                 setStrafe(0.3);
+                dir = 1;
             }
-            setDrive(0);
-        }
-        else if (detector.getAligned().equals(Direction.RIGHT)){
-            while(detector.isFound()==false){
+            else if (direction.equals(Direction.RIGHT)) {
                 setStrafe(-0.3);
+                dir = -1;
             }
-            setDrive(0);
+            else {
+                telemetry.addData("UNKNOWN","");
+                telemetry.update();
+            }
+        }
+        setDrive(0);
+
+        //knock off cube
+        moveEncoders(20, 0.4);
+
+        if (direction.equals(Direction.LEFT)) {
+            strafeEncoders();
+        }
+        else if (direction.equals(Direction.RIGHT)) {
+            strafeEncoders();
+        }
+        else if (direction.equals(Direction.CENTER)) {
+            strafeEncoders();
         }
 
-        moveEncoders(-24,0.4);
-
-                                                            //knock off yellow mineral
-       /* moveEncoders(5);
-
-                                                            //go back to initial pos and turn
-        moveEncoders(5 * -1);
         imuTurn(90, 0.4);
 
-                                                            //move to turn point and turn
-        moveEncoders(55);
-        imuTurn(45,0.4);
+        //Vuforia stuff
 
-                                                            //go to home depot
-        moveEncoders(32);
+        //drop of marker
+        dropMarker();
+        holdUp(0.5);
+        raiseMarker();
 
-                                                            //drop off flag
-        arm.setPower(0.3);
-        holdUp(2);
-        arm.setPower(0);
-
-        //turn arouuuuuuund every now and then i get a little bit lonely
-        imuTurn(180, 0.4);
-
-        //travel from depot to crater
-        moveEncoders(69);*/
-
-        //drop arm in crater
+        moveEncodersCount(-8600, 0.4);
+*/
     }
 }

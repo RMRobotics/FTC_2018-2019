@@ -11,14 +11,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "Arm Calibration")
 public class armCalibration extends LinearOpMode {
 
-    protected DcMotor arm, intake;
+    protected DcMotor hook, intake;
     protected ElapsedTime timer = new ElapsedTime();
 
     public void initialize() {
-        arm = hardwareMap.dcMotor.get("arm");
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hook = hardwareMap.dcMotor.get("hook");
+        hook.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hook.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hook.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
     }
@@ -31,43 +31,30 @@ public class armCalibration extends LinearOpMode {
     }
 
     public void extendArm() {
-        telemetry.addData("Encoder Val", arm.getCurrentPosition());
+        telemetry.addData("Encoder Val", hook.getCurrentPosition());
         telemetry.update();
 
 //        if (gamepad1.x) {
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setTargetPosition(-37500);
-        arm.setPower(1);
-        while (arm.isBusy()) {
+        hook.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hook.setTargetPosition(-37500);
+        hook.setPower(1);
+        while (hook.isBusy()) {
 
         }
-        arm.setPower(0);
+        hook.setPower(0);
     }
-/*        else if (gamepad1.y) {
-            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm.setTargetPosition(0);
-            arm.setPower(-0.4);
-            while (arm.isBusy()) {
-
-            }
-            arm.setPower(0);
-        }
-        else
-            arm.setPower(0);
-            }
-*/
 
     public void retractArm() {
-        telemetry.addData("Encoder Val", arm.getCurrentPosition());
+        telemetry.addData("Encoder Val", hook.getCurrentPosition());
         telemetry.update();
 
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setTargetPosition(0);
-        arm.setPower(-1);
-        while (arm.isBusy()) {
+        hook.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hook.setTargetPosition(0);
+        hook.setPower(-1);
+        while (hook.isBusy()) {
 
         }
-        arm.setPower(0);
+        hook.setPower(0);
     }
 
     @Override

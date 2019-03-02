@@ -19,8 +19,6 @@ public class teleop extends OpMode {
 
     protected DcMotor FL, FR, BL, BR;
     protected DcMotor hook;            //used for latching hook
-    protected DcMotor arm;            //used for intake
-
     protected CRServo intake;//spins surgical tubing for intake
 
     protected Servo marker;
@@ -89,16 +87,6 @@ public class teleop extends OpMode {
         telemetry.update();
     }
 
-    protected void armSlam(int sec) {
-
-//        timer.reset();
-//        double x = gamepad2.right_stick_y;
-//        while (timer.seconds()<=sec || gamepad2.right_stick_y > 0){
-//            if ((int)timer.seconds()==timer.seconds())
-//                x/= 5;
-//            arm.setPower(x);
-//        }
-    }
 
     /*
         this method sets the four wheels' powers to all the input values

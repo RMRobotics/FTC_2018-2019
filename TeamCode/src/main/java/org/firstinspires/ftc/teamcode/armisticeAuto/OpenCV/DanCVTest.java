@@ -24,6 +24,10 @@ public class DanCVTest extends armisticeAutoSuper {
         //Check armisticeAutoSuper for the implementation
         DanCVMineralDetector(detector);
 
+
+        waitForStart();
+
+
         int  count = 0;
         while (count < 1000) {
             telemetry.addData("Is Ready", detector.isReady());
