@@ -17,9 +17,9 @@ import org.firstinspires.ftc.teamcode.vuforia.VuforiaUtilFront;
  * Created by Neal on 2/27/2019.
  */
 
-@Autonomous(name = "VuforiaCraterRed", group = "Vuforia")
+@Autonomous(name = "VuforiDepot", group = "auto")
 
-public class VuforiaCraterRed extends armisticeAutoSuper {
+public class VuforiaDepot extends armisticeAutoSuper {
 
     public static final double FTC_FIELD_WIDTH = 12*12 - 2;
     private VuforiaUtilFront Vuforia = new VuforiaUtilFront(true, VuforiaLocalizer.CameraDirection.BACK, VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES, 90, -90, 0);
@@ -30,6 +30,7 @@ public class VuforiaCraterRed extends armisticeAutoSuper {
 
         //initialization
         initialize(true);
+        waitForStart();
 
         //Vars
         boolean useVuforia = true;
@@ -46,7 +47,7 @@ public class VuforiaCraterRed extends armisticeAutoSuper {
         if(Vuforia.getRobotToFieldtX() == 0){
             setDrive(.4);
         }
-        while(Vuforia.getRobotToFieldtX() == 0 && (initialEncoder + (12 * CPI)) <  FL.getCurrentPosition()){
+        while(Vuforia.getRobotToFieldtX() == 0 && (initialEncoder + (50 * CPI)) <  FL.getCurrentPosition()){
             Vuforia.robotInformation();
         }
 
@@ -69,7 +70,7 @@ public class VuforiaCraterRed extends armisticeAutoSuper {
                 telemetry.update();
             }
             setDrive(0);
-            Vuforia.stillRobotInformation();
+            Vuforia.bootlegStillRobotInformation();
             robotToField = new Position(Vuforia.getRobotToField());
 
             telemetry.addData("tX: " + robotToField.gettX() + "tY", robotToField.gettY());
@@ -80,34 +81,29 @@ public class VuforiaCraterRed extends armisticeAutoSuper {
             telemetry.addData("Checkpoint", 2);
             holdUp(2);
 
-            if(Vuforia.getCurrentImageName().equals("RedPerimeter")){
-                imuTurn(-(90-robotToField.getrZ()), 0.4); //turn towards the depot
+            if(Vuforia.getCurrentImageName().equals("BackPerimeter")){
+                imuTurn(robotToField.getrZ(), 0.4); //turn towards the depot
                 telemetry.addData("Checkpoint", 3);
                 holdUp(2);
-                strafeEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettX(), 0.4); //move up against the wall
-                telemetry.addData("Checkpoint", 4);
-                holdUp(2);
-                strafeEncoders(-1, 0.4);
-                telemetry.addData("Checkpoint", 5);
-                holdUp(2);
-                moveEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettY() - 24, 0.4); //move to depot
-            }
-            else{
-                if(robotToField.gettZ() > 0){
-                    imuTurn(90 - (180 - robotToField.gettZ()), 0.4);
-                }
-                else{
-                    imuTurn(90 + (180 + robotToField.gettZ()), 0.4);
-                }
-                telemetry.addData("Checkpoint", 3);
-                holdUp(2);
-                strafeEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettX(), 0.4); //move up against the wall
+                strafeEncoders(-1 * (FTC_FIELD_WIDTH / 2 - robotToField.gettY()), 0.4); //move up against the wall
                 telemetry.addData("Checkpoint", 4);
                 holdUp(2);
                 strafeEncoders(1, 0.4);
                 telemetry.addData("Checkpoint", 5);
                 holdUp(2);
-                moveEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettY() - 24, 0.4); //move to depot
+                moveEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettX() - 24, 0.4); //move to depot
+            }
+            else{
+                imuTurn((180 + robotToField.getrZ()), 0.4);
+                telemetry.addData("Checkpoint", 3);
+                holdUp(2);
+                strafeEncoders(-1 * (FTC_FIELD_WIDTH / 2 + robotToField.gettY()), 0.4); //move up against the wall
+                telemetry.addData("Checkpoint", 4);
+                holdUp(2);
+                strafeEncoders(1, 0.4);
+                telemetry.addData("Checkpoint", 5);
+                holdUp(2);
+                moveEncoders(FTC_FIELD_WIDTH / 2 + robotToField.gettX() - 24, 0.4); //move to depot
             }
             telemetry.addData("Checkpoint", 6);
             holdUp(2);
@@ -116,13 +112,8 @@ public class VuforiaCraterRed extends armisticeAutoSuper {
         else{
             telemetry.addData("Vuforia not used", "");
             telemetry.update();
+
         }
-
-        imuTurn(-(90-robotToField.getrZ()), 0.4); //turn towards the depot
-        strafeEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettX(), 0.4); //move up against the wall
-
-        moveEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettY() - 24, 0.4); //move to depot
-        moveEncoders(-(FTC_FIELD_WIDTH - 48), 0.4);
 
     }
 

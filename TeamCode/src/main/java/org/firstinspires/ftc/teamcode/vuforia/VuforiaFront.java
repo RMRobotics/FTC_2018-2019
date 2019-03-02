@@ -21,7 +21,7 @@ public class VuforiaFront extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()){
-            test.robotInformation();
+            test.bootlegStillRobotInformation();
             telemetry.addData("Image ", test.getCurrentImageName());
             telemetry.addData("\n(RTI_tran) X: " + test.getRobotToImagetX() + ", Y: " + test.getRobotToImagetY() + ", Z: " + test.getRobotToImagetZ(), "");
             telemetry.addData("(RTI_rot) X: " + test.getRobotToImagerX() + ", Y: " + test.getRobotToImagerY() + ", Z: " + test.getRobotToImagerZ(), "");

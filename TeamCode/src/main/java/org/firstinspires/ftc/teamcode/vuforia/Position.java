@@ -33,6 +33,11 @@ public class Position {
         rZ = position.getrY();
     }
 
+    /**********METHODS**********/
+    public boolean equals(Position pos){
+        return (tX == pos.gettX()) && (tY == pos.gettY()) && (tZ == pos.gettZ()) && (rX == pos.getrX()) && (rY == pos.getrY()) && (rZ == pos.getrZ());
+    }
+
     /**********MUTATORS**********/
     public void settX(double tX){ this.tX = tX; }
     public void settY(double tY){ this.tY = tY; }

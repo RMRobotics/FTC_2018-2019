@@ -58,6 +58,8 @@ public class VuforiaUtilFront {
 
     private Position robotToImage;
     private Position robotToField;
+    private Position robotToImage1;
+    private Position robotToField1;
 
     /**********CONSTRUCTORS**********/
     //default Vuforia parameters set to front camera, no visual feedback
@@ -98,7 +100,7 @@ public class VuforiaUtilFront {
         images.get(3).setName("BackPerimeter");
 
         OpenGLMatrix phoneOnRobot = OpenGLMatrix
-                .translation(0, robotSize / 2, 0)
+                .translation(1.75f, robotSize / 2, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XYZ,
                         AngleUnit.DEGREES, degreesX, degreesY, degreesZ));
@@ -151,6 +153,8 @@ public class VuforiaUtilFront {
 
         robotToField = new Position();
         robotToImage = new Position();
+        robotToField1 = new Position();
+        robotToImage1 = new Position();
     }
 
     /**********METHODS**********/
@@ -162,11 +166,13 @@ public class VuforiaUtilFront {
         ArrayList<Position> robotToImages = new ArrayList();
         ArrayList<Position> robotToFields = new ArrayList();
         int count = 0;
-        while(robotToImages.size() < 6 && count < 25){
+        while(robotToImages.size() < 6 && count < 100){
             robotInformation();
-            if(robotToField != null && robotToImage != null){
+            if(!(robotToField.equals(new Position())) && !(robotToImage.equals(new Position()))){
                 robotToImages.add(new Position(robotToImage));
                 robotToFields.add(new Position(robotToField));
+                robotToImage = new Position();
+                robotToField = new Position();
             }
             count++;
         }
@@ -188,33 +194,65 @@ public class VuforiaUtilFront {
             robotToImage = new Position();
             robotToField = new Position();
             for(int l = 0; l < 6; l++){
-                robotToImage.settX(robotToImage.gettX() + robotToImages.get(l).gettX());
-                robotToImage.settY(robotToImage.gettY() + robotToImages.get(l).gettY());
-                robotToImage.settZ(robotToImage.gettZ() + robotToImages.get(l).gettZ());
-                robotToImage.setrX(robotToImage.getrX() + robotToImages.get(l).getrX());
-                robotToImage.setrY(robotToImage.getrY() + robotToImages.get(l).getrY());
-                robotToImage.setrZ(robotToImage.getrZ() + robotToImages.get(l).getrZ());
-                robotToField.settX(robotToField.gettX() + robotToFields.get(l).gettX());
-                robotToField.settY(robotToField.gettY() + robotToFields.get(l).gettY());
-                robotToField.settZ(robotToField.gettZ() + robotToFields.get(l).gettZ());
-                robotToField.setrX(robotToField.getrX() + robotToFields.get(l).getrX());
-                robotToField.setrY(robotToField.getrY() + robotToFields.get(l).getrY());
-                robotToField.setrZ(robotToField.getrZ() + robotToFields.get(l).getrZ());
+                robotToImage1.settX(robotToImage.gettX() + robotToImages.get(l).gettX());
+                robotToImage1.settY(robotToImage.gettY() + robotToImages.get(l).gettY());
+                robotToImage1.settZ(robotToImage.gettZ() + robotToImages.get(l).gettZ());
+                robotToImage1.setrX(robotToImage.getrX() + robotToImages.get(l).getrX());
+                robotToImage1.setrY(robotToImage.getrY() + robotToImages.get(l).getrY());
+                robotToImage1.setrZ(robotToImage.getrZ() + robotToImages.get(l).getrZ());
+                robotToField1.settX(robotToField.gettX() + robotToFields.get(l).gettX());
+                robotToField1.settY(robotToField.gettY() + robotToFields.get(l).gettY());
+                robotToField1.settZ(robotToField.gettZ() + robotToFields.get(l).gettZ());
+                robotToField1.setrX(robotToField.getrX() + robotToFields.get(l).getrX());
+                robotToField1.setrY(robotToField.getrY() + robotToFields.get(l).getrY());
+                robotToField1.setrZ(robotToField.getrZ() + robotToFields.get(l).getrZ());
             }
-            robotToImage.settX(robotToImage.gettX() / 6);
-            robotToImage.settY(robotToImage.gettY() / 6);
-            robotToImage.settZ(robotToImage.gettZ() / 6);
-            robotToImage.setrX(robotToImage.getrX() / 6);
-            robotToImage.setrY(robotToImage.getrY() / 6);
-            robotToImage.setrZ(robotToImage.getrZ() / 6);
-            robotToField.settX(robotToField.gettX() / 6);
-            robotToField.settY(robotToField.gettY() / 6);
-            robotToField.settZ(robotToField.gettZ() / 6);
-            robotToField.setrX(robotToField.getrX() / 6);
-            robotToField.setrY(robotToField.getrY() / 6);
-            robotToField.setrZ(robotToField.getrZ() / 6);
+            robotToImage.settX(round(robotToImage1.gettX() / 6, 2));
+            robotToImage.settY(round(robotToImage1.gettY() / 6, 2));
+            robotToImage.settZ(round(robotToImage1.gettZ() / 6, 2));
+            robotToImage.setrX(round(robotToImage1.getrX() / 6, 2));
+            robotToImage.setrY(round(robotToImage1.getrY() / 6, 2));
+            robotToImage.setrZ(round(robotToImage1.getrZ() / 6, 2));
+            robotToField.settX(round(robotToField1.gettX() / 6, 2));
+            robotToField.settY(round(robotToField1.gettY() / 6, 2));
+            robotToField.settZ(round(robotToField1.gettZ() / 6, 2));
+            robotToField.setrX(round(robotToField1.getrX() / 6, 2));
+            robotToField.setrY(round(robotToField1.getrY() / 6, 2));
+            robotToField.setrZ(round(robotToField1.getrZ() / 6, 2));
         }
 
+    }
+
+    public void bootlegStillRobotInformation(){
+        Position sumPos = new Position();
+        Position sumPos2 = new Position();
+        for(int i = 0; i < 10; i++){
+            robotInformation();
+            sumPos.settX(sumPos.gettX() + robotToImage.gettX());
+            sumPos.settY(sumPos.gettY() + robotToImage.gettY());
+            sumPos.settZ(sumPos.gettZ() + robotToImage.gettZ());
+            sumPos.setrX(sumPos.getrX() + robotToImage.getrX());
+            sumPos.setrY(sumPos.getrY() + robotToImage.getrY());
+            sumPos.setrZ(sumPos.getrZ() + robotToImage.getrZ());
+            sumPos2.settX(sumPos2.gettX() + robotToField.gettX());
+            sumPos2.settY(sumPos2.gettY() + robotToField.gettY());
+            sumPos2.settZ(sumPos2.gettZ() + robotToField.gettZ());
+            sumPos2.setrX(sumPos2.getrX() + robotToField.getrX());
+            sumPos2.setrY(sumPos2.getrY() + robotToField.getrY());
+            sumPos2.setrZ(sumPos2.getrZ() + robotToField.getrZ());
+        }
+        robotToImage.settX(round(sumPos.gettX() / 10, 2));
+        robotToImage.settY(round(sumPos.gettY() / 10, 2));
+        robotToImage.settZ(round(sumPos.gettZ() / 10, 2));
+        robotToImage.setrX(round(sumPos.getrX() / 10, 2));
+        robotToImage.setrY(round(sumPos.getrY() / 10, 2));
+        robotToImage.setrZ(round(sumPos.getrZ() / 10, 2));
+        robotToField.settX(round(sumPos2.gettX() / 10, 2));
+        robotToField.settY(round(sumPos2.gettY() / 10, 2));
+        robotToField.settZ(round(sumPos2.gettZ() / 10, 2));
+        robotToField.setrX(round(sumPos2.getrX() / 10, 2));
+        robotToField.setrY(round(sumPos2.getrY() / 10, 2));
+        robotToField.setrZ(round(sumPos2.getrZ() / 10, 2));
     }
 
     public void robotInformation(){
@@ -274,10 +312,10 @@ public class VuforiaUtilFront {
                     robotToField.setrX(round(rot.secondAngle, 2));
                     robotToField.setrY(-1 * round(rot.firstAngle, 2));
                     robotToField.setrZ(round(to180(-1 * rot.secondAngle - 180), 2));
-                    if(robotToField.getrZ() < -160){
+                    if(robotToField.getrZ() < -100){
                         robotToField.setrZ(round(-1 * (robotToField.getrZ() + 180), 2));
                     }
-                    else if(robotToField.getrZ() > 160){
+                    else if(robotToField.getrZ() > 100){
                         robotToField.setrZ(round(-1 * (robotToField.getrZ() - 180), 2));
                     }
                     break;

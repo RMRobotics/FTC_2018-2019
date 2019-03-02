@@ -28,7 +28,7 @@ public class OpenCVandMovementTest extends armisticeAutoSuper {
 
 
         //See Qube
-        detector = new GoldAlignDetector(); // Create detector
+        GoldAlignDetector detector = new GoldAlignDetector(); // Create detector
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(), 1, false); // Initialize it with the app context and camera
         detector.useDefaults(); // Set detector to use default settings
 
