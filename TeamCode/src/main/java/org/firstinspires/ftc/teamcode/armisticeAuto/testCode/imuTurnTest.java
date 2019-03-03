@@ -14,11 +14,13 @@ public class imuTurnTest extends armisticeAutoSuper {
 
         initialize(true);
 
-        imuTurn(90, 0.4);
+        waitForStart();
+
+        imuTurn(45, 0.4,true);
         holdUp(2);
-        imuTurn(-90, 0.4);
+       /* imuTurn(-90, 0.4);
         holdUp(2);
-        imuTurn(135, 0.4);
+        imuTurn(135, 0.4);*/
 //        imuTurn1(90, 1);
 
     }

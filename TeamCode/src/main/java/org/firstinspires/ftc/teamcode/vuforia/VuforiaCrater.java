@@ -24,6 +24,7 @@ public class VuforiaCrater extends armisticeAutoSuper {
     public static final double FTC_FIELD_WIDTH = 12*12 - 2;
     private VuforiaUtilFront Vuforia = new VuforiaUtilFront(true, VuforiaLocalizer.CameraDirection.BACK, VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES, 90, -90, 0);
     private Position robotToField;
+    protected double initTime;
 
 
     public void runOpMode(){
@@ -49,7 +50,10 @@ public class VuforiaCrater extends armisticeAutoSuper {
             telemetry.addData("doesnt pose", 0);
             telemetry.update();
             //holdUp(2);
-            setDrive(0.4);
+            initTime = timer.milliseconds();
+            while (timer.milliseconds() - initTime < 3000) {
+                setDrive(0.4);
+            }
 
         }
         else{
@@ -101,7 +105,7 @@ public class VuforiaCrater extends armisticeAutoSuper {
             holdUp(2);
 
             if(Vuforia.getCurrentImageName().equals("RedPerimeter")){
-                imuTurn(-1 * (90-robotToField.getrZ()), 0.4); //turn towards the depot
+                imuTurn(-1 * (90-robotToField.getrZ()), 0.4,true); //turn towards the depot
                 telemetry.addData("Checkpoint", 3);
                 holdUp(2);
                 strafeEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettX(), 0.4); //move up against the wall
@@ -114,10 +118,10 @@ public class VuforiaCrater extends armisticeAutoSuper {
             }
             else{
                 if(robotToField.gettZ() > 0){
-                    imuTurn(-1 * (90 + (180 - robotToField.gettZ())), 0.4);
+                    imuTurn(-1 * (90 + (180 - robotToField.gettZ())), 0.4,true);
                 }
                 else{
-                    imuTurn(-90 + (180 - robotToField.gettZ()), 0.4);
+                    imuTurn(-90 + (180 - robotToField.gettZ()), 0.4,true);
                 }
                 telemetry.addData("Checkpoint", 3);
                 holdUp(2);

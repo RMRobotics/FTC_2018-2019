@@ -18,27 +18,35 @@ import org.firstinspires.ftc.teamcode.DanCV.Enums.RelativePosition;
 public class AutoCrater extends armisticeAutoSuper{
 
     private GoldAlignDetector detector;
+    protected org.firstinspires.ftc.teamcode.armisticeAuto.Direction Direction;
 
     public void runOpMode(){
 
         //initialization
         initialize(true);
 
-        MineralDetector detector = new MineralDetector();
-        detector = DanCVMineralDetector(detector);
-        detector.setResizeVal(0.5);
+        imu.initialize();
+        imu.setOffset(0);
 
+
+
+       /* MineralDetector detector = new MineralDetector();
+        detector = DanCVMineralDetector(detector);
+        detector.setResizeVal(0.5);*/
+
+        /*telemetry.addData("imu angle:", imu.getZAngle());
         telemetry.addData("Is Ready", detector.isReady());
         telemetry.addData("Init Done", detector.isInited());
-        telemetry.update();
+        telemetry.update();*/
 
         waitForStart();
 
         //Get off lander
-        extendHook();
+/*        extendHook();
+        RelativePosition direction = detector.getRelativePos();
         strafeEncoders(20, 0.4);
+        imuTurn(-imu.getZAngle(),0.4,false);
 
-        while (opModeIsActive()) {
             //This method returns a value from the Relative Position enum - see Enum Package folder in DanCV for more info
             //Can yield LEFT,RIGHT,CENTER, or UNKNOWN (not visible)
             telemetry.addData("Detected Position", detector.getRelativePos().name());
@@ -49,58 +57,73 @@ public class AutoCrater extends armisticeAutoSuper{
             //Whether its visible (may have problems, but should work)
             telemetry.addData("Visible", detector.isVisible());
 
-            //Update Telemetry
-            telemetry.update();
-        }
-        RelativePosition direction = detector.getRelativePos();
+
         telemetry.addData("direction", detector.getRelativePos());
         telemetry.update();
 
-/*
+        print("check1",1);
+*/
+
+       /* RelativePosition direction = detector.getRelativePos();
+        telemetry.addData("direction", direction);
+        telemetry.update();
+        holdUp(5);*/
 
         //Move forward to see Qube
-        moveEncoders(30, 0.4);
+        moveEncodersCount(-2500, 0.4);
 
         //align with mineral
-        int dir;
+       /* int dir;
         boolean flag = true;
 
         if (direction.equals(Direction.CENTER))
             dir = 0;
 
-        while (!detector.getRelativePos().equals(Direction.CENTER)) {
-            holdUp(5);
+        telemetry.addData("check","123");
+
+        timer.reset();*/
+       /* while (!detector.getRelativePos().equals(Direction.CENTER) && timer.seconds()<5) {
+            holdUp(1);
             if (direction.equals(Direction.LEFT)) {
                 setStrafe(0.3);
                 dir = 1;
+                telemetry.addData("dir","left");
             }
             else if (direction.equals(Direction.RIGHT)) {
                 setStrafe(-0.3);
                 dir = -1;
+                telemetry.addData("dir","right");
             }
             else {
                 telemetry.addData("UNKNOWN","");
-                telemetry.update();
             }
+            telemetry.update();
         }
-        setDrive(0);
+        setDrive(0);*/
 
         //knock off cube
-        moveEncoders(20, 0.4);
+//        moveEncoders(20, 0.4);
+//        holdUp(1);
+//        moveEncoders(-10,0.4);
 
-        if (direction.equals(Direction.LEFT)) {
-            strafeEncoders();
+        /*if (direction.equals(Direction.LEFT)) {
+            strafeEncodersCount(2500, 0.4, Direction.LEFT);
         }
         else if (direction.equals(Direction.RIGHT)) {
-            strafeEncoders();
+            strafeEncodersCount(6500, 0.4, Direction.LEFT);
         }
         else if (direction.equals(Direction.CENTER)) {
-            strafeEncoders();
-        }
+            strafeEncodersCount(4500, 0.4, Direction.LEFT);
+        }*/
 
-        imuTurn(90, 0.4);
+        strafeEncoders(150, 0.4);
+
+        imuTurn(45, 0.4,true);
 
         //Vuforia stuff
+
+        //temp in place of Vuf
+        moveEncodersCount(5000,0.4);
 
         //drop of marker
         dropMarker();
@@ -108,6 +131,6 @@ public class AutoCrater extends armisticeAutoSuper{
         raiseMarker();
 
         moveEncodersCount(-8600, 0.4);
-*/
+
     }
 }

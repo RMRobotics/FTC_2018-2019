@@ -83,7 +83,7 @@ public class VuforiaDepot extends armisticeAutoSuper {
             holdUp(2);
 
             if(Vuforia.getCurrentImageName().equals("BackPerimeter")){
-                imuTurn(robotToField.getrZ(), 0.4); //turn towards the depot
+                imuTurn(robotToField.getrZ(), 0.4,true); //turn towards the depot
                 telemetry.addData("Checkpoint", 3);
                 holdUp(2);
                 strafeEncoders(-1 * (FTC_FIELD_WIDTH / 2 - robotToField.gettY()), 0.4); //move up against the wall
@@ -95,7 +95,7 @@ public class VuforiaDepot extends armisticeAutoSuper {
                 moveEncoders(FTC_FIELD_WIDTH / 2 - robotToField.gettX() - 24, 0.4); //move to depot
             }
             else{
-                imuTurn((180 + robotToField.getrZ()), 0.4);
+                imuTurn((180 + robotToField.getrZ()), 0.4,true);
                 telemetry.addData("Checkpoint", 3);
                 holdUp(2);
                 strafeEncoders(-1 * (FTC_FIELD_WIDTH / 2 + robotToField.gettY()), 0.4); //move up against the wall

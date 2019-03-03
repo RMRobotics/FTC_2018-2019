@@ -62,7 +62,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         FR.setDirection(DcMotor.Direction.REVERSE);
         BR.setDirection(DcMotor.Direction.REVERSE);
 
-//        setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
+       setZeroMode(DcMotor.ZeroPowerBehavior.BRAKE);
         BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -287,6 +287,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected void moveEncodersCount(int encoderCount, double power) {
 // Reset encoders
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData("FL Encoder", FL.getCurrentPosition());
         telemetry.addData("BL Encoder", BL.getCurrentPosition());
@@ -307,24 +308,69 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         BL.setPower(power);
         BR.setPower(power);
 
-        int lastFL = FL.getCurrentPosition(), lastFR = FR.getCurrentPosition(), lastBL = BL.getCurrentPosition(), lastBR = BR.getCurrentPosition();
+//        int lastFL = FL.getCurrentPosition(), lastFR = FR.getCurrentPosition(), lastBL = BL.getCurrentPosition(), lastBR = BR.getCurrentPosition();
 
         // Loop while we approach the target.  Display position as we go
         while (FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
-            telemetry.addData("FL dif:", FL.getCurrentPosition() - lastFL);
+            /*telemetry.addData("FL dif:", FL.getCurrentPosition() - lastFL);
             telemetry.addData("FR dif:", FR.getCurrentPosition() - lastFR);
             telemetry.addData("BL dif:", BL.getCurrentPosition() - lastBL);
-            telemetry.addData("BR dif:", BR.getCurrentPosition() - lastBR);
+            telemetry.addData("BR dif:", BR.getCurrentPosition() - lastBR);*/
             telemetry.addData("FL Encoder", FL.getCurrentPosition());
             telemetry.addData("BL Encoder", BL.getCurrentPosition());
             telemetry.addData("FR Encoder", FR.getCurrentPosition());
             telemetry.addData("BR Encoder", BR.getCurrentPosition());
-            telemetry.addData("power:", power);
             telemetry.update();
-            lastFL = FL.getCurrentPosition();
+            /*lastFL = FL.getCurrentPosition();
             lastFR = FR.getCurrentPosition();
             lastBL = BL.getCurrentPosition();
-            lastBR = BR.getCurrentPosition();
+            lastBR = BR.getCurrentPosition();*/
+        }
+    }
+
+    protected void strafeEncodersCount(int encoderCount, double power, Direction dir) {
+// Reset encoders
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        telemetry.addData("FL Encoder", FL.getCurrentPosition());
+        telemetry.addData("BL Encoder", BL.getCurrentPosition());
+        telemetry.addData("FR Encoder", FR.getCurrentPosition());
+        telemetry.addData("BR Encoder", BR.getCurrentPosition());
+        telemetry.addData("power:", power);
+        telemetry.update();
+        holdUp(2);
+
+        if (dir.equals(Direction.LEFT)){
+            FL.setTargetPosition(encoderCount);
+            FR.setTargetPosition(-encoderCount);
+            BL.setTargetPosition(-encoderCount);
+            BR.setTargetPosition(encoderCount);
+
+            FL.setPower(power);
+            FR.setPower(-power);
+            BL.setPower(-power);
+            BR.setPower(power);
+        }
+        else {
+            FL.setTargetPosition(-encoderCount);
+            FR.setTargetPosition(encoderCount);
+            BL.setTargetPosition(encoderCount);
+            BR.setTargetPosition(-encoderCount);
+
+            FL.setPower(-power);
+            FR.setPower(power);
+            BL.setPower(power);
+            BR.setPower(-power);
+        }
+
+
+        // Loop while we approach the target.  Display position as we go
+        while (FR.isBusy() && FL.isBusy() && BL.isBusy() && BR.isBusy()) {
+            telemetry.addData("FL Encoder", FL.getCurrentPosition());
+            telemetry.addData("BL Encoder", BL.getCurrentPosition());
+            telemetry.addData("FR Encoder", FR.getCurrentPosition());
+            telemetry.addData("BR Encoder", BR.getCurrentPosition());
+            telemetry.update();
         }
     }
 
@@ -335,6 +381,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
     protected void dropMarker(){
         marker.setPosition(0.75);
+        holdUp(0.25);
+        marker.setPosition(0.25);
     }
 
     protected void raiseMarker(){
@@ -345,8 +393,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         telemetry.addData("Encoder Val", hook.getCurrentPosition());
         telemetry.update();
         hook.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hook.setTargetPosition(37000);
-        hook.setPower(0.7);
+        hook.setTargetPosition(13500);
+        hook.setPower(1);
         while (hook.isBusy()) {
 
             telemetry.addData("Encoder Val", hook.getCurrentPosition());
@@ -368,9 +416,12 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         hook.setPower(0);
     }
 
-    protected void imuTurn(double degree, double speed) {
+    protected void imuTurn(double degree, double speed, boolean reset) {
+        setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         imu.initialize();
-        imu.setOffset(0);
+        if (reset)
+            imu.setOffset(0);
         double err = 1.2, pwr = 0.5;
         speed = -speed;
 
@@ -389,6 +440,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         else
         {
             dir_cw = false;
+            holdUp(1);
             FL.setPower(-1*speed);
             BL.setPower(-1*speed);
             FR.setPower(speed);
@@ -410,7 +462,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             }
             else if (dir_cw && imu.getZAngle()>degree)
             {
-                pwr = speed/count;
+               pwr = speed/count;
                 if (pwr < 0.15)
                     pwr = 0.15;
                 FL.setPower(pwr);
@@ -422,7 +474,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             }
             else if (!dir_cw && imu.getZAngle()<degree)
             {
-                pwr = speed/count;
+               pwr = speed/count;
                 if (pwr < 0.15)
                     pwr = 0.15;
                 FL.setPower(-pwr);
@@ -433,9 +485,6 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
                 dir_cw = !dir_cw;
             }
         }
-
-        print(String.valueOf(imu.getZAngle()),3);
-
         FL.setPower(0);
         BL.setPower(0);
         FR.setPower(0);

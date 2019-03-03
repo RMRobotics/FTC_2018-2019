@@ -62,9 +62,6 @@ public abstract class Detector implements CameraBridgeViewBase.CvCameraViewListe
                 mOpenCvCameraView = new JavaCameraView(finalContext,cameraId);
                 mOpenCvCameraView.setCameraIndex(cameraId);
                 mOpenCvCameraView.setCvCameraViewListener(self);
-                mOpenCvCameraView.setMinimumWidth(FRAME_WIDTH_REQUEST);
-                mOpenCvCameraView.setMinimumHeight(FRAME_HEIGHT_REQUEST);
-                mOpenCvCameraView.setMaxFrameSize(FRAME_WIDTH_REQUEST, FRAME_HEIGHT_REQUEST);
 
                 initDone = true;
             }

@@ -45,7 +45,7 @@ public class MineralDetector extends Detector  {
         this.upper = new Scalar(60,255,255);
         this.centerBounds = 100;
         this.buffer = new Rect();
-        this.showProcessFrame = false;
+        this.showProcessFrame = true;
         mFrame = new Mat();
         mOriginalFrame = new Mat();
         mCnt = new MatOfPoint();
@@ -107,10 +107,10 @@ public class MineralDetector extends Detector  {
             if(!box.empty()){
 
                 box = tryBoxFromBuffer(box);
-                Imgproc.rectangle(mFrame,new Point(box.x,box.y),new Point(box.width,box.height), new Scalar(0,255,0),2);
+                Imgproc.rectangle(mFrame,new Point(box.x,box.y),new Point(box.width,box.height), new Scalar(255,255,255),2);
                 String message = getRelPosition(mFrame,box).name();
-                Imgproc.putText(mFrame,message,box.tl(),Core.FONT_HERSHEY_SIMPLEX,1,new Scalar(0,255,0),2,Core.LINE_AA);
-                Imgproc.putText(mFrame,box.width + " x " + box.height,box.br(),Core.FONT_HERSHEY_SIMPLEX,1,new Scalar(0,255,0),2,Core.LINE_AA);
+                Imgproc.putText(mFrame,message,box.tl(),Core.FONT_HERSHEY_SIMPLEX,1,new Scalar(255,255,255),2,Core.LINE_AA);
+                Imgproc.putText(mFrame,box.width + " x " + box.height,box.br(),Core.FONT_HERSHEY_SIMPLEX,1,new Scalar(255,255,255),2,Core.LINE_AA);
 
 
                 Imgproc.rectangle(mOriginalFrame,new Point(box.x,box.y),new Point(box.width,box.height), new Scalar(0,255,0),2);
