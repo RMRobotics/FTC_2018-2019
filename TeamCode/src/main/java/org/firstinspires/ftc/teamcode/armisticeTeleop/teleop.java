@@ -153,6 +153,10 @@ public class teleop extends OpMode {
         telemetry.addData("position:",marker.getPosition());
         telemetry.update();
 
+        if (gamepad1.y)
+            dropMarker();
+
+
         //Controls the intake servo
       /*  if (gamepad1.right_trigger!=0 && gamepad1.left_trigger==0)
             intake.setPower(gamepad1.right_trigger);
@@ -162,5 +166,18 @@ public class teleop extends OpMode {
             intake.setPower(0);
 
     }*/
+    }
+
+    protected void dropMarker(){
+        marker.setPosition(0.75);
+        holdUp(0.5);
+        marker.setPosition(0.25);
+    }
+
+    protected void holdUp(double num)
+    {
+        timer.reset();
+        while (timer.seconds()<num)
+        {}
     }
 }

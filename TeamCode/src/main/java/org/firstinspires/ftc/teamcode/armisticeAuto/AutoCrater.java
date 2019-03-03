@@ -70,7 +70,7 @@ public class AutoCrater extends armisticeAutoSuper{
         holdUp(5);*/
 
         //Move forward to see Qube
-        moveEncodersCount(-2500, 0.4);
+        moveEncodersCount(-4500, 0.4);
 
         //align with mineral
        /* int dir;
@@ -102,9 +102,8 @@ public class AutoCrater extends armisticeAutoSuper{
         setDrive(0);*/
 
         //knock off cube
-//        moveEncoders(20, 0.4);
-//        holdUp(1);
-//        moveEncoders(-10,0.4);
+        holdUp(0.5);
+        moveEncoders(20,0.4);
 
         /*if (direction.equals(Direction.LEFT)) {
             strafeEncodersCount(2500, 0.4, Direction.LEFT);
@@ -116,7 +115,7 @@ public class AutoCrater extends armisticeAutoSuper{
             strafeEncodersCount(4500, 0.4, Direction.LEFT);
         }*/
 
-        strafeEncoders(150, 0.4);
+        strafeEncoders(50, 0.4);
 
         imuTurn(45, 0.4,true);
 

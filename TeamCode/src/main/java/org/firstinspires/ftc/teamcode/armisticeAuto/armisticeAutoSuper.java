@@ -289,6 +289,8 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        double angle = imu.getZAngle();
+
         telemetry.addData("FL Encoder", FL.getCurrentPosition());
         telemetry.addData("BL Encoder", BL.getCurrentPosition());
         telemetry.addData("FR Encoder", FR.getCurrentPosition());
@@ -316,6 +318,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             telemetry.addData("FR dif:", FR.getCurrentPosition() - lastFR);
             telemetry.addData("BL dif:", BL.getCurrentPosition() - lastBL);
             telemetry.addData("BR dif:", BR.getCurrentPosition() - lastBR);*/
+
             telemetry.addData("FL Encoder", FL.getCurrentPosition());
             telemetry.addData("BL Encoder", BL.getCurrentPosition());
             telemetry.addData("FR Encoder", FR.getCurrentPosition());
@@ -326,6 +329,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
             lastBL = BL.getCurrentPosition();
             lastBR = BR.getCurrentPosition();*/
         }
+        setDrive(0);
     }
 
     protected void strafeEncodersCount(int encoderCount, double power, Direction dir) {
