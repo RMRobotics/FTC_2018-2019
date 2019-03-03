@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class servoCalibration extends OpMode {
 
     protected DcMotor hook, intake;
+    protected CRServo arm1, arm2;
     protected Servo marker;
     protected ElapsedTime timer = new ElapsedTime();
 
@@ -27,10 +28,16 @@ public class servoCalibration extends OpMode {
 
         marker = hardwareMap.servo.get("marker");
 
-        /*intake = hardwareMap.dcMotor.get("intake");
+        hook = hardwareMap.dcMotor.get("hook");
+
+        intake = hardwareMap.dcMotor.get("intake");
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        arm1 = hardwareMap.crservo.get("arm1");
+        arm2 = hardwareMap.crservo.get("arm2");
+
     }
 
     @Override
@@ -41,21 +48,45 @@ public class servoCalibration extends OpMode {
         //telemetry.addData("Intake Encoder Val", intake.getCurrentPosition());
         telemetry.update();
 
-        if (gamepad1.left_trigger>0){
+        if (gamepad2.left_trigger>0){
             hook.setPower(1);
         }
-        else if (gamepad1.right_trigger>0)
+        else if (gamepad2.right_trigger>0)
             hook.setPower(-1);
         else
             hook.setPower(0);
 
 
+        if (gamepad2.left_stick_x > 0){
+            intake.setPower(0.3);
+        }
+        else if (gamepad2.left_stick_x < 0){
+            intake.setPower(-0.3);
+        }
+        else{
+            intake.setPower(0);
+        }
 
-        if (gamepad1.right_bumper){
+
+        if(gamepad2.right_stick_x > 0){
+            arm1.setPower(0.3);
+            arm2.setPower(-0.3);
+        }
+        else if (gamepad2.right_stick_x < 0){
+            arm1.setPower(-0.3);
+            arm2.setPower(0.3);
+        }
+        else{
+            arm1.setPower(0);
+            arm2.setPower(0);
+        }
+
+
+        if (gamepad2.right_bumper){
             marker.setPosition(0);
 //            holdUp(0.5);
         }
-        else if (gamepad1.left_bumper){
+        else if (gamepad2.left_bumper){
             marker.setPosition(0.75);
 //            holdUp(0.5);
         }

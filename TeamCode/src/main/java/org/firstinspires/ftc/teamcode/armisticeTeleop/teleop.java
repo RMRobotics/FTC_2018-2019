@@ -19,7 +19,7 @@ public class teleop extends OpMode {
 
     protected DcMotor FL, FR, BL, BR;
     protected DcMotor hook;            //used for latching hook
-    protected CRServo intake;//spins surgical tubing for intake
+    protected DcMotor intake;//spins surgical tubing for intake
 
     protected Servo marker;
 
@@ -134,27 +134,24 @@ public class teleop extends OpMode {
         BR.setPower((forward + strafe - rotate) / -max);
 
         //controls the hook for latching
-        if (gamepad1.left_trigger>0){
+        if (gamepad2.left_trigger>0){
             hook.setPower(1);
         }
-        else if (gamepad1.right_trigger>0)
+        else if (gamepad2.right_trigger>0)
             hook.setPower(-1);
         else
             hook.setPower(0);
 
 
-        if (gamepad1.right_bumper){
+        if (gamepad2.right_bumper){
             marker.setPosition(0);
         }
-        else if (gamepad1.left_bumper){
+        else if (gamepad2.left_bumper){
             marker.setPosition(0.75);
         }
 
         telemetry.addData("position:",marker.getPosition());
         telemetry.update();
-
-        if (gamepad1.y)
-            dropMarker();
 
 
         //Controls the intake servo
