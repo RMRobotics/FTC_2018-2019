@@ -5,7 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 
-
+import org.firstinspires.ftc.teamcode.DanCV.Enums.DetectionMode;
 import org.firstinspires.ftc.teamcode.DanCV.Enums.RelativeDistance;
 import org.firstinspires.ftc.teamcode.DanCV.Enums.RelativePosition;
 
@@ -39,6 +39,8 @@ public class MineralDetector extends Detector  {
     private boolean inited;
     private boolean isReady = false;
     private double resizeVal;
+    private DetectionMode detectionMethod;
+
 
     public MineralDetector(){
         this.lower = new Scalar(20,190,100);
@@ -52,6 +54,7 @@ public class MineralDetector extends Detector  {
         kernel = new Mat(5,5,CvType.CV_8UC1,new Scalar(255));
         mContours = new ArrayList<>();
         resizeVal = 1.0;
+        detectionMethod = DetectionMode.NORMAL_MODE;
     }
 
     public void toggleShowProcessFrame() {
@@ -86,6 +89,10 @@ public class MineralDetector extends Detector  {
     private void reverseResize(Mat frame){
         Size initialSize = frame.size();
         Imgproc.resize(frame,frame,new Size(initialSize.width/resizeVal,initialSize.height/resizeVal));
+    }
+
+    public void setDetectMode(DetectionMode method) {
+        this.detectionMethod = method;
     }
 
     @Override

@@ -24,7 +24,7 @@ public class DanCVGoldMineralExample extends armisticeAutoSuper {
         //The methods outlined here should provide all the functionality needed to do the auto. But, if openCV runs slow
         //I included the ability to resize the frames to be smaller during processing. It lowers the resolution but ups the speed significantly
         //Try running without it first to see the difference.
-        detector.setResizeVal(0.5);
+        //detector.setResizeVal(0.5);
 
 
             //This simply shows the status of the detector in terms of whether its ready to detect or not
@@ -53,7 +53,7 @@ public class DanCVGoldMineralExample extends armisticeAutoSuper {
                 telemetry.update();
             }
 
-            moveEncoders(30, 0.4);
+            //moveEncoders(30, 0.4);
 
 
 

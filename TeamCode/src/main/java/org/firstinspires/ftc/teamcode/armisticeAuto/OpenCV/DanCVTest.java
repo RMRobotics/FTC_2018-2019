@@ -20,11 +20,8 @@ public class DanCVTest extends armisticeAutoSuper {
     public void runOpMode() {
         initialize(true);
 
-        MineralDetector detector = new MineralDetector();
+        detector.activate();
         //Check armisticeAutoSuper for the implementation
-        DanCVMineralDetector(detector);
-
-
         waitForStart();
 
 
