@@ -39,7 +39,7 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
     protected Orientation angles;
     protected Acceleration gravity;
     //Also if something not accounted for
-    //protected MineralDetector detector;
+    protected MineralDetector detector;
     public static double CPI = (1120.0 * 0.66666)/(4.0 * Math.PI);
 
 
@@ -76,10 +76,10 @@ public abstract class armisticeAutoSuper extends LinearOpMode {
 
 
         //This is just in case something has not to be accounted for
-//        detector = new MineralDetector();
-//        detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
-//        detector.activate();
-//        waitForStart();
+        detector = new MineralDetector();
+        detector.init(hardwareMap.appContext,CVViewActivity.getInstance(),1);
+        //detector.activate();
+
     }
 
     protected void setMode(DcMotor.RunMode r) {
